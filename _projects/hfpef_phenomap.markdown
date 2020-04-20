@@ -21,5 +21,3 @@ Each with unique survival profiles!
   <img class="img-responsive col-12" src="{{ '/assets/img/hfpef_phenomap.png' | prepend: site.baseurl }}" alt="overview figure">
   <h6 class="font-italic text-center" style="color: #78909c;"><u>Figure 1:</u> Overview of the HFpEF phenomapping analysis and findings.</h6>
 </div>
-
-<img class="col" src="/assets/img/hfpef_phenomap.png">
