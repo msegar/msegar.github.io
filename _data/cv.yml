@@ -87,24 +87,6 @@
     - title: 'Swim Coach - Carmel Swim Club.'
       year: 2012-2014
 
-- title: Services
-  type: nested_list
-    - title: 'University Committees'
-      items:
-        - '2014-16: Vice President, Medical Student Council, IUSM.'
-        - '2015-17: LCME Continuous Quality Improvement Team, IUSM.'
-        - '2016-17: President, Medical Student Council, IUSM.'
-        - '2017-18: Admissions Committee, IUSM.'
-    - title: 'Community Service'
-      items:
-        - '2008-11: AIDS Walk, AIDS Resource Alliance.'
-        - '2008-10: Trail Cleanup, R.B. Winter State Park.'
-        - '2009-12: Special Olympics, Pennsylvania Chapter.'
-        - '2009-12: Swim Instructor, Lewisburg Community Outreach Center.'
-        - '2011: Swim Across America.'
-        - '2012-14: IU Health Volunteer.'
-        - '2015-16: Spring House Calls, IUSM.'
-
 - title: Software Development Skills
   type: list
   contents:
