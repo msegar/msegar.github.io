@@ -2,7 +2,7 @@
 layout: page
 title: HFpEF Phenomapping
 description: Novel methods for phenomapping in HFpEF
-img:
+img: /assets/img/clustering.jpg
 ---
 ### Why phenomapping?
 In 2015, Shah ([@HFpEF](https://twitter.com/HFpEF)) published seminal work showing clustering techniques could identify unique subgroups among patients with HFpEF. However, recent machine learning based techniques now allow for clustering of both continuous AND categorical data directly.

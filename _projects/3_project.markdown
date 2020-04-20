@@ -2,7 +2,7 @@
 layout: page
 title: Useful MedTweetorials
 description: A collection of interesting medtwitter tweetorials
-img:
+img: /assets/img/twitter.png
 ---
 ### Why does a "STEMI" cause ST elevation?
 By Avraham Cooper, MD ([Link](https://twitter.com/AvrahamCooperMD/status/1208154632892993536))
