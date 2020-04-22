@@ -21,10 +21,10 @@ $ bundle exec jekyll serve # Add "--incremental" for faster incremental builds.
 ```
 
 Now, feel free to customize the theme however you like (don't forget to change the name!).
-After you are done, you can deploy it to [GitHub Pages](https://pages.github.com/) by running the deploy script:
+After you are done, you can deploy it to [GitHub Pages](https://pages.github.com/) by running the deploy script. Add --user to upload to Github Pages.
 
 ```bash
-$ ./bin/deploy
+$ ./bin/deploy [--user]
 ```
 
 ## Features

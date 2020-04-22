@@ -76,13 +76,16 @@
           {% endif %}
         </p>
       </div>
-    
+
       <div class="col p-0">
         {% if entry.abstract %}
           <a class="badge grey waves-effect font-weight-light mr-1" data-toggle="collapse" href="#{{entry_id}}-abstract" role="button" aria-expanded="false" aria-controls="{{entry_id}}-abstract">Abstract</a>
         {% endif %}
         {% if entry.html %}
           <a class="badge grey waves-effect font-weight-light mr-1" href="{{ entry.html }}" target="_blank">HTML</a>
+        {% endif %}
+        {% if entry.url %}
+          <a class="badge grey waves-effect font-weight-light mr-1" href="{{ entry.url }}" target="_blank">URL</a>
         {% endif %}
         {% if entry.pdf %}
           <a class="badge grey waves-effect font-weight-light mr-1" href="{{ entry.pdf | prepend: '/assets/pdf/' | prepend: site.baseurl }}" target="_blank">PDF</a>
@@ -106,7 +109,7 @@
           <a class="badge grey waves-effect font-weight-light mr-1" href="http://arxiv.org/abs/{{ entry.arxiv }}" target="_blank">arXiv</a>
         {% endif %}
       </div>
-    
+
       {% if entry.abstract %}
       <div class="col mt-2 p-0">
         <div id="{{entry_id}}-abstract" class="collapse">
