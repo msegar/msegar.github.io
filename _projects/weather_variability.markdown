@@ -33,6 +33,33 @@ asv <- function(x){
 I then binned the ASV values into 8 categories in order to see which counties
 had the highest variability.
 
+The difficulty, however, was converting longtitude and latitude into counties. Luckily
+a [StackOverflow thread](https://stackoverflow.com/questions/13316185/r-convert-zipcode-or-lat-long-to-county)
+made this an easy task.
+
+```{r}
+library(sp)
+library(maps)
+library(maptools)
+latlong2county <- function(pointsDF) {
+  # Prepare SpatialPolygons object with one SpatialPolygon
+  # per county
+  counties <- map('county', fill=TRUE, col="transparent", plot=FALSE)
+  IDs <- sapply(strsplit(counties$names, ":"), function(x) x[1])
+  counties_sp <- map2SpatialPolygons(counties, IDs=IDs,proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+  # Convert pointsDF to a SpatialPoints object
+  pointsSP <- SpatialPoints(pointsDF, proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+  # Use 'over' to get _indices_ of the Polygons object containing each point
+  indices <- over(pointsSP, counties_sp)
+  
+  # Return the county names of the Polygons object containing each point
+  countyNames <- sapply(counties_sp@polygons, function(x) x@ID)
+  countyNames[indices]
+}
+```
+
 ### Results
 A choreopleth map of the results is below. The region with the most variability
 was clearly the Midwest United States. The highest bin had ASV values ranging from 9-17
