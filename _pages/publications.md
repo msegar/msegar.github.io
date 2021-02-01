@@ -4,7 +4,7 @@ permalink: /publications/
 title: publications
 nav: publications
 description: <span>*</span> denotes equal contribution and joint lead authorship.
-years: [2020, 2019, 2016, 2015, 2014, 2012]
+years: [2021, 2020, 2019, 2016, 2015, 2014, 2012]
 ---
 
 {% for y in page.years %}
