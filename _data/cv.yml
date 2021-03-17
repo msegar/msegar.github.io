@@ -41,11 +41,14 @@
 - title: Postdoctoral Training
   type: table
   contents:
-    - title: 'Intern/Resident'
+    - title: 'Resident, Internal Medicine'
       year: 2018-now
       description:
-        - Internal Medicine
         - University of Texas Southwestern Medicine Center
+    - title: 'Incoming Fellow, Cardiology'
+      year: 2021
+      description:
+        - Texas Heart Institute
 
 - title: Honors and Awards
   type: table
@@ -76,7 +79,16 @@
     - year: 2020
       items:
         - Best oral abstract (1st place), Donald W. Seldin Symposium, UT Southwestern Medical Center
-        - Elizabeth Barrett-Connor Young Investigator Award finalist, AHA 2020
+        - <b>Elizabeth Barrett-Connor Young Investigator Award</b> finalist, AHA 2020
+
+- title: Clinical Trials
+  type: table
+  contents:
+    - title: 'Electronic Alerts for Heart Failure Prevention in Diabetes (WATCH-DM)'
+      year: 2021-now
+      description:
+        - '<a href="NCT04791826" target="_blank">https://clinicaltrials.gov/ct2/show/NCT04791826</a>'
+        - 'Sub-investigator to evaluate WATCH-DM risk score in EHR system to improve SGLT2i utilization'
 
 - title: Work Experience
   type: table
