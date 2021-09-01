@@ -38,7 +38,7 @@ install_if_missing = function(p) {
 invisible(sapply(my_packages, install_if_missing))
 ```
 
-The <code>run.R</code> file is what's used to establish the API. The critical lines are the host needs to be 0.0.0.0 and port is set as the main Heroku port.
+The <code>app.R</code> file is what's used to establish the API. The critical lines are the host needs to be 0.0.0.0 and port is set as the main Heroku port.
 
 ```{r}
 library(plumber)
