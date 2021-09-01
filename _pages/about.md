@@ -16,9 +16,7 @@ nav: about
 <!-- Introduction -->
 
 <div class="col text-justify p-0">
-  I am a third-year Internal Medicine resident at <a href="https://www.utsouthwestern.edu/education/medical-school/departments/internal-medicine/education-training/residency/" target="_blank">UT Southwestern Medical Center</a>. I graduated with a degree in computer science with Honors from Bucknell University and
-  a Masters of Science in Bioinformatics from Indiana University. I received my medical degree from the Indiana University School of Medicine. I am
-  currently planning on applying for cardiology fellowship upon completion of my residency training. My current research focuses on using machine learning and artificial intelligence to improve risk prediction and tailor medical therapies to identify and treat heart failure.
+  I am a first-year cardiology fellow at the <a  hfref="http://texasheart.wpengine.com/education/fellowships-and-residencies/cardiovascular-disease-fellowship/" target="_blank">Texas Heart Institute</a>. I graduated from Internal Medicine residency at <a href="https://www.utsouthwestern.edu/education/medical-school/departments/internal-medicine/education-training/residency/" target="_blank">UT Southwestern Medical Center</a> and received my medical degree from the Indiana University School of Medicine. I also graduated with a degree in computer science with Honors from Bucknell University and a Masters of Science in Bioinformatics from Indiana University.  My current research focuses on using machine learning and artificial intelligence to improve risk prediction and tailor medical therapies to identify and treat heart failure.
 <br>
   You may find more information about our research at <a href="https://www.cvriskscores.com" target="_blank">CV Risk Scores</a>.
 </div>
