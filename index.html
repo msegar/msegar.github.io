@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matt Segar</title>
+    <!-- Make sure these paths are correct -->
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Social icons styling */
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--accent-color);
+        }
+        
+        .social-link i {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+        
+        [data-theme="dark"] .social-link {
+            color: var(--text-color-dark);
+        }
+        
+        [data-theme="dark"] .social-link:hover {
+            color: var(--accent-color-dark);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="cv.html">CV</a></li>
+                    <li><a href="blog/index.html">Blog</a></li>
+                    <li><a href="book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Physician. Cardiovascular AI Developer. Healthtech Founder.</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>About Me</h3>
+                        <p>I am a cardiac electrophysiology fellow at the Texas Heart Institute where I also completed my cardiology fellowship. I graduated from Internal Medicine residency at UT Southwestern Medical Center and received my medical degree from the Indiana University School of Medicine. I also graduated with a degree in computer science with Honors from Bucknell University and a Masters of Science in Bioinformatics from Indiana University.</p>
+                        <p>My current research focuses on using machine learning and artificial intelligence to improve risk prediction and tailor medical therapies to identify and treat cardiovascular disease. As the developer of the validated WATCH-DM Risk Score and other clinical prediction tools, I bridge the gap between data science and clinical cardiology to create practical solutions that improve patient care.</p>
+                        <p>Beyond my clinical and research work, I am the founder and CEO of <a href="https://www.recodemedical.com" target="_blank">ReCODE Medical</a>, a comprehensive revenue cycle management solution for medical procedures from prior authorization to charge capture.</p>
+                        
+                        <div class="connect">
+                            <h4>Connect With Me</h4>
+                            <div class="social-links">
+                                <a href="https://twitter.com/mattsegar" title="Twitter" class="social-link">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </a>
+                                <a href="https://linkedin.com/in/matthewsegar" title="LinkedIn" class="social-link">
+                                    <i class="fab fa-linkedin"></i> LinkedIn
+                                </a>
+                                <a href="https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ" title="Google Scholar" class="social-link">
+                                    <i class="fas fa-graduation-cap"></i> Google Scholar
+                                </a>
+                                <a href="mailto:matt@segar.me" title="Email" class="social-link">
+                                    <i class="far fa-envelope"></i> Email
+                                </a>
+                                <a href="https://www.cvriskscores.com" title="CV Risk Scores" class="social-link">
+                                    <i class="fas fa-heartbeat"></i> CV Risk Scores
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-work">
+            <div class="container">
+                <h3>Featured Work</h3>
+                <div class="work-grid">
+                    <div class="work-item">
+                        <h4>ReCODE Medical</h4>
+                        <p>A comprehensive revenue cycle management solution for medical procedures, streamlining healthcare workflows from prior authorization to charge capture.</p>
+                        <a href="https://www.recodemedical.com" class="button" target="_blank">Visit Website</a>
+                    </div>
+                    <div class="work-item">
+                        <h4>Machine Learning in Cardiology</h4>
+                        <p>My comprehensive guide on applying machine learning techniques to cardiovascular medicine, with practical implementations and case studies.</p>
+                        <a href="book.html" class="button">Learn More</a>
+                    </div>
+                    <div class="work-item">
+                        <h4>CV Risk Scores</h4>
+                        <p>Interactive tools for predicting cardiovascular risk based on my published research, available for clinical use.</p>
+                        <a href="https://www.cvriskscores.com" class="button">Explore Tools</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="assets/js/theme-toggle.js"></script>
+</body>
+</html>

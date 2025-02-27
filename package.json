@@ -1,0 +1,12 @@
+{
+  "name": "matt-segar-blog",
+  "version": "1.0.0",
+  "description": "Personal blog for Matt Segar",
+  "scripts": {
+    "build": "node scripts/build-blog.js"
+  },
+  "dependencies": {
+    "marked": "^5.0.2",
+    "gray-matter": "^4.0.3"
+  }
+}

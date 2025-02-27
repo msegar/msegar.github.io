@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Plumber API on Heroku - Matt Segar</title>
+    <meta name="description" content="Deploy a R Plumber API on Heroku for serving machine learning models">
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li><a href="../../book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">R Plumber API on Heroku</h1>
+                    <div class="post-meta">
+                        <time datetime="February 26, 2025">February 26, 2025</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>Deploying and self-hosting a R API using Plumber is difficult. I&#39;ve been trying to
+use DigitalOcean and Docker services, but have had trouble with uptime. I recently
+came across a blog article by <a href="https://medium.com/@magnus.furugard/r-docker-heroku-rest-api-30c351f9c194">Magnus Furugard</a>
+and realized <a href="www.heroku.com">Heroku</a> could be an ideal solution. In short, Heroku
+has been a life saver! My goal in this post is to walk you through steps to implement
+a R Plumber API yourself.</p>
+<h3 id="r-and-plumber">R and Plumber</h3>
+<p>The first step is to have a working R Plumber API. Using RStudio, the process is
+trivial. Create a Plumber API project and set up your files as follows.</p>
+<pre><code class="language-sh">app/
+  |- init.R
+  |- app.R
+  |- plumber.R
+</code></pre>
+<p>The <code>init.R</code> file is used to install needed packages.</p>
+<pre><code class="language-r">my_packages = c(&quot;plumber&quot;,&quot;randomForestSRC&quot;)
+install_if_missing = function(p) {
+  if (p %in% rownames(installed.packages()) == FALSE) {
+    install.packages(p, dependencies = TRUE)
+  }
+  else {
+    cat(paste(&quot;Skipping already installed package:&quot;, p, &quot;\n&quot;))
+  }
+}
+invisible(sapply(my_packages, install_if_missing))
+</code></pre>
+<p>The <code>app.R</code> file is what&#39;s used to establish the API. The critical lines are the host needs to be 0.0.0.0 and port is set as the main Heroku port.</p>
+<pre><code class="language-r">library(plumber)
+port &lt;- Sys.getenv(&#39;PORT&#39;)
+server &lt;- plumb(&quot;plumber.R&quot;)
+server$run(
+    host = &#39;0.0.0.0&#39;,
+    port = as.numeric(port),
+    swagger=TRUE
+)
+</code></pre>
+<p>Finally, the <code>plumber.R</code> file is the main API file. Here is where you establish the API endpoints specific to your application. Since the goal of this application was to predict heart failure risk, I used a /predict endpoint. Of note, since the API will be accessed from various websites and applications, CORS is required.</p>
+<pre><code class="language-r">library(plumber)
+library(randomForestSRC)
+# Load model
+rf_model &lt;- readRDS(&quot;model.Rds&quot;)
+#* @filter cors
+cors &lt;- function(req, res) {
+  res$setHeader(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;)
+  if (req$REQUEST_METHOD == &quot;OPTIONS&quot;) {
+    res$setHeader(&quot;Access-Control-Allow-Methods&quot;,&quot;*&quot;)
+    res$setHeader(&quot;Access-Control-Allow-Headers&quot;, req$HTTP_ACCESS_CONTROL_REQUEST_HEADERS)
+    res$status &lt;- 200
+    return(list())
+  } else {
+    plumber::forward()
+  }
+}
+#* Submit data and get a prediction in return
+#* @post /predict
+function(req, res) {
+  data &lt;- tryCatch(jsonlite::parse_json(req$postBody, simplifyVector = TRUE),
+                   error = function(e) NULL)
+  if (is.null(data)) {
+    res$status &lt;- 400
+    list(error = &quot;No data submitted&quot;)
+  }
+  data &lt;- data.frame(data)
+  ret &lt;- predict(rf_model, data)
+  ret &lt;- ret$chf[,length(ret$time.interest)]
+  ret
+}
+</code></pre>
+<h3 id="heroku">Heroku</h3>
+<p>First, make sure the <a href="https://devcenter.heroku.com/articles/heroku-cli">Heroku CLI</a> is installed on your machine. Next, make sure the <a href="https://github.com/virtualstaticvoid/heroku-buildpack-r">Heroku R Buildpack</a> is specified in the application settings.</p>
+<p>Once applied, navigate to the root of your application folder. Finally, push the application files to the stack and enjoy!</p>
+<pre><code class="language-sh">git init
+git add .
+git commit -m &#39;initial&#39;
+git push heroku master
+</code></pre>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>

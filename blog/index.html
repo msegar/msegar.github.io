@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Matt Segar</title>
+    <meta name="description" content="Perspectives on machine learning in cardiology, cardiovascular risk prediction, and the future of AI in clinical practice">
+    <link rel="stylesheet" href="../assets/css/normalize.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog page specific styles */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .blog-card {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .blog-thumbnail {
+            height: 180px;
+            background-color: var(--light-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-text);
+            overflow: hidden;
+        }
+        
+        .blog-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .blog-content {
+            padding: 20px;
+        }
+        
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .blog-meta {
+            font-size: 0.85rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .blog-date {
+            font-style: italic;
+        }
+        
+        .blog-excerpt {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .blog-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+        
+        .blog-category {
+            font-size: 0.75rem;
+            background-color: var(--light-background);
+            padding: 3px 8px;
+            border-radius: 2px;
+        }
+        
+        .blog-placeholder-message {
+            text-align: center;
+            margin: 50px 0;
+            padding: 30px;
+            background-color: var(--light-background);
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../cv.html">CV</a></li>
+                    <li><a href="../blog/index.html" class="active">Blog</a></li>
+                    <li><a href="../book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Blog</h2>
+                    <p>Perspectives on machine learning in cardiology, cardiovascular risk prediction, and the future of AI in clinical practice</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="blog-content">
+            <div class="container">
+                <!-- This section will be completely replaced by the build script -->
+                <div class="blog-grid">
+    <article class="blog-card">
+        <div class="blog-thumbnail">
+            <img src="../assets/images/heroku.png" alt="R Plumber API on Heroku">
+        </div>
+        <div class="blog-content">
+            <h3 class="blog-title">R Plumber API on Heroku</h3>
+            <div class="blog-meta">
+                <span class="blog-date">February 26, 2025</span>
+                <span class="blog-read-time">3 min read</span>
+            </div>
+            <div class="blog-excerpt">
+                <p>Deploy a R Plumber API on Heroku for serving machine learning models</p>
+            </div>
+            <a href="posts/r_plumber.html" class="button">Read More</a>
+            <div class="blog-categories">
+                <span class="blog-category">R</span><span class="blog-category">API</span><span class="blog-category">Deployment</span><span class="blog-category">Heroku</span>
+            </div>
+        </div>
+    </article>
+    
+
+    <article class="blog-card">
+        <div class="blog-thumbnail">
+            <img src="../assets/images/weather.png" alt="Weather Variability">
+        </div>
+        <div class="blog-content">
+            <h3 class="blog-title">Weather Variability</h3>
+            <div class="blog-meta">
+                <span class="blog-date">February 26, 2025</span>
+                <span class="blog-read-time">2 min read</span>
+            </div>
+            <div class="blog-excerpt">
+                <p>Which US county has the highest variation in daily weather?</p>
+            </div>
+            <a href="posts/weather_variability.html" class="button">Read More</a>
+            <div class="blog-categories">
+                <span class="blog-category">R</span><span class="blog-category">Weather</span><span class="blog-category">Cardiology</span>
+            </div>
+        </div>
+    </article>
+    </div>
+                
+                <!-- Placeholder message shown when no posts are available -->
+                
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../assets/js/theme-toggle.js"></script>
+</body>
+</html>
