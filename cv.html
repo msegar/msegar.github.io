@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Vitae - Matt Segar</title>
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CV page specific styles */
+        .cv-section {
+            margin-bottom: 40px;
+        }
+        
+        .cv-section-title {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .cv-entry {
+            margin-bottom: 25px;
+        }
+        
+        .cv-entry-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .cv-position {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .cv-date {
+            color: var(--light-text);
+        }
+        
+        .cv-institution {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .cv-description {
+            margin-top: 10px;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .skill-tag {
+            background-color: var(--light-background);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+        
+        .download-cv {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .cv-entry-header {
+                flex-direction: column;
+            }
+            
+            .cv-date {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="cv.html" class="active">CV</a></li>
+                    <li><a href="blog/index.html">Blog</a></li>
+                    <li><a href="book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Curriculum Vitae</h2>
+                    <p>Intersecting cardiovascular medicine, machine learning, and clinical data science</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cv-content">
+            <div class="container">
+                <div class="download-cv">
+                    <a href="mailto:matt@segar.me" class="button">Contact Me for Full CV</a>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Education</h3>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">M.D., Medicine</div>
+                            <div class="cv-date">2014 - 2018</div>
+                        </div>
+                        <div class="cv-institution">Indiana University School of Medicine, Indianapolis, IN</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">M.S., Bioinformatics (Honors)</div>
+                            <div class="cv-date">2012 - 2014</div>
+                        </div>
+                        <div class="cv-institution">Indiana University, Indianapolis, IN</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">B.A., Computer Science (Honors)</div>
+                            <div class="cv-date">2008 - 2012</div>
+                        </div>
+                        <div class="cv-institution">Bucknell University, Lewisburg, PA</div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Professional Experience</h3>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Founder & CEO, ReCODE Medical</div>
+                            <div class="cv-date">Present</div>
+                        </div>
+                        <div class="cv-institution">www.recodemedical.com</div>
+                        <div class="cv-description">
+                            <p>Founded and lead a healthcare technology company providing comprehensive revenue cycle management solutions for medical procedures. The platform streamlines workflows from prior authorization to charge capture, improving operational efficiency for healthcare providers.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Cardiac Electrophysiology Fellow</div>
+                            <div class="cv-date">2024 - Present</div>
+                        </div>
+                        <div class="cv-institution">Texas Heart Institute, Houston, TX</div>
+                        <div class="cv-description">
+                        </div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Cardiology Fellow</div>
+                            <div class="cv-date">2021 - 2024</div>
+                        </div>
+                        <div class="cv-institution">Texas Heart Institute, Houston, TX</div>
+                        <div class="cv-description">
+                        </div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Internal Medicine Resident</div>
+                            <div class="cv-date">2018 - 2021</div>
+                        </div>
+                        <div class="cv-institution">UT Southwestern Medical Center, Dallas, TX</div>
+                        <div class="cv-description">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Selected Publications</h3>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">"Machine Learning to Predict the Risk of Incident Heart Failure Hospitalization Among Patients With Diabetes: The WATCH-DM Risk Score"</div>
+                            <div class="cv-date">2019</div>
+                        </div>
+                        <div class="cv-institution">Diabetes Care</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">"Development and Validation of Machine Learning-Based Race-Specific Models to Predict 10-Year Risk of Heart Failure: A Multi-Cohort Analysis"</div>
+                            <div class="cv-date">2021</div>
+                        </div>
+                        <div class="cv-institution">Circulation</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">"Using Machine Learning-based Models with Social Determinants of Health to Predict In-Hospital Mortality in Heart Failure"</div>
+                            <div class="cv-date">2022</div>
+                        </div>
+                        <div class="cv-institution">JAMA Cardiology</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">"A Validated Phenomapping Tool and Clinical Score to Identify Low Diuretic Efficiency in Acute Decompensated Heart Failure"</div>
+                            <div class="cv-date">2023</div>
+                        </div>
+                        <div class="cv-institution">JACC: Heart Failure</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">"Optimal Screening for Predicting and Preventing the Risk of Heart Failure among Adults with Diabetes without Cardiovascular Disease"</div>
+                            <div class="cv-date">2023</div>
+                        </div>
+                        <div class="cv-institution">Circulation</div>
+                    </div>
+                    
+                    <p><em>Total of 73 publications with over 2,000 citations (h-index: 22). For a complete list, please visit my <a href="https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ">Google Scholar profile</a>.</em></p>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Technical Skills & Certifications</h3>
+                    
+                    <div class="skills-list">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">R</span>
+                        <span class="skill-tag">Machine Learning</span>
+                        <span class="skill-tag">Deep Learning</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">Epic EHR</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Databricks</span>
+                        <span class="skill-tag">Statistical Analysis</span>
+                        <span class="skill-tag">Clinical Data Science</span>
+                        <span class="skill-tag">Phenomapping</span>
+                        <span class="skill-tag">Predictive Modeling</span>
+                    </div>
+                    
+                    <div class="cv-description" style="margin-top: 15px;">
+                        <p><strong>Epic EHR Certifications:</strong> Cogito Fundamentals, Caboodle Data Model, Notecraft for Physician Builders, Physician Builder: Analytics, Extension-Based Cognitive Computing, Registries-Based Cognitive Computing</p>
+                        <p><strong>Cloud/Data Certifications:</strong> AWS Cloud Practitioner, Databricks Lakehouse Fundamentals</p>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Awards & Honors</h3>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Clinical Cardiology Early Career Research Award Winner</div>
+                            <div class="cv-date">2022</div>
+                        </div>
+                        <div class="cv-institution">American Heart Association (AHA)</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Heart Failure Challenge, Grand Prize Winner</div>
+                            <div class="cv-date">2021</div>
+                        </div>
+                        <div class="cv-institution">American Heart Association (AHA)</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Big Data Analysis Challenge in Heart Failure, Award Winner</div>
+                            <div class="cv-date">2020</div>
+                        </div>
+                        <div class="cv-institution">National Institutes of Health (NIH)</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">WATCH-DM Trademark</div>
+                            <div class="cv-date">2022</div>
+                        </div>
+                        <div class="cv-institution">Intellectual Property</div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Olympic Trials Qualifier, 200M freestyle</div>
+                            <div class="cv-date">2012</div>
+                        </div>
+                        <div class="cv-institution">USA Swimming</div>
+                    </div>
+                </div>
+                
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Grant Support</h3>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">Machine Learning-based Models with SDOH to Improve Incident AF Prediction</div>
+                            <div class="cv-date">2023-2024</div>
+                        </div>
+                        <div class="cv-institution">American Heart Association, $50,000</div>
+                        <div class="cv-description">
+                            <p>Project Lead</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <div class="cv-position">The Texas Heart Institute Relational Database and Warehouse for Cardiovascular Disease (THIRDbase)</div>
+                            <div class="cv-date">2023-2024</div>
+                        </div>
+                        <div class="cv-institution">The Cullen Trust for Healthcare, $250,000</div>
+                        <div class="cv-description">
+                            <p>Co-Principal Investigator</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cv-section">
+                    <h3 class="cv-section-title">Professional Memberships</h3>
+                    <div class="skills-list">
+                        <span class="skill-tag">American Heart Association (AHA)</span>
+                        <span class="skill-tag">American College of Cardiology (ACC)</span>
+                        <span class="skill-tag">Heart Rhythm Society (HRS)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="assets/js/theme-toggle.js"></script>
+</body>
+</html>

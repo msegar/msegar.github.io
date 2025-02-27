@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Variability - Matt Segar</title>
+    <meta name="description" content="Which US county has the highest variation in daily weather?">
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li><a href="../../book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Weather Variability</h1>
+                    <div class="post-meta">
+                        <time datetime="February 27, 2025">February 27, 2025</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>I recently had a conversion with a friend about how Indianapolis has &#39;weird
+weather&#39; where it can be snowing one day and sunny the next. I wondered if this
+was true - whether the Midwest has larger differences day-to-day weather
+changes compared to other areas of the United States. Instead of guessing, I
+decided to perform the analysis!</p>
+<h3 id="data">Data</h3>
+<p>I downloaded daily weather data from the <a href="https://www.ncdc.noaa.gov/cdo-web/">NOAA Climate Data Online dataset repository</a>.
+The dataset included maximum temperature readings from over 8,000 weather stations across
+the United States.</p>
+<h3 id="analysis">Analysis</h3>
+<p>I calculated the average successive variability (ASV) for each weather station in
+the dataset. ASV is defined as the average absolute difference between successive
+values. In R, this looks like:</p>
+<pre><code class="language-r">asv &lt;- function(x){
+  x &lt;- x[!is.na(x)]
+  v &lt;- NULL
+  for (i in seq(1,length(x)-1)){
+    v[i] &lt;- abs(x[i+1] - x[i])
+  }
+  return(mean(v))
+}
+</code></pre>
+<p>I then binned the ASV values into 8 categories in order to see which counties
+had the highest variability.</p>
+<p>The difficulty, however, was converting longtitude and latitude into counties. Luckily
+a <a href="https://stackoverflow.com/questions/13316185/r-convert-zipcode-or-lat-long-to-county">StackOverflow thread</a>
+made this an easy task.</p>
+<pre><code class="language-r">library(sp)
+library(maps)
+library(maptools)
+latlong2county &lt;- function(pointsDF) {
+  # Prepare SpatialPolygons object with one SpatialPolygon
+  # per county
+  counties &lt;- map(&#39;county&#39;, fill=TRUE, col=&quot;transparent&quot;, plot=FALSE)
+  IDs &lt;- sapply(strsplit(counties$names, &quot;:&quot;), function(x) x[1])
+  counties_sp &lt;- map2SpatialPolygons(counties, IDs=IDs,proj4string=CRS(&quot;+proj=longlat +datum=WGS84&quot;))
+
+  # Convert pointsDF to a SpatialPoints object
+  pointsSP &lt;- SpatialPoints(pointsDF, proj4string=CRS(&quot;+proj=longlat +datum=WGS84&quot;))
+
+  # Use &#39;over&#39; to get _indices_ of the Polygons object containing each point
+  indices &lt;- over(pointsSP, counties_sp)
+  
+  # Return the county names of the Polygons object containing each point
+  countyNames &lt;- sapply(counties_sp@polygons, function(x) x@ID)
+  countyNames[indices]
+}
+</code></pre>
+<h3 id="results">Results</h3>
+<p>A choreopleth map of the results is below. The region with the most variability
+was clearly the Midwest United States. The highest bin had ASV values ranging from 9-17
+degrees fahrenheit. In other words, the day-to-day variability was on average 17 degrees!</p>
+<p>Overall, this was a fun and quick exercise that showed the Midwest US has the
+largest weather variability compared to other regions of the United States.</p>
+<p><img src="../../assets/images/countyMap.png" alt="Choropleth map of the United States with bins of increasing weather variability"></p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>

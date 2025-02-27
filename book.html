@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning in Cardiology</title>
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Book page specific styles */
+        .book-cover {
+            max-width: 300px;
+            max-height: 300px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .book-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .book-section {
+            margin-bottom: 40px;
+        }
+        
+        .book-meta {
+            background-color: var(--light-background);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .book-meta dl {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            row-gap: 10px;
+        }
+        
+        .book-meta dt {
+            font-weight: 600;
+        }
+        
+        .purchase-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .purchase-link {
+            padding: 12px 25px;
+        }
+        
+        .testimonials {
+            margin-top: 50px;
+        }
+        
+        .testimonial {
+            padding: 20px;
+            background-color: var(--light-background);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .book-details {
+                flex-direction: row;
+                text-align: left;
+                align-items: flex-start;
+            }
+            
+            .book-cover {
+                margin-right: 40px;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="cv.html">CV</a></li>
+                    <li><a href="blog/index.html">Blog</a></li>
+                    <li><a href="book.html" class="active">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Machine Learning in Cardiology:<br>A Practical R-Based Approach</h2>
+                    <p>Demystifying how artificial intelligence can improve modern heart care</p>
+                </div>
+            </div>
+        </section>
+
+        <div style="height: 50px;"></div> <!-- Simple spacer -->
+
+        <section class="book-content">
+            <div class="container">
+                <div class="book-details">
+                    <img src="assets/images/book-cover.webp" alt="Machine Learning in Cardiology Book Cover" class="book-cover">
+                    <div>
+                        <div class="book-meta">
+                            <dl>
+                                <dt>Author:</dt>
+                                <dd>Dr. Matthew Segar</dd>
+                                <dt>Publication Date:</dt>
+                                <dd>February 2025</dd>
+                                <dt>Pages:</dt>
+                                <dd>214</dd>
+                                <dt>ISBN:</dt>
+                                <dd>979-8-9927305-0-0</dd>
+                            </dl>
+                        </div>
+                        <div class="purchase-options">
+                            <a href="#" class="button purchase-link">Paperback</a>
+                            <a href="https://www.amazon.com/dp/B0DYF9H2F5" class="button purchase-link">Digital</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-section">
+                    <h3>About the Book</h3>
+                    <p>"Machine Learning in Cardiology: A Practical R-Based Approach" demystifies how artificial intelligence can revolutionize modern heart care. Written by cardiologist and data scientist Dr. Matthew Segar, this hands-on guide takes you step by step through essential R-based workflows—from data wrangling and visualization to advanced modeling techniques and real-world clinical applications.</p>
+                    <p>You'll learn how to harness supervised and unsupervised learning, master feature engineering for complex cardiac data, and build powerful predictive tools for risk stratification. With clear, annotated R code examples and in-depth discussions about ethics, regulatory landscapes, and reproducible research, this book empowers you to develop robust, trustworthy machine learning systems.</p>
+                </div>
+
+                <div class="book-section">
+                    <h3>Key Topics</h3>
+                    <ul>
+                        <li>Essential R-based workflows for cardiovascular data science</li>
+                        <li>Supervised and unsupervised learning techniques for clinical applications</li>
+                        <li>Feature engineering strategies for complex cardiac datasets</li>
+                        <li>ECG signal analysis and interpretation using machine learning</li>
+                        <li>Survival modeling for cardiovascular outcomes</li>
+                        <li>Genomic data integration in cardiac care</li>
+                        <li>Fairness and bias mitigation strategies for equitable patient outcomes</li>
+                        <li>Implementation of predictive tools for risk stratification</li>
+                        <li>Ethics, regulatory considerations, and reproducible research principles</li>
+                    </ul>
+                </div>
+                
+                <div class="book-section">
+                    <h3>Who This Book Is For</h3>
+                    <p>Whether you're a cardiologist looking to incorporate AI into your practice, a researcher exploring new analytical methods, or a data scientist specializing in healthcare applications, "Machine Learning in Cardiology" provides the technical know-how and clinical insights to elevate your work—and ultimately improve patient care.</p>
+                </div>
+
+                <div class="testimonials">
+                    <h3>What Experts Are Saying</h3>
+                    <div class="testimonial">
+                        <p>"As a resident, it helped me understand how to use R for cardiovascular medicine... This book helped explain complex concepts in an accessible way. The R code examples were incredibly helpful."</p>
+                        <p class="testimonial-author">— Sandeep - Internal Medicine resident</p>
+                    </div>
+                    <div class="testimonial">
+                        <p>"This book has a nice balance between technical depth and clinical relevance. The case studies and implementations are particularly helpful for those wanting a primer in this space."</p>
+                        <p class="testimonial-author">— Josh - Assistant Professor of Medicine</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="assets/js/theme-toggle.js"></script>
+</body>
+</html>

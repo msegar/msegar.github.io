@@ -1,0 +1,382 @@
+/* 
+ * Main Stylesheet
+ * Author: Your Name
+ */
+
+/* Base Styles */
+:root {
+  /* Light mode (default) */
+  --primary-color: #0a3d62;
+  --secondary-color: #60a3bc;
+  --accent-color: #e58e26;
+  --text-color: #333;
+  --light-text: #666;
+  --background-color: #fff;
+  --light-background: #f5f8fa;
+  --border-color: #e1e8ed;
+  --header-font: 'Merriweather', serif;
+  --body-font: 'Open Sans', sans-serif;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --primary-color: #60a3bc;
+  --secondary-color: #0a3d62;
+  --accent-color: #f39c12;
+  --text-color: #e1e1e1;
+  --light-text: #b0b0b0;
+  --background-color: #1a1a1a;
+  --light-background: #2a2a2a;
+  --border-color: #444;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* Add transitions for theme switching */
+a, button, input, textarea, .button, .work-item, .cv-entry, .blog-card, 
+.testimonial, .social-link, .skill-tag, #theme-toggle-btn {
+  transition: all 0.3s ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--body-font);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--header-font);
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Button Styles */
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* Header Styles */
+header {
+  padding: 20px 0;
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+nav li {
+  margin-left: 30px;
+}
+
+nav a {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+}
+
+#theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--light-background);
+  transition: background-color 0.3s ease;
+}
+
+#theme-toggle-btn:hover {
+  background-color: var(--border-color);
+}
+
+/* Show/hide icons based on current theme */
+.light-icon {
+  display: block;
+}
+
+.dark-icon {
+  display: none;
+}
+
+[data-theme="dark"] .light-icon {
+  display: none;
+}
+
+[data-theme="dark"] .dark-icon {
+  display: block;
+}
+
+nav a:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+nav a:hover:after, nav a.active:after {
+  width: 100%;
+}
+
+/* Hero Section */
+.hero {
+  padding: 40px 0;
+  background-color: var(--light-background);
+  text-align: center;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  color: var(--light-text);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* About Section */
+.about {
+  padding: 80px 0;
+}
+
+.about-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.about-text {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-text h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.about-text p {
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+}
+
+/* Connect Section */
+.connect {
+  margin-top: 40px;
+}
+
+.connect h4 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.social-link {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: var(--light-background);
+  border-radius: 3px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.social-link:hover {
+  background-color: var(--border-color);
+  transform: translateY(-2px);
+}
+
+/* Featured Work Section */
+.featured-work {
+  padding: 80px 0;
+  background-color: var(--light-background);
+}
+
+.featured-work h3 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.work-item {
+  background-color: var(--background-color);
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.work-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.work-item h4 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.work-item p {
+  margin-bottom: 20px;
+  color: var(--light-text);
+}
+
+/* Footer Styles */
+footer {
+  padding: 30px 0;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  header .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  nav {
+    margin-top: 20px;
+  }
+  
+  nav ul {
+    justify-content: center;
+  }
+  
+  nav li {
+    margin: 0 10px;
+  }
+  
+  .about-content {
+    flex-direction: column;
+  }
+  
+  .hero-content h2 {
+    font-size: 2rem;
+  }
+  
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  nav ul {
+    flex-wrap: wrap;
+  }
+  
+  nav li {
+    margin: 5px 10px;
+  }
+  
+  .hero {
+    padding: 60px 0;
+  }
+  
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .featured-work, .about {
+    padding: 60px 0;
+  }
+}
