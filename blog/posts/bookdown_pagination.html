@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Bookdown Pagination - Matt Segar</title>
+    <meta name="description" content="Understanding KDP pagination with R Bookdown">
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Matt Segar</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li><a href="../../book.html">ML Book</a></li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">R Bookdown Pagination</h1>
+                    <div class="post-meta">
+                        <time datetime="February 27, 2025">February 27, 2025</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="pagination-for-r-bookdown-books-in-amazon-kdp-a-comprehensive-guide">Pagination for R Bookdown Books in Amazon KDP: A Comprehensive Guide</h1>
+<h2 id="understanding-kdps-pagination-requirements">Understanding KDP&#39;s Pagination Requirements</h2>
+<p>When publishing an academic or technical book using R Bookdown for Amazon Kindle Direct Publishing (KDP), pagination can become a complex challenge. Many authors encounter the frustrating error message: &quot;Update the pagination in your manuscript file so that the main content begins with the correct page number.&quot;</p>
+<h3 id="what-kdp-wants">What KDP Wants</h3>
+<p>Amazon KDP expects a professionally formatted book with:</p>
+<ul>
+<li>Front matter in roman numerals (i, ii, iii...)</li>
+<li>Main content starting on page 1</li>
+<li>Consistent page numbering</li>
+<li>Proper two-sided printing layout</li>
+</ul>
+<h2 id="the-bookdown-pagination-puzzle">The Bookdown Pagination Puzzle</h2>
+<p>Bookdown&#39;s flexibility is both a blessing and a curse when it comes to book formatting. The default template often generates unwanted title pages and inconsistent page numbering that can trigger KDP&#39;s rejection.</p>
+<h3 id="comprehensive-solution-for-bookdown">Comprehensive Solution for Bookdown</h3>
+<h4 id="1-project-structure">1. Project Structure</h4>
+<p>Typical Bookdown project structure:</p>
+<pre><code>your_book/
+│
+├── index.Rmd            # Main configuration file
+├── _output.yml          # Output configuration
+├── preamble.tex         # LaTeX preamble
+├── frontpage.tex        # Custom front matter
+├── 01-chapter-one.Rmd
+├── 02-chapter-two.Rmd
+└── references.bib
+</code></pre>
+<h4 id="2-yaml-configuration-indexrmd">2. YAML Configuration (<code>index.Rmd</code>)</h4>
+<pre><code class="language-yaml">---
+title: &quot; &quot;  # Minimal title to suppress default page
+author: &quot; &quot;
+documentclass: book
+site: bookdown::bookdown_site
+output:
+  bookdown::pdf_book:
+    template: null
+    includes:
+      in_header: preamble.tex
+      before_body: frontpage.tex
+    latex_engine: xelatex
+    keep_tex: yes
+classoption: 
+  - openright  # Ensure chapters start on right pages
+  - twoside    # Enable two-sided printing
+---
+</code></pre>
+<h4 id="3-output-configuration-_outputyml">3. Output Configuration (<code>_output.yml</code>)</h4>
+<pre><code class="language-yaml">bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+    before_body: frontpage.tex
+    after_body: backpage.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+  documentclass: book
+  classoption: 
+    - twoside
+    - openright
+  pandoc_args: [
+    &quot;--top-level-division=chapter&quot;,
+    &quot;--variable&quot;, &quot;geometry:paperwidth=6in,paperheight=9in,margin=0.75in,twoside&quot;
+  ]
+</code></pre>
+<h4 id="4-latex-preamble-configuration-preambletex">4. LaTeX Preamble Configuration (<code>preamble.tex</code>)</h4>
+<pre><code class="language-latex">\usepackage{booktabs}
+\usepackage{fvextra} 
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+\usepackage{graphicx}
+\setkeys{Gin}{width=0.7\textwidth}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\thepage} % even pages (left side) get page number
+\fancyhead[RO]{\thepage} % odd pages (right side) get page number
+\renewcommand{\headrulewidth}{0pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[LE]{\thepage}
+  \fancyhead[RO]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% Suppress title page generation
+\makeatletter
+\def\maketitle{}
+\def\@maketitle{}
+\makeatother
+
+\AtBeginDocument{\setcounter{page}{1}} % Start counting at 1 for first content page
+</code></pre>
+<h4 id="5-front-matter-configuration-frontpagetex">5. Front Matter Configuration (<code>frontpage.tex</code>)</h4>
+<pre><code class="language-latex">\thispagestyle{empty}
+% Title page content
+\clearpage
+
+\thispagestyle{empty}
+% Copyright and publishing information
+\clearpage
+
+\begin{center}
+    \thispagestyle{empty}
+    \vspace*{\fill}
+    {\Large\itshape Dedication}
+    \vspace*{\fill}
+\end{center}
+\clearpage
+</code></pre>
+<h2 id="deep-dive-why-this-works">Deep Dive: Why This Works</h2>
+<h3 id="page-numbering-mechanics">Page Numbering Mechanics</h3>
+<ul>
+<li><code>\frontmatter</code> automatically sets roman numeral pagination</li>
+<li><code>\mainmatter</code> resets to page 1 in Arabic numerals</li>
+<li><code>\thispagestyle{empty}</code> removes page numbers from specific pages</li>
+<li><code>\fancyhead</code> configuration ensures two-sided printing layout</li>
+</ul>
+<h3 id="kdp-specific-considerations">KDP-Specific Considerations</h3>
+<ol>
+<li><strong>Page Size Matters</strong>: The <code>geometry</code> variable ensures your book matches KDP&#39;s preferred 6x9 inch format</li>
+<li><strong>Margin Consistency</strong>: 0.75-inch margins are standard for most print books</li>
+<li><strong>Two-Sided Printing</strong>: <code>twoside</code> and <code>openright</code> options create a professional layout</li>
+</ol>
+<h2 id="common-pitfalls-and-solutions">Common Pitfalls and Solutions</h2>
+<h3 id="debugging-pagination-issues">Debugging Pagination Issues</h3>
+<ul>
+<li>Always generate a complete PDF and manually check page numbering</li>
+<li>Use <code>\clearpage</code> between major sections</li>
+<li>Verify front matter uses <code>\thispagestyle{empty}</code></li>
+<li>Check that main content starts on page 1</li>
+</ul>
+<h3 id="kdp-submission-tips">KDP Submission Tips</h3>
+<ul>
+<li>Generate a high-quality PDF</li>
+<li>Use XeLaTeX for best font rendering</li>
+<li>Keep margins consistent</li>
+<li>Avoid automatic generated title pages</li>
+</ul>
+<h2 id="advanced-customization">Advanced Customization</h2>
+<h3 id="handling-series-or-volume-numbers">Handling Series or Volume Numbers</h3>
+<p>If your book is part of a series:</p>
+<ol>
+<li>Go to KDP Bookshelf</li>
+<li>Edit book details</li>
+<li>Enter series or volume information</li>
+<li>Resubmit manuscript</li>
+</ol>
+<h2 id="reproducibility-and-version-control">Reproducibility and Version Control</h2>
+<pre><code class="language-r"># Recommended R setup
+rmarkdown::render(&quot;index.Rmd&quot;, 
+                  output_format = &quot;bookdown::pdf_book&quot;)
+</code></pre>
+<p><strong>Pro Tip</strong>: Always preview your PDF multiple times and do a test print before final submission.</p>
+<h3 id="git-workflow-for-book-projects">Git Workflow for Book Projects</h3>
+<pre><code class="language-bash"># Initial setup
+git init
+echo &quot;*.log\n*.aux\n_book/\n_bookdown_files/&quot; &gt; .gitignore
+git add .
+git commit -m &quot;Initial book structure&quot;
+
+# After significant changes
+bookdown::render_book(&quot;index.Rmd&quot;)
+git add .
+git commit -m &quot;Updated chapters 1-3 with new pagination&quot;
+</code></pre>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Matt Segar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
