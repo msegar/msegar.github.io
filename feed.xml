@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Matt Segar Blog</title>
+  <link>https://segar.me/blog/</link>
+  <description>Matt Segar's personal blog</description>
+  <language>en-us</language>
+  <lastBuildDate>Thu, 06 Mar 2025 00:16:47 GMT</lastBuildDate>
+  <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>R Bookdown Pagination</title>
+    <link>https://segar.me/blog/posts/bookdown_pagination.html</link>
+    <guid>https://segar.me/blog/posts/bookdown_pagination.html</guid>
+    <pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
+    <description>Understanding KDP pagination with R Bookdown</description>
+  </item>
+  <item>
+    <title>R Plumber API on Heroku</title>
+    <link>https://segar.me/blog/posts/r_plumber.html</link>
+    <guid>https://segar.me/blog/posts/r_plumber.html</guid>
+    <pubDate>Thu, 27 Feb 2025 00:00:00 GMT</pubDate>
+    <description>Deploy a R Plumber API on Heroku for serving machine learning models</description>
+  </item>
+  <item>
+    <title>Weather Variability</title>
+    <link>https://segar.me/blog/posts/weather_variability.html</link>
+    <guid>https://segar.me/blog/posts/weather_variability.html</guid>
+    <pubDate>Thu, 27 Feb 2025 00:00:00 GMT</pubDate>
+    <description>Which US county has the highest variation in daily weather?</description>
+  </item>
+</channel>
+</rss>

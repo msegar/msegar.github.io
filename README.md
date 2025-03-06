@@ -93,6 +93,8 @@ When you make changes to HTML, CSS, or JavaScript files that are not generated b
    ```bash
    npm run build
    ```
+   
+   > **Note:** You may see deprecation warnings from marked.js about mangle and headerIds parameters. These are just warnings and won't affect your build output.
 
 4. Add all changed files to git:
    ```bash
@@ -220,21 +222,52 @@ You can also use HTML when you need more control:
 
 - **Push rejected due to remote changes**:
   ```bash
+  # For simple cases:
   git pull origin main
-  # Resolve any conflicts
+  
+  # If you encounter "divergent branches" error:
+  git pull --rebase origin main  # Applies your changes on top of remote changes
+  
+  # After resolving any conflicts:
   git push origin main
+  ```
+
+- **Divergent branches error**:
+  ```bash
+  # Option 1 (recommended for cleaner history):
+  git pull --rebase origin main
+  
+  # Option 2 (creates a merge commit):
+  git config pull.rebase false
+  git pull origin main
   ```
 
 - **Merge conflicts**:
   1. Resolve conflicts in the affected files
-  2. Add the resolved files: `git add .`
-  3. Complete the merge: `git commit -m "Resolve merge conflicts"`
+  2. For rebase conflicts:
+     ```bash
+     git add .
+     git rebase --continue
+     ```
+  3. For merge conflicts:
+     ```bash
+     git add .
+     git commit -m "Resolve merge conflicts"
+     ```
   4. Push changes: `git push origin main`
 
 - **Images not showing**:
   - Check image paths in Markdown (should be `../../assets/images/` from posts)
   - Verify the image exists in the correct location
   - Rebuild the blog after adding new images
+
+- **Marked.js deprecation warnings**:
+  - These warnings about `mangle` and `headerIds` parameters are expected with current dependencies
+  - They don't affect functionality and can be safely ignored
+  - To suppress them, you could install the suggested packages:
+    ```bash
+    npm install marked-mangle marked-gfm-heading-id
+    ```
 
 ### Full Update Workflow (Common Pattern)
 
@@ -250,8 +283,8 @@ git add .
 # 4. Commit changes
 git commit -m "Descriptive message about your changes"
 
-# 5. Pull any remote changes
-git pull origin main
+# 5. Pull any remote changes (with rebase to avoid merge commits)
+git pull --rebase origin main
 
 # 6. Push to GitHub
 git push origin main
@@ -263,7 +296,7 @@ This blog is automatically deployed using GitHub Pages through GitHub Actions. T
 
 - Every push to the `main` branch triggers a new build
 - The build process runs the npm script to convert Markdown to HTML
-- The site is automatically deployed to GitHub Pages
+- The site is automatically deployed to GitHub Pages at https://msegar.github.io/
 
 ## License
 

@@ -11,6 +11,14 @@ const TEMPLATE_PATH = path.join(__dirname, '../blog/template.html');
 const INDEX_TEMPLATE_PATH = path.join(__dirname, '../blog/index-template.html');
 const INDEX_PATH = path.join(__dirname, '../blog/index.html');
 
+// Common English words to exclude from keywords
+const commonWords = [
+  'this', 'that', 'these', 'those', 'with', 'from', 'have', 'will', 'been', 'were', 
+  'they', 'them', 'their', 'when', 'what', 'where', 'which', 'would', 'could', 'should', 
+  'about', 'there', 'other', 'more', 'some', 'such', 'only', 'then', 'also', 'very', 
+  'just', 'like', 'than', 'into', 'over', 'most', 'after', 'before', 'between'
+];
+
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -47,14 +55,19 @@ mdFiles.forEach(mdFile => {
     postDate = postDate.toISOString().split('T')[0]; // Convert to YYYY-MM-DD
   }
   
+  // Generate keywords if not provided in frontmatter
+  const keywords = frontmatter.keywords || extractKeywords(markdownContent, frontmatter.title || 'Untitled Post');
+  
   // Create post object
   const post = {
     slug,
     title: frontmatter.title || 'Untitled Post',
     description: frontmatter.description || '',
     date: postDate,
+    isoDate: new Date(postDate).toISOString(),
     img: frontmatter.img || '',
     categories: frontmatter.categories || [],
+    keywords: keywords,
     content: markdownContent // Store content for calculating read time
   };
   
@@ -65,8 +78,12 @@ mdFiles.forEach(mdFile => {
   let postHtml = template
     .replace(/{{title}}/g, post.title)
     .replace(/{{date}}/g, formatDate(post.date))
+    .replace(/{{isoDate}}/g, post.isoDate)
     .replace(/{{description}}/g, post.description)
-    .replace(/{{content}}/g, htmlContent);
+    .replace(/{{content}}/g, htmlContent)
+    .replace(/{{slug}}/g, post.slug)
+    .replace(/{{img}}/g, post.img)
+    .replace(/{{keywords}}/g, post.keywords);
   
   // Write the HTML file
   const outputPath = path.join(OUTPUT_DIR, `${slug}.html`);
@@ -80,6 +97,19 @@ allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 // Update the blog index page
 generateBlogIndex(allPosts);
+
+// Generate sitemap
+generateSitemap(allPosts);
+
+// Generate RSS feed
+generateRSSFeed(allPosts);
+
+// Create robots.txt file
+generateRobotsTxt();
+
+console.log('Blog build complete!');
+
+// Helper Functions
 
 function formatDate(dateString) {
   try {
@@ -104,6 +134,41 @@ function calculateReadTime(content) {
   const wordCount = content.split(/\s+/).length;
   const readTime = Math.ceil(wordCount / 200);
   return readTime < 1 ? 1 : readTime;
+}
+
+function extractKeywords(content, title, maxKeywords = 5) {
+  // Remove markdown syntax, code blocks, etc.
+  const cleanContent = content
+    .replace(/```[\s\S]*?```/g, '')  // Remove code blocks
+    .replace(/`.*?`/g, '')           // Remove inline code
+    .replace(/\[.*?\]\(.*?\)/g, '')  // Remove markdown links
+    .replace(/[^a-zA-Z0-9\s]/g, ' ') // Remove special characters
+    .toLowerCase();
+  
+  // Get all words
+  const words = cleanContent.split(/\s+/).filter(word => word.length > 3);
+  
+  // Count word frequency
+  const wordFrequency = {};
+  words.forEach(word => {
+    if (!commonWords.includes(word)) {
+      wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+    }
+  });
+  
+  // Add title words as potential keywords
+  title.toLowerCase().split(/\s+/).forEach(word => {
+    if (word.length > 3 && !commonWords.includes(word)) {
+      wordFrequency[word] = (wordFrequency[word] || 0) + 5; // Give higher weight to title words
+    }
+  });
+  
+  // Convert to array, sort by frequency, and take top keywords
+  return Object.entries(wordFrequency)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxKeywords)
+    .map(entry => entry[0])
+    .join(', ');
 }
 
 function generateBlogIndex(posts) {
@@ -194,9 +259,142 @@ function generateBlogIndex(posts) {
     }
   }
   
+  // Add meta tags for SEO to the index page
+  if (!newIndexHtml.includes('<meta name="description"')) {
+    newIndexHtml = newIndexHtml.replace(
+      '<title>',
+      `<meta name="description" content="Matt Segar's Blog - Articles on data science, machine learning, and more.">\n    <title>`
+    );
+  }
+  
+  // Add canonical URL for index
+  if (!newIndexHtml.includes('<link rel="canonical"')) {
+    newIndexHtml = newIndexHtml.replace(
+      '</head>',
+      `    <link rel="canonical" href="https://segar.me/blog/index.html">\n</head>`
+    );
+  }
+  
   // Write the updated index.html
   fs.writeFileSync(INDEX_PATH, newIndexHtml);
   console.log(`Updated blog index with ${posts.length} posts`);
 }
 
-console.log('Blog build complete!');
+function generateSitemap(posts) {
+  const baseUrl = 'https://segar.me';
+  let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  
+  // Add homepage
+  sitemap += `  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>\n`;
+  
+  // Add blog index
+  sitemap += `  <url>
+    <loc>${baseUrl}/blog/index.html</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>\n`;
+  
+  // Add other main pages
+  const mainPages = ['cv.html', 'book.html', 'valabformatter/index.html'];
+  mainPages.forEach(page => {
+    sitemap += `  <url>
+    <loc>${baseUrl}/${page}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>\n`;
+  });
+  
+  // Add blog posts
+  posts.forEach(post => {
+    const postDate = new Date(post.date).toISOString().split('T')[0];
+    sitemap += `  <url>
+    <loc>${baseUrl}/blog/posts/${post.slug}.html</loc>
+    <lastmod>${postDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n`;
+  });
+  
+  sitemap += '</urlset>';
+  
+  // Write sitemap to the root directory
+  fs.writeFileSync(path.join(__dirname, '../sitemap.xml'), sitemap);
+  console.log('Generated sitemap.xml');
+}
+
+function generateRSSFeed(posts) {
+  const baseUrl = 'https://segar.me';
+  const now = new Date().toUTCString();
+  
+  let rss = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  rss += '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n';
+  rss += '<channel>\n';
+  rss += '  <title>Matt Segar Blog</title>\n';
+  rss += '  <link>https://segar.me/blog/</link>\n';
+  rss += '  <description>Matt Segar\'s personal blog</description>\n';
+  rss += '  <language>en-us</language>\n';
+  rss += `  <lastBuildDate>${now}</lastBuildDate>\n`;
+  rss += '  <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />\n';
+  
+  // Add posts
+  posts.slice(0, 10).forEach(post => {
+    // Generate a description by extracting first few sentences or use the provided description
+    const description = post.description || extractFirstParagraph(post.content);
+    
+    rss += '  <item>\n';
+    rss += `    <title>${escapeXml(post.title)}</title>\n`;
+    rss += `    <link>${baseUrl}/blog/posts/${post.slug}.html</link>\n`;
+    rss += `    <guid>${baseUrl}/blog/posts/${post.slug}.html</guid>\n`;
+    rss += `    <pubDate>${new Date(post.date).toUTCString()}</pubDate>\n`;
+    rss += `    <description>${escapeXml(description)}</description>\n`;
+    rss += '  </item>\n';
+  });
+  
+  rss += '</channel>\n';
+  rss += '</rss>';
+  
+  // Write RSS feed to the root directory
+  fs.writeFileSync(path.join(__dirname, '../feed.xml'), rss);
+  console.log('Generated feed.xml');
+}
+
+function generateRobotsTxt() {
+  const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: https://segar.me/sitemap.xml
+`;
+  
+  fs.writeFileSync(path.join(__dirname, '../robots.txt'), robotsTxt);
+  console.log('Generated robots.txt');
+}
+
+// Helper function to escape XML entities
+function escapeXml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+// Extract first paragraph for RSS description
+function extractFirstParagraph(markdown) {
+  const text = markdown.replace(/[#*`]/g, '');
+  const firstParagraph = text.split('\n\n')[0].trim();
+  
+  // Limit to ~150 characters
+  if (firstParagraph.length > 150) {
+    return firstParagraph.substring(0, 147) + '...';
+  }
+  return firstParagraph;
+}

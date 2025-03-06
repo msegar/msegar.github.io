@@ -380,3 +380,82 @@ footer p {
     padding: 60px 0;
   }
 }
+
+/* Logo styling */
+.logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  margin-right: 10px;
+}
+
+/* Hide dark logo by default */
+.dark-logo {
+  display: none;
+}
+
+/* In dark mode, hide light logo and show dark logo */
+[data-theme="dark"] .light-logo {
+  display: none;
+}
+
+[data-theme="dark"] .dark-logo {
+  display: block;
+}
+
+ /* Dropdown menu styling */
+ .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 220px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 8px 0;
+  border: 1px solid #eaeaea;
+}
+
+[data-theme="dark"] .dropdown-content {
+  background-color: #2d3748;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid #4a5568;
+}
+
+.dropdown-content a {
+  color: #333;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: block;
+  font-weight: 400;
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+[data-theme="dark"] .dropdown-content a {
+  color: #e2e8f0;
+}
+
+.dropdown-content a:hover {
+  background-color: #f8f9fa;
+  padding-left: 24px;
+}
+
+[data-theme="dark"] .dropdown-content a:hover {
+  background-color: #3a4a5e;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown .nav-link {
+  cursor: pointer;
+}
