@@ -1,6 +1,6 @@
 /* 
  * Main Stylesheet
- * Author: Your Name
+ * Author: Matt Segar
  */
 
 /* Base Styles */
@@ -458,4 +458,18 @@ footer p {
 
 .dropdown .nav-link {
   cursor: pointer;
+}
+
+/* Footer link styles */
+footer a {
+  color: white;
+  text-decoration: underline;
+}
+
+footer a:hover {
+  color: var(--accent-color);
+}
+
+[data-theme="dark"] footer a:hover {
+  color: var(--accent-color);
 }
