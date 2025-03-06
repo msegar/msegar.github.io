@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://segar.me/sitemap.xml

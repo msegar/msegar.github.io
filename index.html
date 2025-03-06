@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matt Segar</title>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
     <!-- Make sure these paths are correct -->
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -45,20 +48,41 @@
         [data-theme="dark"] .social-link:hover {
             color: var(--accent-color-dark);
         }
+
     </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <h1>Matt Segar</h1>
+                <a href="index.html" class="logo-link">
+                    <img src="assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
             </div>
             <nav>
                 <ul>
                     <li><a href="index.html" class="active">Home</a></li>
                     <li><a href="cv.html">CV</a></li>
                     <li><a href="blog/index.html">Blog</a></li>
-                    <li><a href="book.html">ML Book</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="book.html">ML Book</a>
+                            <a href="valabformatter/index.html">CPRS Lab Formatter</a>
+                        </div>
+                    </li>
                     <li class="theme-toggle">
                         <button id="theme-toggle-btn" aria-label="Toggle dark mode">
                             <span class="light-icon">☀️</span>

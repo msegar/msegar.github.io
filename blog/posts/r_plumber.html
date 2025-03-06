@@ -4,7 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>R Plumber API on Heroku - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
     <meta name="description" content="Deploy a R Plumber API on Heroku for serving machine learning models">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="plumber, heroku, code, application, your">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/r_plumber.html">
+    <meta property="og:title" content="R Plumber API on Heroku - Matt Segar">
+    <meta property="og:description" content="Deploy a R Plumber API on Heroku for serving machine learning models">
+    <meta property="og:image" content="../assets/images/heroku.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/r_plumber.html">
+    <meta property="twitter:title" content="R Plumber API on Heroku - Matt Segar">
+    <meta property="twitter:description" content="Deploy a R Plumber API on Heroku for serving machine learning models">
+    <meta property="twitter:image" content="../assets/images/heroku.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/r_plumber.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "R Plumber API on Heroku",
+      "description": "Deploy a R Plumber API on Heroku for serving machine learning models",
+      "image": "../assets/images/heroku.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2025-02-27T00:00:00.000Z",
+      "dateModified": "2025-02-27T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/r_plumber.html"
+      },
+      "keywords": "plumber, heroku, code, application, your"
+    }
+    </script>
+    
     <link rel="stylesheet" href="../../assets/css/normalize.css">
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,20 +134,41 @@
             border-radius: 3px;
             text-decoration: none;
         }
+
     </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <h1>Matt Segar</h1>
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
             </div>
             <nav>
                 <ul>
                     <li><a href="../../index.html">Home</a></li>
                     <li><a href="../../cv.html">CV</a></li>
                     <li><a href="../index.html" class="active">Blog</a></li>
-                    <li><a href="../../book.html">ML Book</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                        </div>
+                    </li>
                     <li class="theme-toggle">
                         <button id="theme-toggle-btn" aria-label="Toggle dark mode">
                             <span class="light-icon">☀️</span>
@@ -109,7 +186,7 @@
                 <header class="post-header">
                     <h1 class="post-title">R Plumber API on Heroku</h1>
                     <div class="post-meta">
-                        <time datetime="February 27, 2025">February 27, 2025</time>
+                        <time datetime="2025-02-27T00:00:00.000Z">February 27, 2025</time>
                     </div>
                 </header>
                 
