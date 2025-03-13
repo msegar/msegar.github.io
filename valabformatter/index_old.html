@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--[if lt IE 8 ]><html class="no-js ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="no-js ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 8)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+
+<head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-N9RJDGM699');
+</script>
+
+   <!--- Basic Page Needs
+   ================================================== -->
+   <meta charset="utf-8">
+	<title>CPRS Lab Formatter | VA Lab Data Analysis Tool</title>
+	<meta name="description" content="Format CPRS lab data from the VA with automatic calculations for anion gap, corrected calcium, ABG analysis, MELD scores and more. A tool for healthcare professionals.">
+	<meta name="author" content="Matthew Segar, MD">
+	<meta name="keywords" content="CPRS, lab data, VA healthcare, lab formatter, medical calculations, MELD calculator, ABG analysis, lab formatting tool">
+
+   <!-- Mobile Specific Metas
+   ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+   <!-- Open Graph / Social Media Meta Tags -->
+   <meta property="og:title" content="CPRS Lab Formatter | VA Lab Data Analysis Tool">
+   <meta property="og:description" content="Format CPRS lab data from the VA with automatic calculations for medical professionals.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://segar.me/valabformatter">
+   
+   <!-- Twitter Card data -->
+   <meta name="twitter:card" content="summary">
+   <meta name="twitter:title" content="CPRS Lab Formatter | VA Lab Data Analysis Tool">
+   <meta name="twitter:description" content="Format CPRS lab data from the VA with automatic calculations for anion gap, corrected calcium, and more.">
+
+	<!-- CSS
+    ================================================== -->
+	<link rel="stylesheet" type="text/css" href="css/screen.css" media="screen" />
+
+   <!-- Script
+   ================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CPRS Lab Formatter",
+  "description": "A tool for formatting and analyzing CPRS lab data from the VA healthcare system",
+  "applicationCategory": "HealthcareApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Matthew Segar, MD"
+  }
+}
+</script>
+
+<script language="javascript">
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
+if (!Array.prototype.filter)
+{
+  Array.prototype.filter = function(fun /*, thisp*/)
+  {
+    var len = this.length;
+    if (typeof fun != "function")
+      throw new TypeError();
+
+    var res = new Array();
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in this)
+      {
+        var val = this[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, this))
+          res.push(val);
+      }
+    }
+
+    return res;
+  };
+}
+
+/* Main function that splits array into discrete lab elements, then generates text */
+var ld ={};
+function fs(){
+	var str1 = document.forms["data1"]["edtData"].value;
+	var vals = str1.split("\n");
+	ld = {};
+	for(i=0;i<vals.length;i++){
+		// Remove any lines that aren't a lab result
+		if ((vals[i].indexOf("[549]") == -1 || vals[i].substring(0,5) == "[549]") && (vals[i].indexOf("[664]") == -1 || vals[i].substring(0,5) == "[664]")) {
+			vals[i] = "";
+		}
+		// Remove the "." prefix that are on some labs
+		if (vals[i].substring(0,1) == ".") {
+			vals[i] = vals[i].substring(1);
+		}
+	}
+	vals = vals.filter(function(e){return e});
+	for(i=0;i<vals.length;i++){
+		var temp = vals[i]
+		var lab = myTrim(temp.substring(0,temp.indexOf("  ")));
+		var valsearch = /\S[.\w=]*/;
+		var val = valsearch.exec(temp.substring(temp.indexOf("  ")));
+		ld[lab] = val;
+	}
+
+	if ("WBC" in ld) {
+		var cbc2 = ld["WBC"] + " ------ " + Math.round(ld["PLATELETS"]);
+		var cbc1 = replicate(" ",ld["WBC"].toString().length) +"\\ " + ld["HGB"] + " /";
+		var cbc0 = replicate(" ",cbc1.length) + ld["MCV"];
+		var cbc3 = replicate(" ",ld["WBC"].toString().length) +"/ " + ld["HCT"] + " \\";
+		var cbc = cbc0 + "\n" + cbc1+ "\n" + cbc2 + "\n" + cbc3 +"\n\n";
+	} else {
+		var cbc = "";
+	}
+	if ("SODIUM" in ld) {
+		var bmp1 = pad(ld["SODIUM"],5) + " | " + pad(ld["CHLORIDE"],5) + " | " + pad(ld["UREA NITROGEN (BUN)"],5) + " /";
+		var bmp2 = replicate("-",bmp1.length-1) + " " + ld["GLUCOSE"];
+		var bmp3 = pad(ld["POTASSIUM"],5) + " | " + pad(ld["CARBON DIOXIDE CO2"],5) + " | " + pad(ld["CREATININE"],5) + " \\ \n\n";
+		var bmp = bmp1+"\n"+bmp2+"\n" + bmp3 + (ld["GLUCOSE"]*1 > 200? "Corrected Na: " + Math.round(ld["SODIUM"]*1 + (0.016 * (ld["GLUCOSE"] - 100))) + "\n": "") +"Anion gap: " + ld["ANION GAP,CALC."] + ("ALBUMIN" in ld && ld["ALBUMIN"]  < 3.5 ? " (corrected " + Math.round((ld["ANION GAP,CALC."] * 1 + 2.5 * (4 - ld["ALBUMIN"] * 1))) + ")" : "") + "\nCa " + ld["CALCIUM"] + ("ALBUMIN" in ld ? ( ld["ALBUMIN"] < 4 && ld["CALCIUM"] < 10.3 ? " (corrected " + Math.round((ld["CALCIUM"] * 1  + 0.8 * (4-ld["ALBUMIN"]))*10)/10 + ")" : "") : "" ) + ("IONIZED CALCIUM" in ld ? ", iCal " + ld["IONIZED CALCIUM"]  : "") + ("MAGNESIUM" in ld ? ", Mg " + ld["MAGNESIUM"]:"") + ("PHOSPHOROUS" in ld ? ", Phos " + ld["PHOSPHOROUS"]:"") + ("PO4" in ld ? ", Phos " + ld["PO4"] : "") + "\n\n";
+	} else {
+		var bmp = "";
+	}
+	var cmp = "";
+	var cexclude2 = "";
+	if (!(ld["AST"] == undefined)) {
+		cmp = pad(ld["CALCIUM"],5) + " | " + ld["AST"] + "\n  ---------\n" + pad(ld["TP, SER/PL"],5) + " | " + ld["ALT/SGPT"] + "\n  ---------\n" + pad(ld["ALBUMIN"],5) + " | " + ld["ALKALINE PHOSPHATASE"] + "\n" + "    /" + ld["BILIRUBIN, TOTAL"] +"\\" + ("DIRECT BILIRUBIN" in ld ? "\n\nDirect bili: " + ld["DIRECT BILIRUBIN"] : "") + "\n\n";
+		cexclude2 = "ALBUMIN, BILIRUBIN, TOTAL, AST, ALT/SGPT, ALKALINE PHOSPHATASE, CALCIUM, DIRECT BILIRUBIN, ";
+		if ("INR" in ld && "CREATININE" in ld && document.forms["data1"]["chkMELD"].checked == true) {
+			cmp = cmp + "MELD: " +  Math.round((0.957 * Math.log(Math.max(1,ld["CREATININE"])) + 0.378 * Math.log(Math.max(1,ld["BILIRUBIN, TOTAL"])) + 1.120 * Math.log(Math.max(1,ld["INR"])) + 0.643 ) * 10) + "\n";
+			cmp = cmp + "MELD with dialysis: " +  Math.round((0.957 * Math.log(4) + 0.378 * Math.log(Math.max(1,ld["BILIRUBIN, TOTAL"])) + 1.120 * Math.log(Math.max(1,ld["INR"])) + 0.643 ) * 10) + "\n\n";
+		}
+	}
+	// This part is to float certain elements to the top
+	totop = "";
+	cexclude2 = cexclude2 + "INR, PROTHROMBIN TIME, PTT, LACTIC ACID, ";
+	totop = displayVal("INR","\n") + ("PROTHROMBIN TIME" in ld ? "PT: " + ld["PROTHROMBIN TIME"] + "\n" : "") + displayVal("PTT","\n") + displayVal("LACTIC ACID","\n");
+	totop = (totop!="" ? totop + "\n" : totop);
+	////////////////////////////////////////////////////
+	var abg = "";
+	if (!(ld["pH.."] == undefined)) {
+		cexclude2 = cexclude2 + "pH.., pCO2.., pO2.., HCO3.., ABE.., sO2.., tHB.., O2Hb.., COHb.., MetHb.., Potassium.., Sodium.., Ionized Ca.., Chloride.., Glucose.., Lactate.., Temperature.., O2 Delivery Type.., LPM.., Allen Test.., FIO2.., Sample site.., ";
+		// Convert vars to numbers
+		//
+		var ph = ld["pH.."]  * 1;
+		var pco2 = ld["pCO2.."] * 1;
+		var hco3 = ld["CARBON DIOXIDE CO2"] * 1;
+		var po2 = ld["pO2.."] * 1;
+		var ag = ld["ANION GAP,CALC."] * 1+ ("ALBUMIN" in ld && ld["ALBUMIN"]  < 3.5 ? 2.5 * (4 - ld["ALBUMIN"] * 1) : 0);
+		//
+		/* For testing
+		var ph = 7.24;
+		var pco2 = 42;
+		var hco3 = 21;
+		var ag = 22;
+		*/
+		abg = "ABG\n> " + Math.round(ld["pH.."]*100)/100 + " / " + Math.round(ld["pCO2.."]) + " / " + Math.round(ld["pO2.."]) + "\n> O2 sat: " + ld["sO2.."] + "%\n> " + ("O2 Delivery Type.." in ld ?  "O2 delivery: " + ("LPM.." in ld ? ld["LPM.."] + " L ": "" ) + ld["O2 Delivery Type.."] + ("FIO2.." in ld ? ", " + Math.round(ld["FIO2.."]) + "% FiO2" : "") + "\n": "" ) + (ld["MetHb.."] * 1 >= 2.9 ? "> MetHb: " + ld["MetHb.."] + "%\n": "" ) + (!(ld["Ionized Ca.."]==undefined) ? "> Ionized Ca: " + ld["Ionized Ca.."] + "\n" : "") + (ld["COHb.."] * 1 > 1.9 ? "> COHb: " + ld["COHb.."] + "%\n": "" );
+		if (po2 < 80 || pco2 < 35 || ("FIO2.." in ld && ld["FIO2.."] > 21) || ("LPM.." in ld)) { // need to calculate A-a gradient (hypoxic, hyperventilating, or on O2
+			var fio2 = ("FIO2.." in ld ? ld["FIO2.."] * 0.01 : ("LPM.." in ld ? 0.2 + (0.04 * ld["LPM.."]) : 0.21)) * 1;
+			var abg = abg + "> A-a gradient: " + Math.round((fio2 * (760-47) - (pco2/0.8) - po2)) + "\n";
+		}
+		// Now, analyze!
+		var abga = "";
+		if (document.forms["data1"]["chkABG"].checked == true) {
+			if (ph < 7.35 || ph > 7.45 || pco2 < 35 || pco2 > 45 || hco3 < 22 || hco3 > 26 || ag > 12) // there is some abnormality that needs analysis
+			{
+				if (ph < 7.35) {
+					if (pco2 > 45) { //respiratory acidosis
+						abga = "Respiratory acidosis";
+						if (hco3 < 22) { // not compensating
+							abga = abga + " with metabolic acidosis";
+						}
+						else { // compensating, so is this acute or chronic resp acidosis
+							var change =  (7.4 - ph)/((pco2 - 40)/10);
+							abga = abga + (change <= .04 && change >= .02 ? " (chronic)" : (change >= 0.07 && change <= 0.09 ? " (acute)" : ( change > 0.04 && change < 0.07 ? " (partially compensated)":"") ));
+							/* Didn't like this way of doing it
+							var change =  (hco3 - 24) / ((pco2 - 40)/10);
+							abga = abga + (change >= 3 && change <= 4 ? " (chronic)" : (change <= 1.5 ? " (acute)" : "" ));
+							*/
+						}
+					}
+					else { //metabolic acidosis
+						// gap or non-gap
+						if (ag > 16) { // gap
+							abga = "High anion gap metabolic acidosis";
+							if ((hco3 + (ag - 12)) < 22) {// there is also NAGMA
+								abga = abga + " and normal anion gap metabolic acidosis";
+							}
+							else if ((hco3 + (ag - 12)) > 26) {// there is also metabolic alkalosis
+								abga = abga + " and metabolic alkalosis";
+							}
+						}
+						else {// no gap
+							abga = "Normal anion gap metabolic acidosis";
+						}
+						// is respiratory compensation appropriate
+						var winter = 1.5 * hco3 + 8;
+						if ((pco2 - winter) > 2 ) { // respiratory acidosis
+							abga = abga + " with concomitant respiratory acidosis";
+						}
+						else if ((pco2 - winter) < 2 ) { // respiratory alkalosis
+							abga = abga + " with concomitant respiratory alkalosis";
+						}
+						else { // appropriate
+							abga = abga + " with appropriate respiratory compensation"
+						}
+					}
+				}
+				else if (ph > 7.45) {
+					if (hco3 > 26 ) {
+						abga = "Metabolic alkalosis";
+					}
+					else if (pco2 < 35) {
+						abga = "Respiratory alkalosis";
+						var change =  (ph - 7.4)/((40 - pco2)/10);
+						abga = abga + (change <= .04 && change >= .02 ? " (chronic)" : (change >= 0.07 && change <= 0.09 ? " (acute)" : ( change > 0.04 && change < 0.07 ? " (partially compensated)":"") ));
+					}
+					else {
+						abga = "Alkalosis (unspecified)"; // couldn't figure out what kind of alkalosis
+					}
+				}
+				else { // pH normal
+					if (hco3 < 22) {
+						if (ag > 16) {
+							abga = abga + "high anion gap metabolic acidosis";
+							if ((hco3 + (ag - 12)) < 22) {// there is also NAGMA
+								abga = abga + " and normal anion gap metabolic acidosis";
+							}
+							else if ((hco3 + (ag - 12)) > 26) {// there is also metabolic alkalosis
+								abga = abga + " and metabolic alkalosis";
+							}
+							abga = abga + ", ";
+						}
+						else {
+							abga = abga + "normal anion gap metabolic acidosis, ";
+						}
+					}
+					if (hco3 > 26) {
+						abga = abga + "metabolic alkalosis, ";
+						if (ag > 16) {
+							abga = abga + "high anion gap metabolic acidosis, ";
+						}
+					}
+					if (pco2 < 35 ) {
+						abga = abga + "respiratory alkalosis, ";
+					}
+					if (pco2 > 45) {
+						abga = abga + "respiratory acidosis, ";
+					}
+					if (abga == "") {// AG is the only abnormality
+						abga = "Elevated anion gap";
+					}
+					else { // now clean it up - make first letter capital and remove the trailing ', '
+						abga = abga.substring(0,1).toUpperCase() + abga.substring(1,abga.length - 2);
+					}
+				}
+			abg = abg + "> Analysis: " + abga + "\n";
+			}
+		}
+		abg = abg + "\n"
+	}
+	var str = "";
+	var cexclude = "SODIUM, POTASSIUM, CHLORIDE, CARBON DIOXIDE CO2, CREATININE, .CREAT,RECIPROCAL(CALC), eGFR(AFR.AMER.), eGFR(NON-AFR.AMER.), UREA NITROGEN (BUN), BUN/CREATININE RATIO, GLUCOSE, A/G RATIO, CALC., OSMOLALITY, CALC., ANION GAP,CALC., CALCIUM, IONIZED CALCIUM, MAGNESIUM, PHOSPHOROUS, PO4, TP, SER/PL, GLOBULIN, CALC., Non-HDL-C, VLDL Chol,Calc., CHOL/HDL RATIO, .CBC w/AUTO DIFF, WBC, RBC, HGB, HCT, MCHC, RDW, MCV, MCH, PLATELETS, MPV, IG %, NEUT %, LYMPH %, MONO %, EOS %, BASO %, IG #, NEUT #, LY #, MONO #, EO #, BA #, BANDS, PLATELET-ESTM, MACROCYTOSIS, HYPOCHROMIA, TOXIC GRANULATION, ACANTHOCYTES, OVALOCYTES, BASOPHILIC STIPPLING, LARGE PLATELET, PLATELET CLUMP, WBC CLUMPS, RETICULOCYTES, GIANT PLATELET, ANISOCYTOSIS, MICROCYTOSIS, TEARDROPS, SPHEROCYTES, POIKILOCYTOSIS, META, TARGET CELLS, ECHINOCYTES(BURR CELLS), NUCLEATED RBC/100WBC, POLYCHROMASIA, MYELO, URINE COLOR, APPEARANCE, URINE GLUCOSE, URINE BILIRUBIN, URINE KETONES, SPECIFIC GRAVITY, URINE BLOOD, URINE PH, URINE PROTEIN, UROBILINOGEN, NITRITE, URINE, LEUKOCYTE ESTERASE, URINE, URINE WBC/HPF, URINE RBC/HPF, URINE BACTERIA, URINE MUCUS, SQUAMOUS EPITH. CELLS, HYALINE CASTS, URINE YEAST, BUDDING, URINE YEAST, HYPHAE, GLUCOSE FINGER STICK, MRSA SURVL NARES DNA, MRSA SURVL NARES AGAR, " + cexclude2;
+	for (var prop in ld) {
+		if (cexclude.indexOf(prop + ", ") == -1) {
+			str = str + prop + ": " + ld[prop] + "\n";
+		}
+	}
+	var UA = "";
+	if ("URINE COLOR" in ld) {
+		if ("URINE WBC/HPF" in ld) {
+			UA2 = "\n> Micro: " + ld["URINE WBC/HPF"] + " WBCs, " + ld["URINE RBC/HPF"] + " RBCs, " + ((ld["SQUAMOUS EPITH. CELLS"] == undefined) ? "0" : ld["SQUAMOUS EPITH. CELLS"]) + " squams\n> Casts: " + ((ld["HYALINE CASTS"] == undefined) ? "no" : ld["HYALINE CASTS"]) + " hyaline casts";
+		} else {
+			UA2 = "";
+		}
+		UA = "\nUrinalysis\n" + "> " + ld["URINE COLOR"] + ", " + ld["APPEARANCE"] + "\n> LE " + ((ld["LEUKOCYTE ESTERASE, URINE"] == "Negative") ? "-ve" : String(ld["LEUKOCYTE ESTERASE, URINE"]).toLowerCase()) + ", nitrites " + ((ld["NITRITE, URINE"] == "NEGATIVE") ? "-ve" : ld["NITRITE, URINE"]) + ((ld["URINE BACTERIA"] == undefined) ? ", no bacteria" : ", " + String(ld["URINE BACTERIA"]).toLowerCase() + " bacteria") + ((ld["URINE YEAST, BUDDING"] == undefined) ? "" : ", " + String(ld["URINE YEAST, BUDDING"]).toLowerCase() + " budding yeast") + ((ld["URINE YEAST, HYPHAE"] == undefined) ? "" : ", " + String(ld["URINE YEAST, HYPHAE"]).toLowerCase() + " hyphae yeast") + ((ld["URINE MUCUS"] == undefined) ? ", no" : ", " + String(ld["URINE MUCUS"]).toLowerCase()) + " mucus"+ "\n> Protein: " + ((ld["URINE PROTEIN"] == "NEGATIVE") ? "-ve" : ld["URINE PROTEIN"]) + " \n> Blood: " + ((ld["URINE BLOOD"] == "NEGATIVE") ? "-ve" : String(ld["URINE BLOOD"]).toLowerCase()) + UA2 + "\n> Ketones " + ((ld["URINE KETONES"] == "NEGATIVE") ? "-ve" : ld["URINE KETONES"]) + "\n> pH " + ld["URINE PH"] + ", spec gravity " + ld["SPECIFIC GRAVITY"] +  ", bilirubin " + ((ld["URINE BILIRUBIN"] == "NEGATIVE") ? "-ve" : ld["URINE BILIRUBIN"]);
+	}
+	var FENa = "";
+	if ("CREATININE" in ld && "CREATININE-URINE" in ld && "SODIUM" in ld && "SODIUM-URINE" in ld) {
+		FENa = "\n\nFENa: " + Math.round(((ld["CREATININE"] * ld["SODIUM-URINE"]) / (ld["SODIUM"] * ld["CREATININE-URINE"]))*10000)/100 + "%";
+	}
+	var FEUrea = "";
+	if ("CREATININE" in ld && "CREATININE-URINE" in ld && "UREA NITROGEN (BUN)" in ld && "UREA NITROGEN-URINE" in ld) {
+		FEUrea = "\n\nFEUrea: " + Math.round(((ld["CREATININE"] * ld["UREA NITROGEN-URINE"]) / (ld["UREA NITROGEN (BUN)"] * ld["CREATININE-URINE"]))*1000)/10 + "%";
+	}
+	document.forms["data1"]["edtData"].value=cbc + bmp + cmp  + totop + abg + str + UA + FENa + FEUrea;
+
+}
+
+function pad(str,num, char) {
+	if (char===undefined) {char=" ";}
+	return String(replicate(char,num)+str).slice(0-num);
+
+}
+
+function displayVal(cElement, cDelim) {
+	return (cElement in ld ? cElement + ": " + ld[cElement] + (cDelim == undefined ? "" : cDelim) : "");
+}
+
+function replicate(char,num) {
+	return new Array(num+1).join(char);
+}
+
+function myTrim(x) {
+	return x.replace(/^\s+|\s+$/gm,'');
+}
+</script>
+
+
+   <!-- Favicons
+	================================================== -->
+	<link rel="shortcut icon" href="favicon.png" >
+
+</head>
+
+<body>
+<div id="header">
+	<div style="width:27%; float: left;">&nbsp;</div>
+	<div style="float: left;">
+		<h1>CPRS Lab Formatter</h1>
+    &nbsp;
+    <br>
+		<!--<input type="button" value="Home" onclick="window.location = 'segar.me'">-->
+    <input type="button" style="background-color:#0099cc" onclick="location.href='https://segar.me';" value="Home" />
+	</div>
+</div>
+<div class="colmask leftmenu">
+	<div class="colleft">
+
+		<div class="col1">
+            <section id="introduction">
+                <h2>About CPRS Lab Formatter</h2>
+                <p>CPRS Lab Formatter is a tool designed for healthcare professionals working with the VA's Computerized Patient Record System (CPRS). This tool formats lab data into easily readable formats and performs automatic calculations for clinical decision support.</p>
+            </section>
+	         <form name="data1" style="margin-bottom:0px;">
+				<textarea rows="38" cols="90" name="edtData" aria-label="Paste your CPRS lab data here"></textarea>
+				<br><br>
+				<input type="checkbox" name="chkMELD" id="chkMELD">&nbsp;<label for="chkMELD">Calculate MELD</label>
+				&nbsp;&nbsp;
+				<input type="checkbox" name="chkABG" id="chkABG" checked>&nbsp;<label for="chkABG">Analyze ABG</label>
+				<br><br>
+				<input type="button" value="Submit" onclick="fs();" aria-label="Format lab data">
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="reset" value="Reset" aria-label="Clear form">
+			</form>
+         </div>
+		<div class="col2">
+			<br>
+			<h2>Features</h2>
+			<h3>Automatic Calculations</h3>
+			<ul>
+				<li>Sodium corrected for glucose</li>
+				<li>Calcium corrected for albumin</li>
+				<li>Anion gap corrected for albumin</li>
+				<li>FENa</li>
+				<li>FEUrea</li>
+				<li>ABG analysis (mixed, A-a)</li>
+				<li>MELD</li>
+			</ul>
+			<br>
+			<h3>Special Formatting</h3>
+			<ul>
+				<li>CBC - Complete Blood Count</li>
+				<li>BMP - Basic Metabolic Panel</li>
+				<li>CMP - Comprehensive Metabolic Panel</li>
+				<li>ABG - Arterial Blood Gas</li>
+				<li>UA - Urinalysis</li>
+			</ul>
+		</div>
+	      </div> <!-- colleft -->
+</div>
+<div id="footer">
+	<div style="width:27%; float: left;">&nbsp;</div>
+	<div style="float: left;">
+		CPRS Lab Formatter &nbsp; &nbsp; | &nbsp; &nbsp; &copy; Matt Segar
+	</DIV>
+</div>
+</body>
+</html>
