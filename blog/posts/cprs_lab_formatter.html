@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPRS Lab Formatter - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="Making Lab Data Easier to See for VA CPRS EHR">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="cprs, formatter, data, tool, patient">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/cprs_lab_formatter.html">
+    <meta property="og:title" content="CPRS Lab Formatter - Matt Segar">
+    <meta property="og:description" content="Making Lab Data Easier to See for VA CPRS EHR">
+    <meta property="og:image" content="../assets/images/cprs.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/cprs_lab_formatter.html">
+    <meta property="twitter:title" content="CPRS Lab Formatter - Matt Segar">
+    <meta property="twitter:description" content="Making Lab Data Easier to See for VA CPRS EHR">
+    <meta property="twitter:image" content="../assets/images/cprs.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/cprs_lab_formatter.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "CPRS Lab Formatter",
+      "description": "Making Lab Data Easier to See for VA CPRS EHR",
+      "image": "../assets/images/cprs.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2025-03-14T00:00:00.000Z",
+      "dateModified": "2025-03-14T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/cprs_lab_formatter.html"
+      },
+      "keywords": "cprs, formatter, data, tool, patient"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">CPRS Lab Formatter</h1>
+                    <div class="post-meta">
+                        <time datetime="2025-03-14T00:00:00.000Z">March 14, 2025</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="cprs-lab-formatter-making-lab-data-easier-to-see-for-va-healthcare-workers">CPRS Lab Formatter: Making Lab Data Easier to See for VA Healthcare Workers</h1>
+<p>Many of us have struggled with CPRS lab results - squinting at numbers, doing math by hand, or wishing we could see trends better. That&#39;s why I made the <a href="https://segar.me/valabformatter">CPRS Lab Formatter</a> - a free tool built to improve how we look at VA lab data.</p>
+<h2 id="the-problem-with-cprs-labs">The Problem with CPRS Labs</h2>
+<p>The Veterans Health Information Systems and Technology Architecture (VistA) and its main screen, the Computerized Patient Record System (CPRS), have been the core of VA healthcare IT since the late 1990s. While it was cutting-edge when created, CPRS shows lab data in a way that hasn&#39;t changed much over the years:</p>
+<ul>
+<li>Text-heavy screens packed with numbers</li>
+<li>No automatic math for values you need to calculate</li>
+<li>Few ways to see data as charts or graphs</li>
+<li>Hard to spot patterns across time</li>
+</ul>
+<p>These issues mean extra mental work and time spent during patient visits - time that would be better used on patient care.</p>
+<h2 id="a-brief-history-of-cprs">A Brief History of CPRS</h2>
+<p>Before looking at the solution, it helps to know where CPRS came from. Built in-house by the VA in the 1980s and 1990s, VistA/CPRS broke new ground - it was one of the first complete electronic health record systems ever made.</p>
+<p>What many don&#39;t know is that VA doctors and staff who taught themselves computer programming created CPRS. This bottom-up approach led to a system that fit clinical workflows well, which explains why it&#39;s lasted so long despite looking outdated.</p>
+<p>The VA&#39;s choice to build its own EHR system was forward-thinking and led to better patient care. Studies show that after CPRS was put in place, the VA did better than private healthcare on many quality measures - showing that having the right information at the right time directly helps patients.</p>
+<h2 id="introducing-the-cprs-lab-formatter">Introducing the CPRS Lab Formatter</h2>
+<p>The CPRS Lab Formatter is a simple but strong tool that changes raw lab data from CPRS into clean, readable formats with automatic calculations. Here&#39;s what it does:</p>
+<ul>
+<li><strong>Organizes lab panels</strong> - CBC, BMP, CMP, ABG, and others are grouped and formatted for easy reading</li>
+<li><strong>Does clinical calculations</strong> - Anion gap, corrected calcium, sodium correction for high blood sugar, and more</li>
+<li><strong>Analyzes ABGs</strong> - Automatically explains acid-base problems including mixed conditions</li>
+<li><strong>Calculates MELD scores</strong> - For checking liver disease</li>
+<li><strong>Computes FENa and FEUrea</strong> - For kidney function tests</li>
+<li><strong>Works right in your browser</strong> - No data is sent anywhere, keeping patient information private</li>
+</ul>
+<h2 id="how-it-works">How It Works</h2>
+<p>I built the Lab Formatter using basic JavaScript, focusing on speed and simplicity. The tool has three main parts:</p>
+<ol>
+<li><strong>A parser</strong> that reads CPRS lab data format and pulls out values</li>
+<li><strong>A formatter</strong> that puts the data in clinically useful groups</li>
+<li><strong>A calculation engine</strong> that figures out important values and what they mean</li>
+</ol>
+<p>The technical approach puts reliability and privacy first. Since all work happens in your browser, no patient data ever leaves your computer. This design follows HIPAA rules while allowing the tool to work anywhere, even with poor internet.</p>
+<p>Here&#39;s a simplified look at how it reads the data:</p>
+<pre><code class="language-javascript">function parseLabData(inputText) {
+  // Split input into lines
+  var lines = inputText.split(&quot;\n&quot;);
+  
+  // Filter for lab result lines containing site codes [XXX]
+  for (let i = 0; i &lt; lines.length; i++) {
+    if (!/\[\d{3}\]/.test(lines[i])) {
+      lines[i] = &quot;&quot;;
+    }
+  }
+  
+  // Extract lab values from remaining lines
+  for (let i = 0; i &lt; lines.length; i++) {
+    var line = lines[i];
+    // Find lab name and value
+    var labNameEndPos = line.search(/\s{2,}/);
+    
+    if (labNameEndPos &gt; 0) {
+      var labName = trim(line.substring(0, labNameEndPos));
+      // Extract value portion
+      var valueStartPos = line.substring(labNameEndPos).search(/\S/) + labNameEndPos;
+      var valueEndPos = line.substring(valueStartPos).search(/\s{2,}/);
+      if (valueEndPos &lt; 0) valueEndPos = line.length;
+      else valueEndPos += valueStartPos;
+      
+      var labValue = cleanLabValue(line.substring(valueStartPos, valueEndPos).trim());
+      labData[labName] = labValue;
+    }
+  }
+  
+  return labData;
+}
+</code></pre>
+<p>Once the data is read, the formatter applies special layouts for different lab panels. For example, a CBC is shown in a diamond pattern that makes it easy to see how key values relate:</p>
+<pre><code>      87.3
+      \ 13.9 /
+8.1 ------ 278
+      / 41.7 \
+</code></pre>
+<p>While a basic metabolic panel is set up to highlight the connections between electrolytes:</p>
+<pre><code>  138 | 102 |  15 /
+  -----------------  118
+  3.9 |  24 | 0.9 \
+</code></pre>
+<h2 id="clinical-applications">Clinical Applications</h2>
+<p>The real value of the Lab Formatter comes from its automatic analysis. For example, when checking ABGs, the tool not only organizes the values but also explains them:</p>
+<pre><code>ABG
+&gt; 7.25 / 48 / 62
+&gt; O2 sat: 89%
+&gt; O2 delivery: 2 L Nasal Cannula, 28% FiO2
+&gt; A-a gradient: 103
+&gt; Analysis: Respiratory acidosis with metabolic acidosis
+</code></pre>
+<p>This instant analysis helps find mixed acid-base problems that might be missed or need hand calculations.</p>
+<p>Similarly, the automatic math for anion gap, corrected calcium, and other values saves time and cuts down on math errors.</p>
+<h2 id="how-to-use-it">How to Use It</h2>
+<p>Using the tool is easy:</p>
+<ol>
+<li>Visit <a href="https://segar.me/valabformatter">segar.me/valabformatter</a></li>
+<li>In CPRS, go to the Labs tab and select &quot;All Tests by Date&quot;</li>
+<li>Select the text (Ctrl+A) and copy it (Ctrl+C)</li>
+<li>Paste (Ctrl+V) into the Lab Formatter text box</li>
+<li>Click &quot;Format Labs&quot;</li>
+</ol>
+<p>The result is a clean, organized view of the lab data that shows important relationships and does relevant calculations automatically.</p>
+<h2 id="the-future-of-va-health-it">The Future of VA Health IT</h2>
+<p>While the VA is moving to a store-bought EHR system (supposedly Cerner/Oracle Health), CPRS is still the main screen for hundreds of thousands of VA staff serving millions of veterans. Tools like the Lab Formatter help fill the gap between old systems and modern clinical needs.</p>
+<p>As a doctor who uses CPRS, I built this tool to fix a problem I faced myself. The good feedback I&#39;ve gotten from coworkers shows there&#39;s a real need for better data display in clinical systems.</p>
+<p>Whether you&#39;re a doctor, nurse, PA, or other healthcare worker in the VA system, I hope you&#39;ll find the Lab Formatter useful in your daily work. Visit <a href="https://segar.me/valabformatter">segar.me/valabformatter</a> to try it out, and please share any feedback or ideas for making it better.</p>
+<h2 id="about-the-author">About the Author</h2>
+<p>Dr. Matthew Segar is a physician and programmer who likes finding tech solutions to clinical problems. This tool was made as a side project to improve daily workflows and is free for all VA healthcare staff. Visit <a href="https://segar.me">segar.me</a> to learn more.</p>
+<hr>
+<p><em>Disclaimer: The CPRS Lab Formatter is an independent tool and is not officially connected with or supported by the Department of Veterans Affairs. All patient data stays in your browser and is never sent or stored elsewhere.</em></p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="sitemap.xml">Sitemap</a> | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>

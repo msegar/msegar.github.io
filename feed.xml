@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Thu, 13 Mar 2025 17:07:51 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 14 Mar 2025 20:52:53 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>CPRS Lab Formatter</title>
+    <link>https://segar.me/blog/posts/cprs_lab_formatter.html</link>
+    <guid>https://segar.me/blog/posts/cprs_lab_formatter.html</guid>
+    <pubDate>Fri, 14 Mar 2025 00:00:00 GMT</pubDate>
+    <description>Making Lab Data Easier to See for VA CPRS EHR</description>
+  </item>
   <item>
     <title>R Bookdown Pagination</title>
     <link>https://segar.me/blog/posts/bookdown_pagination.html</link>
