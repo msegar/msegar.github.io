@@ -345,6 +345,27 @@ footer p {
   nav li {
     margin: 0 10px;
   }
+
+  /* Mobile dropdown improvements */
+  .dropdown .nav-link {
+    position: relative;
+  }
+  
+  .dropdown .nav-link:after {
+    content: '▼';
+    font-size: 0.7em;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  
+  /* Make mobile menu accessible with a tap instead of hover */
+  .dropdown-content {
+    display: none;
+  }
+  
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
   
   .about-content {
     flex-direction: column;
@@ -445,7 +466,7 @@ footer p {
 
 .dropdown-content a:hover {
   background-color: #f8f9fa;
-  padding-left: 24px;
+  /*padding-left: 24px;*/
 }
 
 [data-theme="dark"] .dropdown-content a:hover {
