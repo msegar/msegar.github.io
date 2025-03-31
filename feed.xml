@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Fri, 14 Mar 2025 20:52:53 GMT</lastBuildDate>
+  <lastBuildDate>Mon, 31 Mar 2025 01:24:05 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Building a Simple Static Blog with JavaScript and Markdown</title>
+    <link>https://segar.me/blog/posts/static_blog.html</link>
+    <guid>https://segar.me/blog/posts/static_blog.html</guid>
+    <pubDate>Sun, 30 Mar 2025 00:00:00 GMT</pubDate>
+    <description>How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates</description>
+  </item>
   <item>
     <title>CPRS Lab Formatter</title>
     <link>https://segar.me/blog/posts/cprs_lab_formatter.html</link>

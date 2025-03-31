@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a Simple Static Blog with JavaScript and Markdown - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="markdown, blog, content, static, system">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/static_blog.html">
+    <meta property="og:title" content="Building a Simple Static Blog with JavaScript and Markdown - Matt Segar">
+    <meta property="og:description" content="How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates">
+    <meta property="og:image" content="../assets/images/static-blog.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/static_blog.html">
+    <meta property="twitter:title" content="Building a Simple Static Blog with JavaScript and Markdown - Matt Segar">
+    <meta property="twitter:description" content="How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates">
+    <meta property="twitter:image" content="../assets/images/static-blog.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/static_blog.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Building a Simple Static Blog with JavaScript and Markdown",
+      "description": "How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates",
+      "image": "../assets/images/static-blog.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2025-03-30T00:00:00.000Z",
+      "dateModified": "2025-03-30T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/static_blog.html"
+      },
+      "keywords": "markdown, blog, content, static, system"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Building a Simple Static Blog with JavaScript and Markdown</h1>
+                    <div class="post-meta">
+                        <time datetime="2025-03-30T00:00:00.000Z">March 30, 2025</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="building-a-simple-static-blog-with-javascript-and-markdown">Building a Simple Static Blog with JavaScript and Markdown</h1>
+<p>As a developer who values simplicity and performance, I&#39;ve always been drawn to static site generators. While there are many excellent options like Jekyll, Hugo, and Eleventy, sometimes you want something tailored precisely to your needs without the overhead of learning a new framework. That&#39;s why I built a custom, lightweight blogging system for my personal website using JavaScript, Markdown, and HTML templates.</p>
+<h2 id="why-build-a-custom-blog-system">Why Build a Custom Blog System?</h2>
+<p>When redesigning my personal website, I had a few specific requirements:</p>
+<ol>
+<li><strong>Content in Markdown</strong> - I wanted to write in Markdown for ease of use and portability</li>
+<li><strong>Simple file structure</strong> - No complex database, just files and folders</li>
+<li><strong>SEO optimization</strong> - Generated pages with proper meta tags, structured data, and sitemaps</li>
+<li><strong>Minimal dependencies</strong> - Just a few core npm packages</li>
+<li><strong>Full control</strong> - The ability to customize every aspect of the build process</li>
+</ol>
+<p>After evaluating several existing solutions, I decided to build my own system that would tick all these boxes while being extremely lightweight.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>The system consists of a few key components:</p>
+<ol>
+<li><strong>Content files</strong> - Markdown files with YAML frontmatter stored in a content directory</li>
+<li><strong>HTML templates</strong> - Template files with placeholders for dynamic content</li>
+<li><strong>Build script</strong> - A Node.js script that processes the markdown files and generates the static HTML</li>
+</ol>
+<p>The build process is straightforward:</p>
+<ol>
+<li>Read all markdown files from the content directory</li>
+<li>Parse the frontmatter and markdown content</li>
+<li>Convert markdown to HTML</li>
+<li>Insert the HTML and metadata into the template</li>
+<li>Generate an index page listing all posts</li>
+<li>Create a sitemap and RSS feed for SEO</li>
+</ol>
+<h2 id="the-build-script">The Build Script</h2>
+<p>The heart of the system is the build script, which handles the entire process of converting markdown to HTML and generating the blog pages. Here&#39;s a breakdown of how it works:</p>
+<h3 id="setting-up">Setting Up</h3>
+<p>The script starts by importing dependencies and defining paths:</p>
+<pre><code class="language-javascript">const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+const marked = require(&#39;marked&#39;);
+const matter = require(&#39;gray-matter&#39;);
+
+// Configure paths
+const CONTENT_DIR = path.join(__dirname, &#39;../content/posts&#39;);
+const OUTPUT_DIR = path.join(__dirname, &#39;../blog/posts&#39;);
+const TEMPLATE_PATH = path.join(__dirname, &#39;../blog/template.html&#39;);
+</code></pre>
+<h3 id="processing-markdown-files">Processing Markdown Files</h3>
+<p>For each markdown file, the script:</p>
+<ol>
+<li>Reads the file content</li>
+<li>Parses the frontmatter and markdown using gray-matter</li>
+<li>Generates a slug from the filename</li>
+<li>Converts markdown to HTML using marked</li>
+<li>Extracts metadata like date, title, description</li>
+</ol>
+<pre><code class="language-javascript">mdFiles.forEach(mdFile =&gt; {
+  const filePath = path.join(CONTENT_DIR, mdFile);
+  const content = fs.readFileSync(filePath, &#39;utf8&#39;);
+  
+  // Parse frontmatter and content
+  const { data: frontmatter, content: markdownContent } = matter(content);
+  
+  // Generate slug from filename
+  const slug = mdFile.replace(&#39;.md&#39;, &#39;&#39;);
+  
+  // Convert markdown to HTML
+  const htmlContent = marked.parse(markdownContent);
+  
+  // Create post object with metadata
+  const post = {
+    slug,
+    title: frontmatter.title || &#39;Untitled Post&#39;,
+    description: frontmatter.description || &#39;&#39;,
+    date: postDate,
+    // Additional metadata...
+  };
+
+  // Generate HTML from template
+  let postHtml = template
+    .replace(/{{title}}/g, post.title)
+    .replace(/{{date}}/g, formatDate(post.date))
+    // Replace other placeholders...
+    
+  // Write to file
+  fs.writeFileSync(outputPath, postHtml);
+});
+</code></pre>
+<h3 id="generating-the-blog-index">Generating the Blog Index</h3>
+<p>The index page lists all blog posts in reverse chronological order. The script:</p>
+<ol>
+<li>Sorts all posts by date</li>
+<li>Generates HTML for each blog card</li>
+<li>Inserts the HTML into the index template</li>
+</ol>
+<p>The index template includes placeholders for the blog grid:</p>
+<pre><code class="language-html">&lt;div class=&quot;blog-grid&quot;&gt;
+    &lt;!-- Blog posts will be inserted here --&gt;
+&lt;/div&gt;
+</code></pre>
+<p>The script replaces this with dynamically generated HTML for each post:</p>
+<pre><code class="language-javascript">const blogCardsHtml = posts.map(post =&gt; {
+  return `
+  &lt;article class=&quot;blog-card&quot;&gt;
+      &lt;div class=&quot;blog-thumbnail&quot;&gt;
+          ${post.img ? `&lt;img src=&quot;${post.img}&quot; alt=&quot;${post.title}&quot;&gt;` : &#39;&lt;span&gt;Featured Image&lt;/span&gt;&#39;}
+      &lt;/div&gt;
+      &lt;div class=&quot;blog-content&quot;&gt;
+          &lt;h3 class=&quot;blog-title&quot;&gt;${post.title}&lt;/h3&gt;
+          &lt;div class=&quot;blog-meta&quot;&gt;
+              &lt;span class=&quot;blog-date&quot;&gt;${formatDate(post.date)}&lt;/span&gt;
+              &lt;span class=&quot;blog-read-time&quot;&gt;${readTime} min read&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;blog-excerpt&quot;&gt;
+              &lt;p&gt;${post.description}&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;a href=&quot;posts/${post.slug}.html&quot; class=&quot;button&quot;&gt;Read More&lt;/a&gt;
+      &lt;/div&gt;
+  &lt;/article&gt;
+  `;
+}).join(&#39;\n&#39;);
+</code></pre>
+<h2 id="seo-optimization">SEO Optimization</h2>
+<p>One of the benefits of this approach is the ability to add comprehensive SEO features:</p>
+<h3 id="meta-tags">Meta Tags</h3>
+<p>The template includes meta tags for social sharing and SEO:</p>
+<pre><code class="language-html">&lt;!-- Primary Meta Tags --&gt;
+&lt;meta name=&quot;description&quot; content=&quot;{{description}}&quot;&gt;
+&lt;meta name=&quot;author&quot; content=&quot;Matt Segar&quot;&gt;
+&lt;meta name=&quot;keywords&quot; content=&quot;markdown, blog, content, static, system&quot;&gt;
+
+&lt;!-- Open Graph / Facebook --&gt;
+&lt;meta property=&quot;og:type&quot; content=&quot;article&quot;&gt;
+&lt;meta property=&quot;og:url&quot; content=&quot;https://segar.me/blog/posts/static_blog.html&quot;&gt;
+&lt;meta property=&quot;og:title&quot; content=&quot;{{title}} - Matt Segar&quot;&gt;
+&lt;meta property=&quot;og:description&quot; content=&quot;{{description}}&quot;&gt;
+&lt;meta property=&quot;og:image&quot; content=&quot;../assets/images/static-blog.png&quot;&gt;
+
+&lt;!-- Twitter --&gt;
+&lt;meta property=&quot;twitter:card&quot; content=&quot;summary_large_image&quot;&gt;
+&lt;!-- Additional Twitter tags... --&gt;
+</code></pre>
+<h3 id="structured-data">Structured Data</h3>
+<p>The system also includes structured data for rich search results:</p>
+<pre><code class="language-html">&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;BlogPosting&quot;,
+  &quot;headline&quot;: &quot;{{title}}&quot;,
+  &quot;description&quot;: &quot;{{description}}&quot;,
+  &quot;image&quot;: &quot;../assets/images/static-blog.png&quot;,
+  &quot;author&quot;: {
+    &quot;@type&quot;: &quot;Person&quot;,
+    &quot;name&quot;: &quot;Matt Segar&quot;
+  },
+  &lt;!-- Additional structured data... --&gt;
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="sitemap-and-rss-feed">Sitemap and RSS Feed</h3>
+<p>The script also generates a sitemap.xml and RSS feed to improve search engine indexing:</p>
+<pre><code class="language-javascript">function generateSitemap(posts) {
+  const baseUrl = &#39;https://segar.me&#39;;
+  let sitemap = &#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;\n&#39;;
+  sitemap += &#39;&lt;urlset xmlns=&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;&gt;\n&#39;;
+  
+  // Add homepage and other main pages...
+  
+  // Add blog posts
+  posts.forEach(post =&gt; {
+    sitemap += `  &lt;url&gt;
+    &lt;loc&gt;${baseUrl}/blog/posts/${post.slug}.html&lt;/loc&gt;
+    &lt;lastmod&gt;${postDate}&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.7&lt;/priority&gt;
+  &lt;/url&gt;\n`;
+  });
+  
+  sitemap += &#39;&lt;/urlset&gt;&#39;;
+  
+  // Write sitemap to file
+  fs.writeFileSync(path.join(__dirname, &#39;../sitemap.xml&#39;), sitemap);
+}
+</code></pre>
+<h2 id="benefits-of-this-approach">Benefits of This Approach</h2>
+<p>Using this custom static blog system offers several advantages:</p>
+<ol>
+<li><strong>Performance</strong> - Static HTML pages are extremely fast to load</li>
+<li><strong>Security</strong> - No server-side processing means fewer security vulnerabilities</li>
+<li><strong>Simplicity</strong> - The entire system is just a few files</li>
+<li><strong>Version control</strong> - Content can be easily tracked in Git</li>
+<li><strong>Flexibility</strong> - Add new features or modify the build process as needed</li>
+<li><strong>Low cost</strong> - Host on GitHub Pages, Netlify, or any static hosting service for free or low cost</li>
+</ol>
+<h2 id="adding-content">Adding Content</h2>
+<p>With this system, adding a new blog post is as simple as:</p>
+<ol>
+<li>Create a new markdown file in the content directory</li>
+<li>Add frontmatter with metadata (title, description, date, etc.)</li>
+<li>Write the post content in markdown</li>
+<li>Run the build script to generate HTML</li>
+<li>Deploy the updated files</li>
+</ol>
+<pre><code class="language-markdown">---
+title: My New Blog Post
+description: This is an example blog post
+date: 2025-03-24
+img: ../assets/images/example.png
+categories: [Example, Blog]
+---
+
+# My New Blog Post
+
+This is an example of how easy it is to create content with this system.
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Building a custom static blog system might seem like reinventing the wheel, but it offers a level of control and simplicity that&#39;s hard to match with off-the-shelf solutions. This approach is perfect for developers who want a lightweight, customizable blogging platform without the overhead of a full CMS or complex static site generator.</p>
+<p>The entire system I&#39;ve described is less than 300 lines of code, yet it provides all the essential features of a modern blog: markdown support, responsive design, SEO optimization, and easy content management.</p>
+<p>If you&#39;re looking to create a personal blog or simple content website, consider this approach. It&#39;s lightweight, flexible, and puts you in complete control of your content.</p>
+<p>Reach out to me if you&#39;d like to see the full source code for this system. It&#39;s also hosted in my GitHub. </p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="sitemap.xml">Sitemap</a> | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
