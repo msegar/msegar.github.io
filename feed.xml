@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Mon, 31 Mar 2025 01:24:05 GMT</lastBuildDate>
+  <lastBuildDate>Tue, 29 Jul 2025 00:50:48 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Doximity AI Scribe Experience</title>
+    <link>https://segar.me/blog/posts/doximity.html</link>
+    <guid>https://segar.me/blog/posts/doximity.html</guid>
+    <pubDate>Mon, 28 Jul 2025 00:00:00 GMT</pubDate>
+    <description>My experience using Doximity&apos;s new AI Scribe feature for cardiology documentation including setup and workflow.</description>
+  </item>
   <item>
     <title>Building a Simple Static Blog with JavaScript and Markdown</title>
     <link>https://segar.me/blog/posts/static_blog.html</link>

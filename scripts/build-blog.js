@@ -302,7 +302,7 @@ function generateSitemap(posts) {
   </url>\n`;
   
   // Add other main pages
-  const mainPages = ['cv.html', 'book.html', 'valabformatter/index.html'];
+  const mainPages = ['cv.html', 'book.html', 'job-search-book.html', 'valabformatter/index.html'];
   mainPages.forEach(page => {
     sitemap += `  <url>
     <loc>${baseUrl}/${page}</loc>
