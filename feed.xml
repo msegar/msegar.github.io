@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Thu, 22 Jan 2026 01:51:11 GMT</lastBuildDate>
+  <lastBuildDate>Thu, 22 Jan 2026 01:53:37 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Migrating Static Sites to Dokploy with Traefik and Let&apos;s Encrypt</title>
+    <link>https://segar.me/blog/posts/dokploy.html</link>
+    <guid>https://segar.me/blog/posts/dokploy.html</guid>
+    <pubDate>Wed, 21 Jan 2026 00:00:00 GMT</pubDate>
+    <description>A practical guide to hosting static sites on Dokploy, including React SPAs, SSL certificates, and the networking gotchas that will save you hours.</description>
+  </item>
   <item>
     <title>Embedding 500K Medical Texts with PubMedBERT on RunPod</title>
     <link>https://segar.me/blog/posts/runpod.html</link>
@@ -41,13 +48,6 @@
     <guid>https://segar.me/blog/posts/bookdown_pagination.html</guid>
     <pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
     <description>Understanding KDP pagination with R Bookdown</description>
-  </item>
-  <item>
-    <title>Weather Variability</title>
-    <link>https://segar.me/blog/posts/dokploy.html</link>
-    <guid>https://segar.me/blog/posts/dokploy.html</guid>
-    <pubDate>Thu, 27 Feb 2025 00:00:00 GMT</pubDate>
-    <description>Which US county has the highest variation in daily weather?</description>
   </item>
   <item>
     <title>R Plumber API on Heroku</title>
