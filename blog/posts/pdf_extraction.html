@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Text Extraction in Next.js Standalone Builds - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="standalone, build, text, docker, extraction">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/pdf_extraction.html">
+    <meta property="og:title" content="PDF Text Extraction in Next.js Standalone Builds - Matt Segar">
+    <meta property="og:description" content="How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.">
+    <meta property="og:image" content="../assets/images/pdf-extraction.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/pdf_extraction.html">
+    <meta property="twitter:title" content="PDF Text Extraction in Next.js Standalone Builds - Matt Segar">
+    <meta property="twitter:description" content="How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.">
+    <meta property="twitter:image" content="../assets/images/pdf-extraction.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/pdf_extraction.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "PDF Text Extraction in Next.js Standalone Builds",
+      "description": "How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.",
+      "image": "../assets/images/pdf-extraction.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-01-27T00:00:00.000Z",
+      "dateModified": "2026-01-27T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/pdf_extraction.html"
+      },
+      "keywords": "standalone, build, text, docker, extraction"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">PDF Text Extraction in Next.js Standalone Builds</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-01-27T00:00:00.000Z">January 27, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>I recently built a feature for ManuscriptMind that lets users upload academic manuscripts in PDF, DOCX, and TXT formats. The server-side API route extracts raw text from the uploaded file and passes it to an AI review pipeline. TXT and DOCX worked immediately. PDF did not.</p>
+<p>What followed was a multi-day debugging session that took me through browser global polyfills, Next.js build tracing, Docker container crashes, and invisible production errors. Here&#39;s what happened and how I finally fixed it.</p>
+<h2 id="the-feature">The Feature</h2>
+<p>The requirement is straightforward: a user uploads a PDF, the server reads the text out of it, and that text gets sent to an AI agent for analysis. The extraction happens in a Next.js API route (<code>/api/manuscripts/upload</code>) running server-side in a standalone Docker deployment on <code>node:20-alpine</code>.</p>
+<h2 id="the-problem-with-pdfjs-dist">The Problem with <code>pdfjs-dist</code></h2>
+<p>My first instinct was to reach for <strong><code>pdfjs-dist</code></strong> (Mozilla&#39;s PDF.js). It&#39;s the gold standard for PDF parsing, widely used, and well-documented. The problem is that it&#39;s designed for the browser.</p>
+<p>At module-evaluation time — before any of my code runs — <code>pdfjs-dist</code> attempts to reference browser globals that don&#39;t exist in Node.js:</p>
+<ul>
+<li><strong><code>DOMMatrix</code></strong> — coordinate transforms and text positioning</li>
+<li><strong><code>Path2D</code></strong> — vector path rendering</li>
+<li><strong><code>ImageData</code></strong> — image pixel data</li>
+</ul>
+<p>The API route crashed immediately on import:</p>
+<pre><code>ReferenceError: DOMMatrix is not defined
+</code></pre>
+<p>On top of that, Next.js standalone builds use <strong>output file tracing</strong> to determine which <code>node_modules</code> files to include in the deployment artifact. <code>pdfjs-dist</code> has a complex file structure with worker scripts, WASM binaries, and legacy build variants. The tracer frequently missed files that were loaded at runtime via dynamic <code>import()</code>, causing <code>MODULE_NOT_FOUND</code> errors in production that didn&#39;t appear in local development.</p>
+<h2 id="the-attempts-that-didnt-stick">The Attempts That Didn&#39;t Stick</h2>
+<p>I went through two earlier approaches before landing on the final solution.</p>
+<p><strong>Attempt 1: Polyfill the browser globals.</strong> I wrote ~80 lines of stub classes for <code>DOMMatrix</code>, <code>Path2D</code>, and <code>ImageData</code>, injecting them onto <code>globalThis</code> before importing <code>pdfjs-dist</code>. This worked locally but was fragile — any update to <code>pdfjs-dist</code> could introduce references to additional browser APIs, and it still didn&#39;t solve the build tracing issue.</p>
+<p><strong>Attempt 2: Replace <code>pdfjs-dist</code> with <code>pdf-parse</code>.</strong> The <code>pdf-parse</code> library is marketed as Node.js-native — pass a buffer in, get text out. This dropped the extraction code from ~115 lines to 7:</p>
+<pre><code class="language-typescript">import { PDFParse } from &#39;pdf-parse&#39;;
+
+export async function extractTextFromPDF(buffer: Buffer): Promise&lt;string&gt; {
+  const parser = new PDFParse({ data: new Uint8Array(buffer) });
+  const result = await parser.getText();
+  return result.text;
+}
+</code></pre>
+<p>I also added <code>outputFileTracingIncludes</code> to <code>next.config.ts</code> to make sure the standalone build actually copied the required <code>node_modules</code> into the deployment artifact:</p>
+<pre><code class="language-typescript">outputFileTracingIncludes: {
+  &quot;/api/manuscripts/upload&quot;: [
+    &quot;./node_modules/pdf-parse/**/*&quot;,
+    &quot;./node_modules/pdfjs-dist/**/*&quot;,
+  ],
+},
+</code></pre>
+<p>This worked in local development. It did not work in Docker.</p>
+<h2 id="the-crash-nobody-could-see">The Crash Nobody Could See</h2>
+<p>After deploying to Docker, the upload route returned a 500 error with no useful information. The container logs showed nothing. Sentry captured nothing. The feature simply didn&#39;t work.</p>
+<p>This is where the debugging got interesting.</p>
+<p>The root cause was hiding behind two layers of invisibility. First, <code>pdf-parse</code> v2.x depends on <code>pdfjs-dist</code> 5.x as a <strong>transitive dependency</strong>. Even though <code>pdf-parse</code> presents a clean Node.js API, under the hood it still loads <code>pdfjs-dist</code>, which still expects those browser globals. Second, all of my server-side logging was gated behind an <code>isDev</code> check:</p>
+<pre><code class="language-typescript">const isDev = process.env.NODE_ENV === &#39;development&#39;;
+
+if (isDev) {
+  console.log(&#39;debug info...&#39;);
+}
+</code></pre>
+<p>In Docker, <code>NODE_ENV</code> is always <code>production</code>. Every debug log was silenced. The crash happened at module resolution time — before the route handler&#39;s <code>try/catch</code> even ran — so Sentry never captured it either.</p>
+<p>When I finally got visibility into the container, the actual errors were:</p>
+<pre><code>Error: Failed to load external module pdf-parse: ReferenceError: DOMMatrix is not defined
+</code></pre>
+<pre><code>Warning: Cannot load &quot;@napi-rs/canvas&quot; package
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `ImageData`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+</code></pre>
+<p>The <code>pdfjs-dist</code> source code already had logic to import <code>@napi-rs/canvas</code> and use it to polyfill the missing browser APIs. It just needed the package to be installed.</p>
+<h2 id="the-fix">The Fix</h2>
+<h3 id="install-napi-rscanvas">Install <code>@napi-rs/canvas</code></h3>
+<pre><code class="language-bash">npm install @napi-rs/canvas
+</code></pre>
+<p><code>@napi-rs/canvas</code> is a <strong>Rust-based native module</strong> that ships prebuilt binaries for each platform. Unlike the older C++ <code>canvas</code> package that requires a build toolchain (<code>python3</code>, <code>make</code>, <code>g++</code>, <code>cairo-dev</code>), this one just works. npm selects the correct binary based on the container&#39;s OS and architecture automatically.</p>
+<h3 id="update-the-nextjs-build-config">Update the Next.js Build Config</h3>
+<p>The standalone build needs to know about the new dependency and its platform-specific native binaries:</p>
+<pre><code class="language-typescript">const nextConfig: NextConfig = {
+  output: &quot;standalone&quot;,
+  serverExternalPackages: [&quot;pdf-parse&quot;, &quot;pdfjs-dist&quot;, &quot;@napi-rs/canvas&quot;],
+  outputFileTracingIncludes: {
+    &quot;/api/manuscripts/upload&quot;: [
+      &quot;./node_modules/pdf-parse/**/*&quot;,
+      &quot;./node_modules/pdfjs-dist/**/*&quot;,
+      &quot;./node_modules/@napi-rs/canvas/**/*&quot;,
+      &quot;./node_modules/@napi-rs/canvas-linux-x64-musl/**/*&quot;,
+      &quot;./node_modules/@napi-rs/canvas-linux-arm64-musl/**/*&quot;,
+    ],
+  },
+};
+</code></pre>
+<p>Both <code>x64-musl</code> and <code>arm64-musl</code> variants are included to cover common VPS architectures. Only the one matching the build container&#39;s arch will actually be installed — the other glob matches nothing and is harmlessly ignored.</p>
+<p>The <code>serverExternalPackages</code> entry tells Next.js not to bundle these packages (they stay as external <code>require</code>/<code>import</code> calls). The <code>outputFileTracingIncludes</code> entry tells the tracer to copy them into the standalone output directory anyway.</p>
+<h3 id="zero-changes-to-extraction-code">Zero Changes to Extraction Code</h3>
+<p>The extraction logic in <code>pdf-extract.ts</code> didn&#39;t change at all. The fix was purely at the dependency and config level. <code>pdfjs-dist</code> already contains the code to discover and use <code>@napi-rs/canvas</code> — it just needs the package to exist in <code>node_modules</code>.</p>
+<h2 id="the-logging-fix">The Logging Fix</h2>
+<p>The invisible crash exposed a bigger problem: my logging strategy was wrong for production containers. I replaced the <code>isDev</code> / <code>debug()</code> pattern with a structured logger controlled by a <code>LOG_LEVEL</code> environment variable:</p>
+<pre><code class="language-typescript">// src/lib/logger.ts
+const LOG_LEVEL = process.env.LOG_LEVEL || &#39;info&#39;;
+
+const levels = { debug: 0, info: 1, warn: 2, error: 3 };
+
+function shouldLog(level: string): boolean {
+  return levels[level] &gt;= levels[LOG_LEVEL];
+}
+
+export const logger = {
+  debug: (...args: any[]) =&gt; shouldLog(&#39;debug&#39;) &amp;&amp; console.log(&#39;[DEBUG]&#39;, ...args),
+  info: (...args: any[]) =&gt; shouldLog(&#39;info&#39;) &amp;&amp; console.log(&#39;[INFO]&#39;, ...args),
+  warn: (...args: any[]) =&gt; shouldLog(&#39;warn&#39;) &amp;&amp; console.warn(&#39;[WARN]&#39;, ...args),
+  error: (...args: any[]) =&gt; shouldLog(&#39;error&#39;) &amp;&amp; console.error(&#39;[ERROR]&#39;, ...args),
+};
+</code></pre>
+<p>Now logs are visible in production Docker containers when <code>LOG_LEVEL=debug</code> is set, without requiring <code>NODE_ENV=development</code>. I also added a <code>docker-compose.local.yml</code> for local production testing with <code>LOG_LEVEL=debug</code> enabled by default, so I can catch these issues before they reach a real deployment.</p>
+<h2 id="why-this-was-hard">Why This Was Hard</h2>
+<p>This bug hit a confluence of issues that made it particularly difficult to diagnose:</p>
+<ol>
+<li><p><strong>Transitive dependency.</strong> <code>pdf-parse</code> advertises itself as Node-native, but it wraps <code>pdfjs-dist</code> which is not. The browser global requirement was hidden one level down in the dependency tree.</p>
+</li>
+<li><p><strong>Module-time crash.</strong> The error occurred at <code>import()</code> resolution, before any application-level error handling could catch it. Sentry, try/catch blocks, error boundaries — none of it mattered.</p>
+</li>
+<li><p><strong>Silent failure in production.</strong> The logging pattern (<code>isDev</code> check) meant the container gave no indication of what was wrong. The only symptom was a generic 500 response.</p>
+</li>
+<li><p><strong>Environment-specific.</strong> It worked in local development (where Node.js development builds have different module resolution behavior) and failed only in the Docker standalone build.</p>
+</li>
+<li><p><strong>Build tracing.</strong> Even after fixing the runtime error, the Next.js standalone output file tracer needed explicit instructions to include the native binaries in the deployment artifact.</p>
+</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><p><strong>Check your transitive dependencies.</strong> A library can have a clean API but a messy dependency tree. <code>pdf-parse</code> wraps <code>pdfjs-dist</code>, which means you inherit all of <code>pdfjs-dist</code>&#39;s server-side incompatibilities.</p>
+</li>
+<li><p><strong>Never gate all logging behind <code>NODE_ENV</code>.</strong> Use a separate <code>LOG_LEVEL</code> variable so you can get debug output in production containers without changing the build mode.</p>
+</li>
+<li><p><strong>Test in Docker locally.</strong> If your deployment target is a Docker standalone build, run that build locally before pushing. A <code>docker-compose.local.yml</code> with debug logging enabled catches most of these issues.</p>
+</li>
+<li><p><strong><code>outputFileTracingIncludes</code> is your friend.</strong> Next.js standalone builds frequently miss native modules and complex dependency trees. When in doubt, explicitly tell the tracer what to include.</p>
+</li>
+<li><p><strong><code>@napi-rs/canvas</code> is the right answer for <code>pdfjs-dist</code> on Node.js.</strong> The library already expects it. No polyfills, no stubs, no custom code — just install the package and it works.</p>
+</li>
+</ol>
+<hr>
+<p><em>Running into similar issues with PDF processing in Next.js? Let me know — I&#39;ve probably already hit the error you&#39;re looking at.</em></p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="sitemap.xml">Sitemap</a> | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>

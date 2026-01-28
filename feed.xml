@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Thu, 22 Jan 2026 01:54:25 GMT</lastBuildDate>
+  <lastBuildDate>Wed, 28 Jan 2026 01:48:43 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>PDF Text Extraction in Next.js Standalone Builds</title>
+    <link>https://segar.me/blog/posts/pdf_extraction.html</link>
+    <guid>https://segar.me/blog/posts/pdf_extraction.html</guid>
+    <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
+    <description>How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.</description>
+  </item>
   <item>
     <title>Migrating Static Sites to Dokploy with Traefik and Let&apos;s Encrypt</title>
     <link>https://segar.me/blog/posts/dokploy.html</link>
