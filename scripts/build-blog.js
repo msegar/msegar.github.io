@@ -199,7 +199,7 @@ function generateBlogIndex(posts) {
     return `
     <article class="blog-card">
         <div class="blog-thumbnail">
-            ${post.img ? `<img src="${post.img}" alt="${post.title}">` : '<span>Featured Image</span>'}
+            ${post.img ? `<img src="${post.img}" alt="${post.title}" loading="lazy">` : '<span>Featured Image</span>'}
         </div>
         <div class="blog-content">
             <h3 class="blog-title">${post.title}</h3>
