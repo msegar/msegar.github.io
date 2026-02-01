@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Wed, 28 Jan 2026 01:57:35 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 01 Feb 2026 23:59:01 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>How I Boosted My Next.js Landing Page from 76 to 96 on Lighthouse</title>
+    <link>https://segar.me/blog/posts/nextjs_optimization.html</link>
+    <guid>https://segar.me/blog/posts/nextjs_optimization.html</guid>
+    <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+    <description>A 50KB animation library was blocking my landing page render. Here&apos;s how I replaced it with CSS and gained 20 Lighthouse points in the process.</description>
+  </item>
   <item>
     <title>PDF Text Extraction in Next.js Standalone Builds</title>
     <link>https://segar.me/blog/posts/pdf_extraction.html</link>
