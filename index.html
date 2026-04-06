@@ -181,9 +181,15 @@
                                 <a href="https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ" title="View Dr. Matt Segar's publications on Google Scholar" class="social-link" rel="noopener">
                                     <i class="fas fa-graduation-cap" aria-hidden="true"></i> Google Scholar
                                 </a>
-                                <a href="mailto:matt@segar.me" title="Email Dr. Matt Segar" class="social-link">
+                                <a id="contact-link" href="#" title="Email Dr. Matt Segar" class="social-link">
                                     <i class="far fa-envelope" aria-hidden="true"></i> Email
                                 </a>
+                                <script>
+                                (function() {
+                                    var u = 'matt', d = 'segar.me';
+                                    document.getElementById('contact-link').href = 'mailto:' + u + '@' + d;
+                                })();
+                                </script>
                                 <a href="https://www.cvriskscores.com" title="Access Cardiovascular Risk Assessment Tools" class="social-link" rel="noopener">
                                     <i class="fas fa-heartbeat" aria-hidden="true"></i> CV Risk Scores
                                 </a>
