@@ -1,0 +1,38 @@
+# Matt Segar
+
+> Personal site of Dr. Matt Segar — cardiac electrophysiologist, AI developer, and healthcare entrepreneur. Writing on medical AI, machine learning, web development infrastructure, and physician-built software.
+
+Matt is a practicing cardiac electrophysiologist who builds software at the intersection of medicine and machine learning. Notable work includes the WATCH-DM Risk Score for heart failure prediction in diabetes, ReCODE Medical, and EPLog (an EP study logging app for cardiologists). The blog covers practical engineering posts (Next.js, Supabase, RunPod, Dokploy, R Plumber) and clinical/AI tooling experiences.
+
+## Core pages
+
+- [Home](https://segar.me/): Bio, research highlights, and projects.
+- [CV](https://segar.me/cv.html): Full curriculum vitae — clinical training, publications, and research.
+- [Blog index](https://segar.me/blog/index.html): All posts on medicine, AI, and software.
+- [RSS feed](https://segar.me/feed.xml): Atom/RSS feed for blog posts.
+
+## Projects
+
+- [EPLog](https://segar.me/eplog.html): iOS app for cardiac electrophysiologists to log EP studies and ablation procedures.
+- [VA Lab Formatter](https://segar.me/valabformatter/index.html): Tool that reformats VA CPRS lab data into a more readable view for clinicians.
+- [Job Search Book](https://segar.me/job-search-book.html): Companion site for a book on the medical job search.
+- [Book](https://segar.me/book.html): Author page for published work.
+
+## Blog posts
+
+- [Using Supabase MCP with Multiple Organizations in Claude Code](https://segar.me/blog/posts/supabase_multiple_orgs.html): Configuring multiple Supabase MCP servers in Claude Code to work across orgs without constant re-auth.
+- [How I Boosted My Next.js Landing Page from 76 to 96 on Lighthouse](https://segar.me/blog/posts/nextjs_optimization.html): Replacing a 50KB animation library with CSS to fix render-blocking and gain 20 Lighthouse points.
+- [PDF Text Extraction in Next.js Standalone Builds](https://segar.me/blog/posts/pdf_extraction.html): Debugging a PDF upload feature across browser polyfills, build tracing, and Docker containers.
+- [Migrating Static Sites to Dokploy with Traefik and Let's Encrypt](https://segar.me/blog/posts/dokploy.html): Hosting static sites and React SPAs on Dokploy, with SSL and networking gotchas.
+- [Embedding 500K Medical Texts with PubMedBERT on RunPod](https://segar.me/blog/posts/runpod.html): Running large-scale biomedical embeddings on GPU.
+- [Doximity AI Scribe Experience](https://segar.me/blog/posts/doximity.html): Using Doximity's AI Scribe for cardiology documentation — setup and workflow.
+- [Building a Simple Static Blog with JavaScript and Markdown](https://segar.me/blog/posts/static_blog.html): A lightweight, SEO-friendly blog from markdown files and static HTML templates.
+- [CPRS Lab Formatter](https://segar.me/blog/posts/cprs_lab_formatter.html): Making VA CPRS EHR lab data easier to read.
+- [R Bookdown Pagination](https://segar.me/blog/posts/bookdown_pagination.html): Understanding KDP pagination with R Bookdown.
+- [R Plumber API on Heroku](https://segar.me/blog/posts/r_plumber.html): Deploying an R Plumber API on Heroku for serving ML models.
+- [Weather Variability](https://segar.me/blog/posts/weather_variability.html): Which US county has the highest day-to-day weather variation?
+
+## Optional
+
+- [Privacy Policy](https://segar.me/privacy-policy.html): Site privacy policy.
+- [Sitemap](https://segar.me/sitemap.xml): XML sitemap.

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using Supabase MCP with Multiple Organizations in Claude Code - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="claude, code, supabase, project, multiple">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/supabase_multiple_orgs.html">
+    <meta property="og:title" content="Using Supabase MCP with Multiple Organizations in Claude Code - Matt Segar">
+    <meta property="og:description" content="How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out">
+    <meta property="og:image" content="../assets/images/supabase-mcp-multi-org.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/supabase_multiple_orgs.html">
+    <meta property="twitter:title" content="Using Supabase MCP with Multiple Organizations in Claude Code - Matt Segar">
+    <meta property="twitter:description" content="How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out">
+    <meta property="twitter:image" content="../assets/images/supabase-mcp-multi-org.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/supabase_multiple_orgs.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Using Supabase MCP with Multiple Organizations in Claude Code",
+      "description": "How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out",
+      "image": "../assets/images/supabase-mcp-multi-org.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-04-30T00:00:00.000Z",
+      "dateModified": "2026-04-30T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/supabase_multiple_orgs.html"
+      },
+      "keywords": "claude, code, supabase, project, multiple"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Using Supabase MCP with Multiple Organizations in Claude Code</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-04-30T00:00:00.000Z">April 29, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="using-supabase-mcp-with-multiple-organizations-in-claude-code">Using Supabase MCP with Multiple Organizations in Claude Code</h1>
+<p>If you work across multiple Supabase organizations — say, a personal project and a client project — you&#39;ve probably hit this wall: Claude Code only lets you authenticate one Supabase org at a time, and switching means logging out and back in through a browser OAuth flow. Every. Single. Time.</p>
+<p>After fighting with this for longer than I&#39;d like to admit, I found a clean solution that lets you have multiple Supabase MCP servers running simultaneously, each scoped to a different org and project. Here&#39;s exactly how to set it up.</p>
+<h2 id="the-problem-with-the-default-setup">The Problem with the Default Setup</h2>
+<p>The default Supabase MCP setup uses OAuth browser-based authentication. When you run <code>/mcp</code> in Claude Code and authorize, you&#39;re granting access to one specific Supabase organization. There&#39;s no built-in way to be authenticated to two orgs at once using this flow.</p>
+<p>There are also a few things that tripped me up when trying to solve this:</p>
+<ol>
+<li><strong>The <code>npx</code> stdio approach silently breaks</strong> - Many tutorials still show configuring the MCP server by spawning <code>@supabase/mcp-server-supabase</code> via <code>npx</code>. The server will show as &quot;Connected&quot; in <code>claude mcp list</code>, but the tools simply won&#39;t be discovered. No error, just silence.</li>
+<li><strong>PATs passed as CLI flags don&#39;t work</strong> - Passing <code>--access-token</code> as an argument to the npx command is a pattern that appears in old docs and blog posts, but it&#39;s not the supported authentication path for Claude Code.</li>
+<li><strong>The <code>Authorization</code> header approach is what actually works</strong> - Supabase&#39;s MCP server supports token authentication via HTTP headers, and Claude Code supports a <code>headers</code> field in its http-type MCP config.</li>
+</ol>
+<h2 id="the-solution-http-type-mcp-with-authorization-headers">The Solution: HTTP-type MCP with Authorization Headers</h2>
+<p>Instead of spawning a local npx process, we use Supabase&#39;s hosted remote MCP URL (<code>https://mcp.supabase.com/mcp</code>) and authenticate with a Personal Access Token (PAT) passed via an <code>Authorization</code> header. You can define as many of these as you want — one per project — each with a different name, URL, and token.</p>
+<h3 id="step-1-generate-a-pat-for-each-supabase-org">Step 1: Generate a PAT for Each Supabase Org</h3>
+<p>For each Supabase organization you want to connect to:</p>
+<ol>
+<li>Log into that org&#39;s account at <a href="https://supabase.com">supabase.com</a></li>
+<li>Click your avatar in the top right → <strong>Account Preferences</strong></li>
+<li>Go to <strong>Access Tokens</strong> → <strong>Generate new token</strong></li>
+<li>Name it something descriptive (e.g. &quot;Claude Code - Personal&quot; or &quot;Claude Code - ClientX&quot;)</li>
+<li>Copy and save the token — you won&#39;t be able to see it again</li>
+</ol>
+<p>Repeat for each org. If you have two orgs, you&#39;ll end up with two PATs.</p>
+<h3 id="step-2-find-your-project-refs">Step 2: Find Your Project Refs</h3>
+<p>For each project you want to scope the MCP to:</p>
+<ol>
+<li>Open the project in the Supabase dashboard</li>
+<li>Go to <strong>Project Settings</strong> → <strong>General</strong></li>
+<li>Copy the <strong>Project ID</strong> (this is your <code>project_ref</code>)</li>
+</ol>
+<p>Scoping to a specific project ref is strongly recommended — without it, the MCP server has access to everything in that org.</p>
+<h3 id="step-3-configure-mcpjson">Step 3: Configure <code>.mcp.json</code></h3>
+<p>In the root of each Claude Code project, create (or edit) a <code>.mcp.json</code> file:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;supabase-project-a&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF_A&quot;,
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer YOUR_PAT_FOR_ORG_A&quot;
+      }
+    },
+    &quot;supabase-project-b&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF_B&quot;,
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer YOUR_PAT_FOR_ORG_B&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p>Give each server a descriptive name (the key in <code>mcpServers</code>) so you can tell them apart. Claude Code will pick this up automatically when you open a session in that directory.</p>
+<h3 id="step-4-verify-its-working">Step 4: Verify It&#39;s Working</h3>
+<p>Open Claude Code in the project directory and run <code>/mcp</code>. You should see your named servers listed and connected. Then try a quick sanity check:</p>
+<blockquote>
+<p>&quot;List all tables in the database using MCP tools.&quot;</p>
+</blockquote>
+<p>If tools come back, you&#39;re in business.</p>
+<h2 id="using-multiple-projects-from-one-config">Using Multiple Projects from One Config</h2>
+<p>The real power of this approach is that you can define both servers in a single <code>.mcp.json</code> and have them active at the same time. Claude Code will have simultaneous access to both projects and can query either one in the same session. Just be explicit in your prompts about which project you&#39;re referring to.</p>
+<p>If you&#39;d rather keep configs separate, just put a <code>.mcp.json</code> in each project&#39;s directory with only the relevant server defined. Claude Code loads config from the working directory, so each project gets its own isolated MCP context.</p>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>A few things worth keeping in mind:</p>
+<ul>
+<li><strong>Add <code>.mcp.json</code> to <code>.gitignore</code></strong> - PATs are secrets and should never be committed to version control.</li>
+<li><strong>Use environment variables instead of hardcoding tokens</strong> - Claude Code will expand shell environment variables, so you can do <code>&quot;Bearer $SUPABASE_PAT_PERSONAL&quot;</code> and set the variables in your shell profile.</li>
+<li><strong>Consider read-only mode</strong> for projects where you only need to query data. Just append <code>&amp;read_only=true</code> to the URL: <code>https://mcp.supabase.com/mcp?project_ref=abc123&amp;read_only=true</code></li>
+<li><strong>Scope to a project ref whenever possible</strong> - Without a <code>project_ref</code>, the MCP server has access to every project in that org.</li>
+</ul>
+<h2 id="why-this-approach-works">Why This Approach Works</h2>
+<p>Supabase&#39;s MCP server is a hosted remote server, not a locally-installed package. The <code>type: &quot;http&quot;</code> configuration tells Claude Code to connect to it over HTTP rather than spawning a subprocess. The <code>Authorization</code> header is the officially supported way to authenticate in non-interactive environments where a browser OAuth flow isn&#39;t possible — which is exactly what we need here for a stable, multi-org setup.</p>
+<p>The <code>npx</code> approach predates Supabase&#39;s hosted remote MCP and is effectively deprecated for this use case, even though it still appears in a lot of tutorials and community posts.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Once you get past the authentication model shift, the setup is actually quite clean. A <code>.mcp.json</code> with two entries, two PATs, two project refs — and you&#39;re done. No more logging in and out, no browser tabs, no broken tool discovery.</p>
+<p>If you&#39;re building across multiple Supabase projects or organizations with Claude Code, this is the approach to use. The configuration takes about five minutes and saves a lot of friction.</p>
+<p>The full config template is above — swap in your own project refs and tokens and you should be up and running.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
