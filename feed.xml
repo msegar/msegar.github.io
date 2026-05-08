@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Fri, 01 May 2026 02:24:04 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 08 May 2026 19:23:50 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>A Sane Schema Workflow for Supabase Projects</title>
+    <link>https://segar.me/blog/posts/supabase_schema_workflow.html</link>
+    <guid>https://segar.me/blog/posts/supabase_schema_workflow.html</guid>
+    <pubDate>Fri, 08 May 2026 00:00:00 GMT</pubDate>
+    <description>How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can&apos;t capture.</description>
+  </item>
   <item>
     <title>Using Supabase MCP with Multiple Organizations in Claude Code</title>
     <link>https://segar.me/blog/posts/supabase_multiple_orgs.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/bookdown_pagination.html</guid>
     <pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
     <description>Understanding KDP pagination with R Bookdown</description>
-  </item>
-  <item>
-    <title>R Plumber API on Heroku</title>
-    <link>https://segar.me/blog/posts/r_plumber.html</link>
-    <guid>https://segar.me/blog/posts/r_plumber.html</guid>
-    <pubDate>Thu, 27 Feb 2025 00:00:00 GMT</pubDate>
-    <description>Deploy a R Plumber API on Heroku for serving machine learning models</description>
   </item>
 </channel>
 </rss>
