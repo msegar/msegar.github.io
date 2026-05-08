@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Sane Schema Workflow for Supabase Projects - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="schema, database, migration, supabase, files">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/supabase_schema_workflow.html">
+    <meta property="og:title" content="A Sane Schema Workflow for Supabase Projects - Matt Segar">
+    <meta property="og:description" content="How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.">
+    <meta property="og:image" content="../assets/images/supabase-schema-workflow.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/supabase_schema_workflow.html">
+    <meta property="twitter:title" content="A Sane Schema Workflow for Supabase Projects - Matt Segar">
+    <meta property="twitter:description" content="How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.">
+    <meta property="twitter:image" content="../assets/images/supabase-schema-workflow.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/supabase_schema_workflow.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "A Sane Schema Workflow for Supabase Projects",
+      "description": "How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.",
+      "image": "../assets/images/supabase-schema-workflow.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-05-08T00:00:00.000Z",
+      "dateModified": "2026-05-08T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/supabase_schema_workflow.html"
+      },
+      "keywords": "schema, database, migration, supabase, files"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">A Sane Schema Workflow for Supabase Projects</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-05-08T00:00:00.000Z">May 7, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="a-sane-schema-workflow-for-supabase-projects">A Sane Schema Workflow for Supabase Projects</h1>
+<p>Most Supabase projects I&#39;ve seen end up in one of two failure modes for schema management. Either everyone hand-writes migration files into <code>supabase/migrations/</code>, drifts the live database out of sync with them, and then nobody trusts the folder. Or there are no migrations at all, just a Supabase dashboard and a vague memory of what was changed last Tuesday.</p>
+<p>I went through both of these on <a href="www.claripulse.com">Claripulse</a> before settling on a workflow that I actually like. The short version: the live database is the source of truth, a <code>pg_dump</code> snapshot in <code>supabase/schema/</code> is the durable record, migrations are applied through the <a href="https://segar.me/blog/posts/supabase_multiple_orgs.html">Supabase MCP server</a>, and a single <code>docs/database_notes.md</code> captures the design intent that <code>pg_dump</code> cannot.</p>
+<p>Here&#39;s exactly how it&#39;s set up.</p>
+<h2 id="the-core-idea">The Core Idea</h2>
+<p>There are three layers, and each one has exactly one job:</p>
+<ol>
+<li><strong>The live Supabase database</strong> is the source of truth. Anything you can query is real. Anything in a file but not in the database is fiction.</li>
+<li><strong><code>supabase/schema/</code></strong> is an auto-generated snapshot of the live database, committed to git. It exists so that code review, <code>git blame</code>, and historical diffs work for schema changes the same way they work for application code.</li>
+<li><strong><code>docs/database_notes.md</code></strong> is a hand-written file that captures the <em>why</em> behind non-obvious schema choices. Lifecycle states for an enum, the reasoning behind a partial-index predicate, the constraint that prevents a foot-gun. Things <code>pg_dump</code> flattens or omits.</li>
+</ol>
+<p>There is no folder of hand-written migration files that you maintain. Migrations are created and applied through the MCP server, which records them in <code>supabase_migrations.schema_migrations</code> automatically.</p>
+<h2 id="why-i-stopped-hand-writing-migration-files">Why I Stopped Hand-Writing Migration Files</h2>
+<p>The classic Supabase setup has you write <code>supabase/migrations/NNN_description.sql</code> files and apply them via the Supabase CLI. This works fine on day one. The problems show up later:</p>
+<ol>
+<li><strong>Drift.</strong> Someone clicks something in the dashboard, or runs a one-off <code>ALTER TABLE</code> in a <code>psql</code> shell, and now the migration folder no longer describes the actual database. Once that happens, every future migration is built on a fiction.</li>
+<li><strong>Re-running history is fragile.</strong> Long migration histories accumulate <code>DROP COLUMN</code> and <code>RENAME</code> and partial reversions. Replaying them from scratch on a new environment becomes its own debugging exercise.</li>
+<li><strong>The folder doesn&#39;t help reviewers.</strong> A PR that says &quot;added a partial index&quot; gives you the <code>CREATE INDEX</code> but not the surrounding tables, indexes, and functions it interacts with. Reviewers can&#39;t see the shape of the schema, only the delta.</li>
+</ol>
+<p>What I wanted was a single file (or a small set of split files) where I could open one tab, hit Cmd-F, and immediately see the current state of the database. That is what <code>pg_dump --schema-only</code> produces, and that is what gets committed.</p>
+<h2 id="the-refresh_schemash-script">The <code>refresh_schema.sh</code> Script</h2>
+<p>The whole snapshot pipeline is one shell script and one small Python helper:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+# scripts/refresh_schema.sh
+set -euo pipefail
+cd &quot;$(dirname &quot;$0&quot;)/..&quot;
+
+if [ -z &quot;${DATABASE_URL:-}&quot; ] &amp;&amp; [ -f .env ]; then
+  set +e; set -a
+  . ./.env 2&gt;/dev/null
+  set +a; set -e
+fi
+
+if [ -z &quot;${DATABASE_URL:-}&quot; ]; then
+  echo &quot;ERROR: DATABASE_URL not set.&quot; &gt;&amp;2
+  exit 1
+fi
+
+mkdir -p supabase/schema
+
+pg_dump &quot;$DATABASE_URL&quot; \
+  --schema-only --no-owner --no-acl --schema=public \
+  | sed -E &#39;/^\\(restrict|unrestrict) /d&#39; \
+  &gt; supabase/schema/schema_dump.sql
+
+uv run python scripts/split_schema_dump.py supabase/schema/schema_dump.sql
+
+echo &quot;Done. Review with: git diff supabase/schema/&quot;
+</code></pre>
+<p>A few things worth calling out:</p>
+<ul>
+<li><strong><code>--schema-only --no-owner --no-acl --schema=public</code></strong> strips the parts of <code>pg_dump</code> output that are noisy and environment-specific. No data, no role grants, no ownership lines. Just the structure.</li>
+<li><strong>The <code>sed</code> filter</strong> removes <code>\restrict</code> and <code>\unrestrict</code> tokens that newer <code>pg_dump</code> versions emit with random nonces inside them. Without this, every snapshot diff is full of meaningless changes and you eventually stop reading them. (If you stop reading the diffs, the snapshot has no value.)</li>
+<li><strong><code>scripts/split_schema_dump.py</code></strong> takes the monolithic dump and splits it into <code>tables.sql</code>, <code>views.sql</code>, <code>functions.sql</code>, <code>indexes.sql</code>, and <code>misc.sql</code>. The full dump still gets committed too. The split files are for navigation, the full dump is the canonical artifact.</li>
+</ul>
+<p>Splitting matters more than I expected. Once <code>schema_dump.sql</code> crosses a few thousand lines, GitHub PR diffs become unwieldy. Splitting by object type means a function change shows up in <code>functions.sql</code> and a column change shows up in <code>tables.sql</code>, and reviewers can scan the relevant file in isolation.</p>
+<h2 id="the-splitter">The Splitter</h2>
+<p>The Python helper is short and dumb on purpose. <code>pg_dump</code> writes a header before each object that looks like:</p>
+<pre><code class="language-sql">-- Name: my_function(int); Type: FUNCTION; Schema: public; Owner: -
+</code></pre>
+<p>The splitter scans for those headers, reads the <code>Type:</code>, and routes each section to the right file based on a small dict:</p>
+<pre><code class="language-python">BUCKETS = {
+    &quot;TABLE&quot;: &quot;tables.sql&quot;,
+    &quot;SEQUENCE&quot;: &quot;tables.sql&quot;,
+    &quot;CONSTRAINT&quot;: &quot;tables.sql&quot;,
+    &quot;FK CONSTRAINT&quot;: &quot;tables.sql&quot;,
+    &quot;VIEW&quot;: &quot;views.sql&quot;,
+    &quot;MATERIALIZED VIEW&quot;: &quot;views.sql&quot;,
+    &quot;FUNCTION&quot;: &quot;functions.sql&quot;,
+    &quot;PROCEDURE&quot;: &quot;functions.sql&quot;,
+    &quot;TRIGGER&quot;: &quot;functions.sql&quot;,
+    &quot;INDEX&quot;: &quot;indexes.sql&quot;,
+    # ... and a few more
+}
+</code></pre>
+<p>Anything the splitter doesn&#39;t recognize falls through to <code>misc.sql</code> so nothing is silently dropped. Each output file gets an &quot;AUTO-GENERATED, do not edit by hand&quot; header. Because this is a derived artifact, regenerating it is always cheap and there&#39;s never a reason to hand-edit one of these files.</p>
+<h2 id="applying-schema-changes-via-mcp">Applying Schema Changes via MCP</h2>
+<p>This is where the workflow diverges from the standard Supabase CLI flow. Instead of writing a migration file and running <code>supabase db push</code>, I apply migrations through the <a href="https://github.com/supabase-community/supabase-mcp">Supabase MCP server</a> directly from Claude Code:</p>
+<pre><code>mcp__supabase__apply_migration(
+  name=&quot;add_signals_quadrant_column&quot;,
+  query=&quot;ALTER TABLE signals ADD COLUMN quadrant TEXT CHECK (quadrant IN (&#39;priority&#39;, &#39;investigate&#39;, &#39;watch&#39;));&quot;
+)
+</code></pre>
+<p>Two things happen when this runs:</p>
+<ol>
+<li>The DDL is applied to the live database.</li>
+<li>The migration is recorded in <code>supabase_migrations.schema_migrations</code> with the name and SQL, the same table the Supabase CLI would write to.</li>
+</ol>
+<p>The migration history is still there, intact, queryable, and recoverable. It just lives in the database rather than in a folder of files. (You can see it via <code>mcp__supabase__list_migrations</code> or by querying <code>supabase_migrations.schema_migrations</code> directly.)</p>
+<p>After applying the migration I run:</p>
+<pre><code class="language-bash">./scripts/refresh_schema.sh
+git diff supabase/schema/
+</code></pre>
+<p>The diff should show exactly the change I just made. If it shows more than that, the live database has drifted (someone ran something out of band) and I need to figure out what before continuing.</p>
+<p>That last point is the one that makes the whole workflow worth it. <strong>The snapshot is a drift detector.</strong> If <code>git diff supabase/schema/</code> ever shows changes I didn&#39;t author, somebody (or some other process) is editing the database without going through migrations, and I want to know about it before it compounds.</p>
+<h2 id="the-migration-folder">The Migration Folder</h2>
+<p>I keep <code>supabase/migrations/</code> mostly empty, with a single file: <code>001_baseline.sql</code>. It&#39;s an idempotent consolidated snapshot of the schema, useful as a &quot;what does this database actually look like, top to bottom&quot; reference, and as a starting point if I ever need to bootstrap a fresh environment. It is NOT the source of truth and I don&#39;t update it on every migration. I refresh it occasionally when the schema has shifted enough that the baseline feels stale.</p>
+<p>The reason I don&#39;t save migration SQL into this folder is that the live database already has it (in <code>supabase_migrations.schema_migrations</code>) and the snapshot already shows the resulting structure. A third copy in a numbered file is redundant, and historically, redundant copies are the things that drift.</p>
+<h2 id="database_notesmd-the-things-pg_dump-cant-capture"><code>database_notes.md</code>: The Things <code>pg_dump</code> Can&#39;t Capture</h2>
+<p><code>pg_dump</code> gives you a perfect mechanical record of <em>what</em> exists. It says nothing about <em>why</em>. There are several categories of design intent that simply do not survive a schema dump:</p>
+<ul>
+<li><strong>Lifecycle semantics for enum-like columns.</strong> A <code>CHECK (status IN (&#39;active&#39;, &#39;confirmed&#39;, &#39;resolved&#39;, &#39;dismissed&#39;))</code> constraint shows you the allowed values, but not what each value means or which transitions are legal.</li>
+<li><strong>The reasoning behind a partial index predicate.</strong> <code>WHERE narrative_embedding IS NULL AND (event_description IS NOT NULL OR additional_narrative IS NOT NULL)</code> is doing a specific job for a specific worker. Future-me will not remember this in six months.</li>
+<li><strong>&quot;Don&#39;t refactor this back&quot; notes.</strong> I have one CTE in a materialized view that <em>looks</em> like it could be simplified into a single join, but the simplification inflates <code>SUM(report_count)</code> because of fan-out. The note exists so that future-me does not &quot;clean up&quot; the code and silently break the totals.</li>
+<li><strong>Why two RPCs are deliberate parallels.</strong> Some of my functions have group-level twins (<code>device_group_signal_overview</code> mirrors <code>device_signal_overview</code>). Their input/output shapes need to stay aligned, but a fresh reader has no way of knowing that from the function bodies alone.</li>
+</ul>
+<p>So I keep <code>docs/database_notes.md</code> as a hand-written companion to the auto-generated snapshot. It&#39;s small (under 100 lines) and stays small because it only contains things that genuinely cannot be inferred from the SQL itself. If I find myself writing a note that just describes what the SQL already shows, I delete it.</p>
+<h2 id="the-full-workflow">The Full Workflow</h2>
+<p>The whole loop, end to end, is just three steps:</p>
+<ol>
+<li><strong>Read state.</strong> Open <code>supabase/schema/schema_dump.sql</code> or grep one of the split files to confirm what currently exists.</li>
+<li><strong>Apply the change.</strong> Use <code>mcp__supabase__apply_migration</code> (or <code>psql &quot;$DATABASE_URL&quot; -f</code> for a manual run) with idempotent DDL: <code>CREATE ... IF NOT EXISTS</code>, <code>ALTER TABLE ... ADD COLUMN IF NOT EXISTS</code>, <code>CREATE OR REPLACE FUNCTION</code>. No <code>DROP TABLE</code> or <code>DROP COLUMN</code> without explicit thought.</li>
+<li><strong>Refresh the snapshot.</strong> Run <code>./scripts/refresh_schema.sh</code>, review the diff, and commit <code>supabase/schema/</code> alongside any application code that depends on the schema change. If the change has a non-obvious motivation, add a paragraph to <code>docs/database_notes.md</code>.</li>
+</ol>
+<p>That&#39;s it. There is no fourth step where you also write a numbered migration file by hand and try to keep it in sync.</p>
+<h2 id="what-this-buys-you">What This Buys You</h2>
+<p>A few concrete things I get from this setup that I didn&#39;t have before:</p>
+<ul>
+<li><strong>One place to read the schema.</strong> When I want to know whether a column exists, I open <code>tables.sql</code> and Cmd-F. No flipping through a dozen migration files trying to reconstruct current state.</li>
+<li><strong>Reviewable schema PRs.</strong> A PR that touches a function, an index, and a constraint shows three small diffs in three different files instead of one giant blob.</li>
+<li><strong>Drift detection for free.</strong> <code>git diff supabase/schema/</code> after a <code>refresh_schema.sh</code> run is a one-line check for &quot;did anything change in the database that I didn&#39;t intend?&quot;</li>
+<li><strong>No re-application order to debug.</strong> Because nobody is replaying a folder of migrations from scratch, there is no order-of-application bug class.</li>
+<li><strong>Notes that don&#39;t rot.</strong> Because <code>database_notes.md</code> is hand-written and small, the entropy is low and it stays accurate. The big auto-generated files don&#39;t need notes because they&#39;re the ground truth.</li>
+</ul>
+<h2 id="caveats-and-when-this-doesnt-fit">Caveats and When This Doesn&#39;t Fit</h2>
+<p>This workflow assumes a single source database (or a very small number of them) where you treat the live schema as authoritative. It works very well for:</p>
+<ul>
+<li>Solo or small-team projects.</li>
+<li>Projects where the database is hosted on Supabase and you have direct access via MCP or <code>psql</code>.</li>
+<li>Projects where you trust everyone touching the database to apply changes through the documented path.</li>
+</ul>
+<p>It fits less well for:</p>
+<ul>
+<li>Multi-environment setups where you genuinely need to replay the same migration sequence against staging, production, and CI clones from scratch. In that case the standard <code>supabase/migrations/</code> folder with sequential SQL files is still the right answer, even with the drift risk.</li>
+<li>Teams large enough that someone <em>will</em> run an ad-hoc <code>ALTER TABLE</code> against production. The drift detector helps you catch it, but it doesn&#39;t prevent it.</li>
+</ul>
+<p>For a one-database project where I want a fast, low-ceremony loop, the snapshot-plus-MCP approach has been the cleanest setup I&#39;ve used.</p>
+<h2 id="files-to-steal">Files to Steal</h2>
+<p>If you want to drop this into your own Supabase project, the two files you need are:</p>
+<ul>
+<li><code>scripts/refresh_schema.sh</code> (the bash script above)</li>
+<li><code>scripts/split_schema_dump.py</code> (a ~50-line Python script that does header-based section splitting)</li>
+</ul>
+<p>Then add <code>supabase/schema/</code> and <code>docs/database_notes.md</code> to the repo, and write a short <code>Database Rules</code> section in your <code>CLAUDE.md</code> (or <code>README.md</code>) describing the three-step workflow above so that future-you (and your AI assistants) follow the same path.</p>
+<p>The whole thing is maybe 100 lines of glue code, and it has done more for my schema sanity than any migration tool I&#39;ve used.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
