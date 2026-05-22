@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Fri, 08 May 2026 19:23:50 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 22 May 2026 16:02:24 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Adding Localization and RTL Support to a Next.js App</title>
+    <link>https://segar.me/blog/posts/app_localization_rtl.html</link>
+    <guid>https://segar.me/blog/posts/app_localization_rtl.html</guid>
+    <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+    <description>Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for</description>
+  </item>
   <item>
     <title>A Sane Schema Workflow for Supabase Projects</title>
     <link>https://segar.me/blog/posts/supabase_schema_workflow.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/cprs_lab_formatter.html</guid>
     <pubDate>Fri, 14 Mar 2025 00:00:00 GMT</pubDate>
     <description>Making Lab Data Easier to See for VA CPRS EHR</description>
-  </item>
-  <item>
-    <title>R Bookdown Pagination</title>
-    <link>https://segar.me/blog/posts/bookdown_pagination.html</link>
-    <guid>https://segar.me/blog/posts/bookdown_pagination.html</guid>
-    <pubDate>Fri, 28 Feb 2025 00:00:00 GMT</pubDate>
-    <description>Understanding KDP pagination with R Bookdown</description>
   </item>
 </channel>
 </rss>

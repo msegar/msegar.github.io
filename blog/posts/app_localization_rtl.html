@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adding Localization and RTL Support to a Next.js App - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="your, locale, language, logical, localization">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/app_localization_rtl.html">
+    <meta property="og:title" content="Adding Localization and RTL Support to a Next.js App - Matt Segar">
+    <meta property="og:description" content="Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for">
+    <meta property="og:image" content="../assets/images/app-localization-rtl.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/app_localization_rtl.html">
+    <meta property="twitter:title" content="Adding Localization and RTL Support to a Next.js App - Matt Segar">
+    <meta property="twitter:description" content="Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for">
+    <meta property="twitter:image" content="../assets/images/app-localization-rtl.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/app_localization_rtl.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Adding Localization and RTL Support to a Next.js App",
+      "description": "Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for",
+      "image": "../assets/images/app-localization-rtl.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-05-22T00:00:00.000Z",
+      "dateModified": "2026-05-22T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/app_localization_rtl.html"
+      },
+      "keywords": "your, locale, language, logical, localization"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Adding Localization and RTL Support to a Next.js App</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-05-22T00:00:00.000Z">May 22, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="adding-localization-and-rtl-support-to-a-nextjs-app">Adding Localization and RTL Support to a Next.js App</h1>
+<p>I added eight languages and right-to-left (RTL) support to <a href="https://manuscriptmind.com">ManuscriptMind</a>, an AI peer-review tool I build, taking it from English only to German, Portuguese, French, Chinese, Japanese, Arabic, and Spanish. A handful of techniques handled most of the work, and two non-obvious bugs cost more time than they should have. These are my notes on both.</p>
+<p>The principles apply to any framework. The concrete examples use Next.js (App Router), <a href="https://next-intl.dev">next-intl</a>, Tailwind CSS, and Radix UI, since that&#39;s the stack here.</p>
+<h2 id="start-with-one-source-of-truth-for-your-locales">Start With One Source of Truth for Your Locales</h2>
+<p>Before touching a single string, decide where your list of supported locales lives, and make everything derive from it. Your language switcher, your sitemap, your <code>hreflang</code> tags, and your routing config should all read from the same array.</p>
+<p>In next-intl that looks like this:</p>
+<pre><code class="language-ts">// i18n/routing.ts
+export const routing = defineRouting({
+  locales: [&#39;en&#39;, &#39;es&#39;, &#39;de&#39;, &#39;pt&#39;, &#39;fr&#39;, &#39;zh&#39;, &#39;ja&#39;, &#39;ar&#39;],
+  defaultLocale: &#39;en&#39;,
+  localePrefix: &#39;as-needed&#39;,
+});
+</code></pre>
+<p>Then the sitemap generates <code>hreflang</code> alternates by mapping over <code>routing.locales</code> instead of a hardcoded list. Add a language later and the sitemap, the switcher, and the routes all update for free. This one habit prevents the classic bug where you ship a new language but forget to add it to the SEO metadata.</p>
+<h2 id="use-logical-css-properties-so-rtl-is-almost-free">Use Logical CSS Properties So RTL Is (Almost) Free</h2>
+<p>Of everything here, this removed the most work.</p>
+<p>A lot of directional CSS gets written out of habit: <code>margin-left</code>, <code>padding-right</code>, <code>text-align: left</code>. The problem is that &quot;left&quot; and &quot;right&quot; are physical directions. In an RTL language like Arabic, the layout mirrors, and all of those physical directions are now wrong.</p>
+<p>The fix is <strong>logical properties</strong>, which describe position relative to the reading direction instead of the screen. <code>margin-inline-start</code> is &quot;the start edge,&quot; which is the left in English and the right in Arabic. The browser flips it for you when the document direction changes.</p>
+<p>Tailwind ships logical equivalents for almost everything:</p>
+<table>
+<thead>
+<tr>
+<th>Physical (avoid)</th>
+<th>Logical (use)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ml-2</code> / <code>mr-2</code></td>
+<td><code>ms-2</code> / <code>me-2</code></td>
+</tr>
+<tr>
+<td><code>pl-4</code> / <code>pr-4</code></td>
+<td><code>ps-4</code> / <code>pe-4</code></td>
+</tr>
+<tr>
+<td><code>left-0</code> / <code>right-0</code></td>
+<td><code>start-0</code> / <code>end-0</code></td>
+</tr>
+<tr>
+<td><code>text-left</code> / <code>text-right</code></td>
+<td><code>text-start</code> / <code>text-end</code></td>
+</tr>
+<tr>
+<td><code>border-l</code> / <code>border-r</code></td>
+<td><code>border-s</code> / <code>border-e</code></td>
+</tr>
+</tbody></table>
+<p>The migration is mostly a find-and-replace. Once it&#39;s done, the bulk of your UI mirrors when you flip the document direction, with no per-language stylesheets or conditional class names.</p>
+<h2 id="flip-the-document-direction-in-one-place">Flip the Document Direction in One Place</h2>
+<p>Logical properties only work if the document knows its direction. Set <code>dir</code> on the <code>&lt;html&gt;</code> element based on the active locale:</p>
+<pre><code class="language-tsx">const RTL_LOCALES = [&#39;ar&#39;];
+const dir = RTL_LOCALES.includes(locale) ? &#39;rtl&#39; : &#39;ltr&#39;;
+
+return &lt;html lang={locale} dir={dir}&gt;{children}&lt;/html&gt;;
+</code></pre>
+<p>There is a catch with component libraries. Floating elements like dropdowns, popovers, and tooltips often render in a portal at the bottom of the <code>&lt;body&gt;</code>, outside your layout tree. They can miss the <code>dir</code> context. Radix solves this with a <code>DirectionProvider</code>, so wrap your app once:</p>
+<pre><code class="language-tsx">import { DirectionProvider } from &#39;@radix-ui/react-direction&#39;;
+
+&lt;DirectionProvider dir={dir}&gt;{children}&lt;/DirectionProvider&gt;
+</code></pre>
+<p>Now your portaled menus open and align on the correct side in RTL.</p>
+<h2 id="flip-directional-icons-by-hand">Flip Directional Icons by Hand</h2>
+<p>Logical properties handle spacing and alignment, but they do nothing for icons that point somewhere. A &quot;back&quot; arrow, a chevron in a breadcrumb, a caret on an expandable row: these all point left or right on purpose, and in RTL they should point the other way.</p>
+<p>Tailwind&#39;s <code>rtl:</code> variant makes this a one-liner:</p>
+<pre><code class="language-tsx">&lt;ArrowLeft className=&quot;h-4 w-4 rtl:rotate-180&quot; /&gt;
+</code></pre>
+<p>For a caret that also has an open or closed state, combine a mirror with the existing rotation:</p>
+<pre><code class="language-tsx">&lt;CaretRight className=&quot;rtl:-scale-x-100 data-[open]:rotate-90&quot; /&gt;
+</code></pre>
+<p>It&#39;s a small detail, but arrows pointing the wrong way make a localized UI feel broken even when the rest is correct.</p>
+<h2 id="separate-the-url-locale-from-the-formatting-locale">Separate the URL Locale From the Formatting Locale</h2>
+<p>The locale code in your URL and the locale code you hand to <code>Intl</code> do not have to be the same string.</p>
+<p>I wanted Brazilian Portuguese, but I wanted the URL to stay short and clean as <code>/pt</code>, not <code>/pt-BR</code>. The trouble is that <code>Intl</code> resolves a bare <code>pt</code> to generic or European Portuguese, so dates and numbers came out wrong for Brazilian users.</p>
+<p>The answer is a tiny mapping layer. Keep the short slug for routing, and widen it to a full <a href="https://en.wikipedia.org/wiki/IETF_language_tag">BCP-47</a> tag only when you format:</p>
+<pre><code class="language-ts">const FORMATTING_LOCALE: Record&lt;string, string&gt; = { pt: &#39;pt-BR&#39; };
+
+export function getFormattingLocale(locale: string) {
+  return FORMATTING_LOCALE[locale] ?? locale;
+}
+</code></pre>
+<p>Then use <code>getFormattingLocale(locale)</code> anywhere you call <code>Intl</code> (dates, numbers, currency), for the <code>&lt;html lang&gt;</code> attribute, and for your <code>hreflang</code> keys. Your URLs stay tidy, your formatting is correct, and search engines still see the precise regional tag. The same trick works for <code>en-GB</code> versus <code>en-US</code>, or any case where the route and the format diverge.</p>
+<h2 id="translate-the-boring-parts-with-an-llm">Translate the Boring Parts With an LLM</h2>
+<p>Once your strings live in JSON message catalogs, a language model is a good fit for translating them. I wrote a small script that reads the English catalog, finds the keys missing from a target language, sends those keys to the model, and merges the result back.</p>
+<p>A few rules made the output reliable:</p>
+<ul>
+<li><strong>Only translate the diff.</strong> Compare against the existing target file and translate keys that are missing or still identical to English. This makes re-runs cheap and keeps human edits intact.</li>
+<li><strong>Preserve placeholders verbatim.</strong> Tell the model to leave <a href="https://formatjs.io/docs/core-concepts/icu-syntax/">ICU MessageFormat</a> tokens like <code>{count, plural, one {# credit} other {# credits}}</code> and markup tokens like <code>&lt;link&gt;</code> exactly as they are. Translate the words around them, never the braces.</li>
+<li><strong>Give it tone and register.</strong> A one-line instruction such as &quot;use the informal register appropriate to the language&quot; produces more natural copy than a literal translation.</li>
+<li><strong>Keep product names fixed.</strong> List the terms that should never be translated.</li>
+</ul>
+<p>This is not a replacement for a professional review on copy that matters. For UI labels and buttons, it gets you most of the way there quickly. Treat the output as a first draft you can refine.</p>
+<h2 id="watch-out-for-hydration-mismatches">Watch Out for Hydration Mismatches</h2>
+<p>This is where I lost the most time, so it gets its own section. Server-rendered apps render HTML twice: once on the server and once on the client during hydration. If the two renders disagree, React throws a hydration error. Localization introduces two ways to make them disagree.</p>
+<h3 id="dates-and-times">Dates and times</h3>
+<p>If you format a date with the user&#39;s locale and timezone, the server (often running in UTC) and the browser (in the user&#39;s local timezone) can produce different text for the same instant, which is a guaranteed mismatch. For the case where the content is correct on both sides and only the timezone differs, <code>suppressHydrationWarning</code> on that element is the right tool:</p>
+<pre><code class="language-tsx">&lt;span suppressHydrationWarning&gt;{formatDate(createdAt, locale)}&lt;/span&gt;
+</code></pre>
+<p>Use it only when the timezone is the sole difference. It is the wrong tool for hiding an actual content mismatch.</p>
+<h3 id="the-stale-message-cache-that-looks-like-a-different-bug">The stale message cache that looks like a different bug</h3>
+<p>This one is worth knowing because the symptom shows up far from the cause.</p>
+<p>After translating my message files, the review page filled with hydration errors. The diff was a flood of mismatched IDs on component-library elements (<code>id</code>, <code>aria-controls</code>, and so on), all with different values. It looked like a bug in the UI library&#39;s ID generation.</p>
+<p>It was not. The real cause was a single text mismatch high up the tree: my dev server had cached the old version of a message file in memory, while the browser bundle had hot-reloaded the freshly translated strings. So the server rendered the old translation of a button and the client rendered the new one. React hit that text difference, gave up trying to patch the subtree, and re-rendered it on the client from scratch. That re-render regenerated every auto-generated ID below it, which is why the error looked like dozens of unrelated ID mismatches instead of one wrong word.</p>
+<p>The lesson: a cascade of mysterious auto-generated ID mismatches after editing translations almost always means the server and client are reading different versions of your message files. The fix was restarting the dev server so it reloaded the catalogs from disk:</p>
+<pre><code class="language-bash">rm -rf .next &amp;&amp; npm run dev
+</code></pre>
+<p>If you edit message JSON and suddenly see hydration noise, restart before you debug anything else. It will save you the hour it cost me.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The translation step is tedious, but the structural work is smaller than it looks once you use the right primitives:</p>
+<ul>
+<li>Derive everything from one locale list.</li>
+<li>Convert physical CSS to logical properties and let the browser mirror your layout.</li>
+<li>Set <code>dir</code> once, add a direction provider for portaled UI, and flip directional icons by hand.</li>
+<li>Decouple the URL locale from the formatting tag when you need regional precision.</li>
+<li>Let a model handle the first-draft translations, with strict rules about placeholders.</li>
+<li>When hydration breaks after a translation change, suspect a stale cache first.</li>
+</ul>
+<p>Most of these took an afternoon to wire up. If you start with the locale list and the logical properties, the rest is incremental.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
