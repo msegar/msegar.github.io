@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Fri, 22 May 2026 16:02:24 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 24 May 2026 00:25:36 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Reconstructing a Mixbook Movie with ffmpeg</title>
+    <link>https://segar.me/blog/posts/reconstructing_a_mixbook_movie.html</link>
+    <guid>https://segar.me/blog/posts/reconstructing_a_mixbook_movie.html</guid>
+    <pubDate>Sat, 23 May 2026 00:00:00 GMT</pubDate>
+    <description>How I traced Mixbook&apos;s animated Movie feature to its data API, found that the browser builds the video instead of storing it, and rebuilt a downloadable MP4 from the raw photos and music with crossfades, Ken Burns motion, and the original title text</description>
+  </item>
   <item>
     <title>Adding Localization and RTL Support to a Next.js App</title>
     <link>https://segar.me/blog/posts/app_localization_rtl.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/static_blog.html</guid>
     <pubDate>Sun, 30 Mar 2025 00:00:00 GMT</pubDate>
     <description>How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates</description>
-  </item>
-  <item>
-    <title>CPRS Lab Formatter</title>
-    <link>https://segar.me/blog/posts/cprs_lab_formatter.html</link>
-    <guid>https://segar.me/blog/posts/cprs_lab_formatter.html</guid>
-    <pubDate>Fri, 14 Mar 2025 00:00:00 GMT</pubDate>
-    <description>Making Lab Data Easier to See for VA CPRS EHR</description>
   </item>
 </channel>
 </rss>
