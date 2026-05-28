@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Sun, 24 May 2026 00:25:36 GMT</lastBuildDate>
+  <lastBuildDate>Thu, 28 May 2026 02:53:47 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Fine-Tuning a Local LLM to Write in My Academic Voice</title>
+    <link>https://segar.me/blog/posts/fine_tuning_academic_voice.html</link>
+    <guid>https://segar.me/blog/posts/fine_tuning_academic_voice.html</guid>
+    <pubDate>Wed, 27 May 2026 00:00:00 GMT</pubDate>
+    <description>How I trained an 8B Llama on my own cardiology papers, from extracting prose out of Word docs, to a first attempt that failed because I trained on single sentences, to a working model that drafts abstracts, methods, and discussions in my style on a Mac.</description>
+  </item>
   <item>
     <title>Reconstructing a Mixbook Movie with ffmpeg</title>
     <link>https://segar.me/blog/posts/reconstructing_a_mixbook_movie.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/doximity.html</guid>
     <pubDate>Mon, 28 Jul 2025 00:00:00 GMT</pubDate>
     <description>My experience using Doximity&apos;s new AI Scribe feature for cardiology documentation including setup and workflow.</description>
-  </item>
-  <item>
-    <title>Building a Simple Static Blog with JavaScript and Markdown</title>
-    <link>https://segar.me/blog/posts/static_blog.html</link>
-    <guid>https://segar.me/blog/posts/static_blog.html</guid>
-    <pubDate>Sun, 30 Mar 2025 00:00:00 GMT</pubDate>
-    <description>How to create a lightweight, SEO-friendly blog using markdown files, JavaScript, and static HTML templates</description>
   </item>
 </channel>
 </rss>
