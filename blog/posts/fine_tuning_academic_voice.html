@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine-Tuning a Local LLM to Write in My Academic Voice - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How I trained an 8B Llama on my own cardiology papers, from extracting prose out of Word docs, to a first attempt that failed because I trained on single sentences, to a working model that drafts abstracts, methods, and discussions in my style on a Mac.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="training, model, write, section, prompt">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/fine_tuning_academic_voice.html">
+    <meta property="og:title" content="Fine-Tuning a Local LLM to Write in My Academic Voice - Matt Segar">
+    <meta property="og:description" content="How I trained an 8B Llama on my own cardiology papers, from extracting prose out of Word docs, to a first attempt that failed because I trained on single sentences, to a working model that drafts abstracts, methods, and discussions in my style on a Mac.">
+    <meta property="og:image" content="../assets/images/fine-tuning-academic-voice.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/fine_tuning_academic_voice.html">
+    <meta property="twitter:title" content="Fine-Tuning a Local LLM to Write in My Academic Voice - Matt Segar">
+    <meta property="twitter:description" content="How I trained an 8B Llama on my own cardiology papers, from extracting prose out of Word docs, to a first attempt that failed because I trained on single sentences, to a working model that drafts abstracts, methods, and discussions in my style on a Mac.">
+    <meta property="twitter:image" content="../assets/images/fine-tuning-academic-voice.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/fine_tuning_academic_voice.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Fine-Tuning a Local LLM to Write in My Academic Voice",
+      "description": "How I trained an 8B Llama on my own cardiology papers, from extracting prose out of Word docs, to a first attempt that failed because I trained on single sentences, to a working model that drafts abstracts, methods, and discussions in my style on a Mac.",
+      "image": "../assets/images/fine-tuning-academic-voice.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-05-27T00:00:00.000Z",
+      "dateModified": "2026-05-27T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/fine_tuning_academic_voice.html"
+      },
+      "keywords": "training, model, write, section, prompt"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Fine-Tuning a Local LLM to Write in My Academic Voice</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-05-27T00:00:00.000Z">May 26, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="fine-tuning-a-local-llm-to-write-in-my-academic-voice">Fine-Tuning a Local LLM to Write in My Academic Voice</h1>
+<p>I write a lot of papers, and the prose takes more time than the science. I turn statistical outputs and bullet points into a journal-shaped methods section, hedge a results paragraph the way a reviewer expects, drag a limitations paragraph out of a discussion. Generic chatbots can produce something on the topic, but the result reads like an AI assistant, not like me. I wanted a model that already knew the voice.</p>
+<p>I ended up with a fine-tuned <strong>Llama-3.1-8B-Instruct</strong>, trained on my own corpus of 37 published papers, running on my Mac in <strong>LM Studio</strong> at 25 to 30 tokens per second. Total cloud spend across the whole project was under $5. My first training run flopped, and the reason it flopped pointed me at the fix.</p>
+<h2 id="what-i-wanted-from-it">What I Wanted From It</h2>
+<p>A concrete goal made the rest of the decisions easier. The goal was a <strong>rewrite assistant</strong>. I paste a rough paragraph (mine, a co-author&#39;s, or something I dictated into Otter), and it returns the same content in my published academic style. The shapes I write in are abstracts, methods sections, and discussions.</p>
+<p>That framing turned out to matter. The data format, the system prompt, and the way I generated training examples all follow from the task being &quot;rewrite this draft&quot; instead of &quot;answer this question.&quot;</p>
+<h2 id="the-stack">The Stack</h2>
+<p>The pieces that mattered:</p>
+<ul>
+<li><strong>Llama-3.1-8B-Instruct</strong> as the base. Better English prose than Qwen3 at this size, biggest LoRA ecosystem, Apache 2.0.</li>
+<li><strong>QLoRA via Unsloth</strong> on a Modal <strong>A100-40GB</strong> for training. Cloud GPU because the dataset includes 4096-token sequences and my Mac would take hours.</li>
+<li><strong>MLX</strong> for inference back on the Mac. Apple&#39;s runtime is 20 to 40% faster on Apple Silicon than CUDA-ported alternatives.</li>
+<li><strong>LM Studio</strong> as the UI, because it is the path of least resistance to a chat box with a system prompt field.</li>
+<li><strong>Azure OpenAI GPT-5.4-mini</strong> to generate the training pairs from my papers.</li>
+</ul>
+<p>I managed the full setup with <code>uv</code>, the only Python env story I am willing to deal with in 2026.</p>
+<h2 id="step-one-getting-prose-out-of-word">Step One: Getting Prose Out of Word</h2>
+<p>My papers are <code>.docx</code> files with the usual editorial sediment: reviewer comments, tracked changes, figure captions, reference lists, author affiliations. None of that should end up in training data. The extractor (<code>extract.py</code>) reads only <code>word/document.xml</code>, drops the contents of <code>&lt;w:del&gt;</code> (tracked deletions) while keeping <code>&lt;w:ins&gt;</code>, and walks paragraphs in order to tag each one with a section name.</p>
+<p>Two things were not obvious going in:</p>
+<ol>
+<li><strong>Word comments live in a separate XML part</strong> (<code>word/comments.xml</code>). <code>python-docx</code> doesn&#39;t read it, so reviewer comments are excluded for free. I checked this first because an earlier scraping attempt of mine had pulled &quot;Matt, do we have a citation for this?&quot; into the training data.</li>
+<li><strong>Section detection by short paragraphs, not styles.</strong> Author-applied heading styles in Word are inconsistent across journals. The extractor looks for short (&lt;80 char) paragraphs that match a small whitelist of section keywords (<code>Introduction</code>, <code>Methods</code>, <code>Discussion</code>, <code>Limitations</code>). Anything that follows belongs to that section until the next heading.</li>
+</ol>
+<p>A second pass writes each paper out to <code>cleaned_docs/&lt;paper&gt;.md</code>, with frontmatter and <code>## section</code> headers. Out of 40 papers, 37 had clean abstracts and full sections, and three were research letters with a single <code>body</code> section.</p>
+<h2 id="step-two-generating-training-pairs">Step Two: Generating Training Pairs</h2>
+<p>Fine-tuning Llama needs <strong>instruction → response</strong> pairs in ChatML JSONL: a system prompt that defines the voice, a user turn with the instruction, an assistant turn with the desired output. The system prompt is <strong>identical across every example</strong>. That is where the voice lives. Change it per-example and the model has no anchor.</p>
+<p>Mine is the obvious thing:</p>
+<pre><code>You are Matt Segar, MD, a cardiac electrophysiologist and cardiovascular
+epidemiologist with experience leading observational cohort analyses,
+machine-learning phenotyping studies, and post-hoc analyses of randomized
+clinical trials. Write in a precise, hedged academic style appropriate for
+high-impact cardiology journals such as JACC, Circulation, JAMA Cardiology,
+and the European Heart Journal. Use formal but readable prose, qualify
+statistical findings with appropriate uncertainty language, and structure
+arguments with both clinical and mechanistic reasoning.
+</code></pre>
+<p>The prompt covers persona, journal register, and style. No specific topics or datasets, because those bleed into every output.</p>
+<h3 id="the-rewrite-pair-trick">The rewrite-pair trick</h3>
+<p>One natural way to make training pairs is &quot;write a methods section about X&quot; paired with the published methods section. That doesn&#39;t match how I use the model. I work from drafts, not blank pages. Every pair I generated is a <strong>rewrite</strong> task, with a rough draft as the input and the polished, published version as the output.</p>
+<p>The polished side is easy because that paragraph is already in the paper. The rough draft is the missing half, so I had GPT-5.4-mini <em>de-polish</em> each published passage into one of three rough styles I see in real drafts:</p>
+<ul>
+<li><strong>AI-generic</strong>: bland chatbot prose, &quot;plays a crucial role in,&quot; &quot;underscores the significance of&quot;</li>
+<li><strong>Verbose co-author</strong>: wordy, redundant clauses, &quot;in addition to this, furthermore...&quot;</li>
+<li><strong>Loose first draft</strong>: short, casual, contractions, &quot;a lot of&quot; instead of &quot;a high proportion&quot;</li>
+</ul>
+<p>Each pair then looks like:</p>
+<pre><code>USER: Rewrite the following in my academic cardiology style:
+      [rough draft generated by GPT]
+ASSISTANT: [original polished paragraph, verbatim]
+</code></pre>
+<p>A thread pool of 10 concurrent Azure calls turns 37 papers into ~1,400 candidate pairs in about 30 minutes, for a couple of dollars in API spend.</p>
+<h2 id="step-three-the-first-attempt-that-didnt-work">Step Three: The First Attempt That Didn&#39;t Work</h2>
+<p>It took two training runs to see the problem with my first approach.</p>
+<p>The initial generator broke each section into <strong>single sentences</strong> and asked GPT to rough up one sentence at a time. The idea was that more pairs equals more training signal: 1 paragraph times 6 sentences gives 6 examples instead of 1. After de-duplication I had close to 4,000 sentence-level pairs and an eval loss curve that looked beautiful.</p>
+<p>The model came back broken in a specific, instructive way: it would write one good sentence and stop.</p>
+<pre><code>USER: Rewrite this discussion paragraph in my voice:
+      [a four-sentence draft about ECG-AI and HF risk]
+
+A: Electrocardiographic artificial intelligence has emerged
+as a promising tool for the early detection of structural heart
+disease in asymptomatic populations.
+&lt;|eot_id|&gt;
+</code></pre>
+<p>That sentence sounds like me. It is also the entire response. Every training example had ended after one sentence, so the model learned that one sentence is where assistant turns terminate. The model had memorized where to put EOS. It had not learned to write at length.</p>
+<p>The fix was not more data. The data needed a different shape.</p>
+<h2 id="step-four-mixing-response-shapes">Step Four: Mixing Response Shapes</h2>
+<p>I scrapped the sentence-level pipeline and rebuilt the generator around three coexisting pair types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Response shape</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>paragraph</code></td>
+<td>A single paragraph, verbatim</td>
+<td>~960</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>A complete multi-paragraph section (intro / methods / discussion)</td>
+<td>~210</td>
+</tr>
+<tr>
+<td><code>abstract</code></td>
+<td>A full structured abstract (JAMA-style or traditional)</td>
+<td>~210</td>
+</tr>
+</tbody></table>
+<p>The model now sees assistant turns of every length it might need to produce, from one paragraph to a 350-word structured abstract with inline labels (<code>Importance:</code>, <code>Methods:</code>, <code>Findings:</code>). The EOS token marks the end of a response of any length, not the end of a sentence.</p>
+<p>GPT&#39;s default behavior when asked to rewrite something long is to summarize it, so the prompt is explicit:</p>
+<pre><code>Rewrite the SAME content in a different prose style. Preserve every fact,
+statistic, study detail, and conclusion exactly. Do not summarize or
+shorten. Keep approximately the same length and the same paragraph
+structure (use blank lines between paragraphs).
+</code></pre>
+<p>A weighted sampler tilts toward abstracts (weight 2.0) and main sections (weight 1.0), away from conclusions (0.5) and <code>unknown</code>-tagged paragraphs (0.25). Abstracts carry disproportionate stylistic signal, since every sentence has been agonized over, and doubling their weight is worth it.</p>
+<p>Final dataset: <strong>1,377 pairs, split 1,240 train / 137 valid (90/10)</strong>.</p>
+<p>Before training I ran a local HTML viewer (<code>viewer.html</code>, served by <code>python -m http.server 8000</code>) with arrow-key navigation through the JSONL. Scrolling through fifty random pairs takes ten minutes and catches contaminated examples before they eat a $0.40 GPU run.</p>
+<h2 id="step-five-training-on-modal">Step Five: Training on Modal</h2>
+<p>QLoRA on an A100-40GB through Unsloth is by 2026 a solved problem, <em>if</em> you don&#39;t fight the dependency matrix.</p>
+<p>The rule I paid to learn: do not hand-pin the torch / transformers / unsloth / xformers / bitsandbytes version graph. It is fragile, it breaks every six weeks, and the Modal staff already maintain a working pin set in their reference example. Copy theirs verbatim. The key invocation in the Modal image:</p>
+<pre><code class="language-python">&quot;unsloth[cu128-torch270]==2025.7.8&quot;
+</code></pre>
+<p>That <code>[cu128-torch270]</code> extra pulls a pre-bundled wheel set for CUDA 12.8 plus torch 2.7.0 and sidesteps the whole problem.</p>
+<p>Training itself is unremarkable:</p>
+<pre><code class="language-python">model = FastLanguageModel.get_peft_model(
+    model,
+    r=16, lora_alpha=32,
+    target_modules=[&quot;q_proj&quot;, &quot;k_proj&quot;, &quot;v_proj&quot;, &quot;o_proj&quot;],
+    lora_dropout=0.05,
+    bias=&quot;none&quot;,
+    use_gradient_checkpointing=&quot;unsloth&quot;,
+)
+</code></pre>
+<p>LoRA rank 16 on the four attention projections across all 32 transformer layers. That is <strong>13.6M trainable parameters out of 8B, or 0.17% of the model.</strong> Two epochs at sequence length 4096, effective batch 8 (<code>batch=4 * grad_accum=2</code>), learning rate <code>2e-4</code> with a cosine schedule and 3% warmup.</p>
+<p>Run command:</p>
+<pre><code class="language-bash"># Smoke test first. Validates the whole pipeline for about $0.10.
+uv run modal run train_modal.py --max-steps 50
+
+# Then the real thing.
+uv run modal run train_modal.py --epochs 2
+</code></pre>
+<p>The eval loss curve was the thing I cared about, and this time it was honest:</p>
+<pre><code>step 100   eval_loss 0.7411
+step 200   eval_loss 0.6747
+step 300   eval_loss 0.6519
+</code></pre>
+<p>Monotonically dropping, with no plateau yet at two epochs. Three or four epochs would probably squeeze a little more out, but the model was already producing the outputs I wanted, so I shipped. About 18 minutes wall-clock, <strong>$0.40</strong> on the A100.</p>
+<h2 id="step-six-getting-it-onto-the-mac">Step Six: Getting It Onto the Mac</h2>
+<p>The Modal job saves two artifacts to a Modal volume: the raw LoRA adapter (<del>55 MB) and a merged FP16 model (</del>16 GB across four shards). The merged version is what matters, because MLX-LM&#39;s adapter loader can&#39;t read Unsloth&#39;s PEFT-format adapters directly. The key names and tensor layouts differ.</p>
+<p>One Modal CLI bug worth knowing about as of May 2026: <code>modal volume get</code> on a directory flattens the contents into a single file. The workaround is a per-file loop, which is ugly but reliable. Once the merged FP16 model is local, MLX converts it to 4-bit in one command:</p>
+<pre><code class="language-bash">uv run mlx_lm.convert \
+  --hf-path ./my-finetune/modal/merged_16bit \
+  --mlx-path ./my-finetune/llama-segar-mlx \
+  --quantize --q-bits 4
+</code></pre>
+<p>Output: a single ~4.2 GB MLX model directory. For an 8B model in conversation, 4-bit is the default. I tried a few side-by-side rewrites against the FP16 version and could not pick the FP16 one out of a lineup.</p>
+<p>LM Studio&#39;s scanner looks for MLX models under <code>~/.cache/huggingface/hub/&lt;author&gt;/&lt;name&gt;/</code>:</p>
+<pre><code class="language-bash">mkdir -p ~/.cache/huggingface/hub/segar/llama-3.1-8b-cardiology-mlx
+cp my-finetune/llama-segar-mlx/* \
+   ~/.cache/huggingface/hub/segar/llama-3.1-8b-cardiology-mlx/
+</code></pre>
+<p>I refresh <strong>My Models</strong> in LM Studio, the model shows up, I click load. Pasting the same system prompt that anchored every training example into the System Prompt field puts the model in the right register.</p>
+<h2 id="does-it-work">Does It Work?</h2>
+<p>The real test is whether I prefer its output to a generic Claude or GPT rewrite, and whether I would use it day to day. Three things stood out.</p>
+<p><strong>First, it hedges the way I do.</strong> The base Llama-3.1 will write &quot;ECG-AI is a powerful tool that revolutionizes cardiovascular risk prediction.&quot; Mine writes &quot;ECG-AI has emerged as a promising tool for cardiovascular risk stratification, leveraging subtle waveform features imperceptible to human interpretation, though prospective validation in diverse populations remains limited.&quot; The fine-tuned version qualifies, leans on &quot;emerging,&quot; and gets the limitation into the same sentence.</p>
+<p><strong>Second, it knows the section shapes.</strong> Ask for &quot;a limitations section for a propensity-matched retrospective cohort study&quot; and it produces three paragraphs in the order I use: residual confounding from unmeasured variables, then ascertainment and outcome-definition concerns, then external validity. I never wrote that order down. The model absorbed it from the 23 limitations sections in the training set.</p>
+<p><strong>Third, the structured-abstract reflex is back.</strong> This was the regression I cared about after the sentence-level run. The prompt: &quot;Write a structured abstract for a paper examining atrial cardiomyopathy phenotypes and stroke risk in ARIC.&quot; The response: a JAMA-style abstract with inline <code>Importance:</code>, <code>Objective:</code>, <code>Design:</code>, <code>Findings:</code>, <code>Meaning:</code> labels at the right length. The shape-mixing fix did what I hoped it would.</p>
+<p>On an M5 Pro with 32 GB unified memory, the model generates at <strong>25 to 30 tokens/sec</strong>, uses about 8 GB of RAM, and gets to first token in about two seconds. That is comfortable interactive speed. It produces prose about six times faster than I can read it.</p>
+<h2 id="lessons">Lessons</h2>
+<p>A few things from this project that I&#39;d carry to the next one.</p>
+<ul>
+<li><strong>Match training shapes to inference shapes.</strong> A model trained on single sentences will emit single sentences. Multi-paragraph output needs multi-paragraph examples in the training data. The eval loss curve gives you no warning about this. Mine dropped beautifully on both runs.</li>
+<li><strong>The system prompt is voice, not content.</strong> Keep it identical across all examples. Cover persona, journal register, and style. Anything specific, like a dataset name or a topic, belongs in the user turn, because details in the system prompt bleed into every output.</li>
+<li><strong>Frame pairs around the task you do.</strong> I draft from rough text, so every pair is a rewrite with a roughed-up draft on the input side. If I were drafting from blank pages, the pair shapes would look different.</li>
+<li><strong>Generate the rough draft, don&#39;t write it.</strong> Hand-writing 1,400 rough drafts would be a part-time job. Asking GPT-5.4-mini to de-polish published prose into three named rough styles (&quot;AI-generic,&quot; &quot;verbose co-author,&quot; &quot;loose first draft&quot;) cost about $2 and an afternoon.</li>
+<li><strong>Eyeball the pairs before training.</strong> A 20-line HTML viewer with arrow-key nav and a search box saved at least one failed GPU run by catching abstracts where the rough draft had collapsed into a summary.</li>
+<li><strong>Don&#39;t hand-pin ML image dependencies.</strong> Find a maintainer&#39;s working pin set (Modal staff publish theirs in <code>modal-labs/modal-examples</code>) and copy it verbatim. The torch/transformers/xformers/bitsandbytes matrix moves too fast to chase by hand.</li>
+<li><strong>Trial-first, full-run-second, at every stage.</strong> Smoke-test on one paper for data generation, on 50 steps for training, on a single prompt for inference. Each smoke test is cheap, and each one has caught something stupid at least once.</li>
+</ul>
+<p>The fine-tuned model now drafts the first version of most abstracts and limitations sections I write. I still edit the output, but I am editing my own voice instead of arguing with a chatbot. The gap between the first run and this one came down to the shape of the data.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
