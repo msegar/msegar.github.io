@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Claude to Make Slides That Look Like Mine - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="There's a recognizable look to AI-generated conference slides — the rounded teal cards, the icon-in-a-circle, the drop shadows. I took one of my own talks, had Claude reverse-engineer its design system into a reusable skill, and tested whether the skill could regenerate a deck in my style instead of the default one.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="skill, look, claude, slides, deck">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/teaching-claude-my-slide-style.html">
+    <meta property="og:title" content="Teaching Claude to Make Slides That Look Like Mine - Matt Segar">
+    <meta property="og:description" content="There's a recognizable look to AI-generated conference slides — the rounded teal cards, the icon-in-a-circle, the drop shadows. I took one of my own talks, had Claude reverse-engineer its design system into a reusable skill, and tested whether the skill could regenerate a deck in my style instead of the default one.">
+    <meta property="og:image" content="../assets/images/academic-slide-skill.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/teaching-claude-my-slide-style.html">
+    <meta property="twitter:title" content="Teaching Claude to Make Slides That Look Like Mine - Matt Segar">
+    <meta property="twitter:description" content="There's a recognizable look to AI-generated conference slides — the rounded teal cards, the icon-in-a-circle, the drop shadows. I took one of my own talks, had Claude reverse-engineer its design system into a reusable skill, and tested whether the skill could regenerate a deck in my style instead of the default one.">
+    <meta property="twitter:image" content="../assets/images/academic-slide-skill.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/teaching-claude-my-slide-style.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Teaching Claude to Make Slides That Look Like Mine",
+      "description": "There's a recognizable look to AI-generated conference slides — the rounded teal cards, the icon-in-a-circle, the drop shadows. I took one of my own talks, had Claude reverse-engineer its design system into a reusable skill, and tested whether the skill could regenerate a deck in my style instead of the default one.",
+      "image": "../assets/images/academic-slide-skill.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-06-16T00:00:00.000Z",
+      "dateModified": "2026-06-16T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/teaching-claude-my-slide-style.html"
+      },
+      "keywords": "skill, look, claude, slides, deck"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Teaching Claude to Make Slides That Look Like Mine</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-06-16T00:00:00.000Z">June 15, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <h1 id="teaching-claude-to-make-slides-that-look-like-mine">Teaching Claude to Make Slides That Look Like Mine</h1>
+<p>If you&#39;ve sat through a conference session lately, you&#39;ve seen these slides. Rounded cards, each one a slightly different shade of teal, a bold icon tucked inside a colored circle in the top-left of every card, a soft drop shadow under everything, a serif headline over a sans-serif body. They look clean and competent, and they&#39;re what you get when you ask an AI for a deck with no further instruction than &quot;make me one.&quot;</p>
+<p>That look isn&#39;t bad, it&#39;s generic. It signals &quot;an LLM made this&quot; the way a stock-photo handshake signals &quot;a committee made this.&quot; For a research talk, where the point is that the work is yours, slides that look like everyone else&#39;s are a small but real tell.</p>
+<p>So I fixed it the way I fix most things lately: I asked Claude to learn my style and hand it back as a tool I could reuse. I built a <a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview">skill</a> from one of my old decks, then tested whether it changes what Claude produces.</p>
+<h2 id="the-generic-look-and-why-it-happens">The Generic Look, and Why It Happens</h2>
+<p>Ask any frontier model to build a slide deck and it reaches for the same vocabulary, because that vocabulary is good design advice in the abstract. Pick a bold color palette. Use one color for 60–70% of the visual weight. Commit to a repeated motif — icons in circles, rounded image frames. Avoid plain bullets on white. Every one of those rules is defensible. The problem is that <em>everyone&#39;s</em> model follows the same rules, so the output converges. The teal-card-with-icon deck is what you get when good generic taste runs with no constraints from you.</p>
+<p>My conference slides don&#39;t look like that, because they&#39;re shaped by institutional constraints instead. They&#39;re 4:3, not widescreen, because the template predates the widescreen default and I never changed it. Every content slide has a centered title with a red rule underneath. There&#39;s a navy footer bar across the bottom of every slide. Stat callouts are navy boxes with a big number and a small label. Citations sit bottom-left in small italic, &quot;Author, Journal, Year.&quot; None of it is fashionable, but it&#39;s mine, and an audience that&#39;s seen my talks recognizes it.</p>
+<p>The interesting question: can I get those constraints out of my head and into a form Claude will apply automatically?</p>
+<h2 id="turning-a-deck-into-a-skill">Turning a Deck Into a Skill</h2>
+<p>A <a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview">skill</a> is just a folder Claude reads before it does a task: a <code>SKILL.md</code> file describing when and how to do something, optionally with reference assets alongside it. The leverage comes from writing the instructions down once and having them apply every time.
+I gave Claude one of my real talks and asked it to reverse-engineer the design system into a skill, not to summarize the deck, but to extract the <em>rules</em> that would let it reproduce the look on new content. The output was a <code>SKILL.md</code> that reads like a style guide written by someone who&#39;d stared at my slides for an hour:</p>
+<ul>
+<li><strong>Format.</strong> 4:3 (10″ × 7.5″), white background on every slide. An explicit note <em>not</em> to default to widescreen.</li>
+<li><strong>Palette.</strong> A table of seven roles mapped to exact hex values. Navy <code>003366</code> dominates; red <code>FF0000</code> for the title rule and adverse arrows; <code>C00000</code> for emphasis; orange <code>F79646</code> for a key-takeaway banner; green <code>00B050</code> for favorable arrows. With a one-line rule I liked a lot: <em>do not introduce new hues — the restraint is part of the look.</em></li>
+<li><strong>Typography.</strong> Arial as the workhorse, 14pt body, ~32pt centered bold titles, citations ~10pt italic.</li>
+<li><strong>Signature conventions.</strong> The red rule under every title. The navy footer bar. Navy stat boxes. Progressive builds, where you repeat a base slide and add one element at a time to walk an audience through an argument.</li>
+</ul>
+<p>The detail that convinced me the skill understood the assignment was a section it labeled <em>intentional overrides</em>. General slide-design advice — including the <a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview">public PowerPoint skill</a> Claude already uses — explicitly warns against title underlines and full-width color bars, because those are exactly the &quot;an AI made this&quot; tells I complained about earlier. My skill carves out an exception: in <em>this</em> style, the red title rule and the navy footer bar are real institutional branding, so keep them, but don&#39;t add any <em>other</em> decorative stripes, because those still read as filler. The useful part wasn&#39;t the list of rules. It was that the skill flagged which general rules it was breaking on purpose, and why.</p>
+<p>The skill folder also references assets — a template deck carrying the real slide masters, a <code>theme1.xml</code> for the theme colors, the institutional logo — so that &quot;true fidelity&quot; runs can repopulate the actual layouts instead of rebuilding the chrome by hand each time.</p>
+<h2 id="the-test-same-content-two-styles">The Test: Same Content, Two Styles</h2>
+<p>A skill that sounds right in prose might do nothing when it runs. So I set up a clean A/B test.</p>
+<p>First, the <strong>before</strong>. I gave Claude a manuscript I&#39;d submitted — a computational review of adverse events for pulsed field ablation catheters, built from FDA MAUDE data — and asked for a simple thing: <em>make a 4-slide deck on the methods and results.</em> No style guidance at all. This is the generic case, and Claude produced the generic look: widescreen, a teal palette, rounded cards, an icon in a colored circle on each one. Competent, and not mine.</p>
+<p>Then, the <strong>after</strong>. Same manuscript, same four slides, one added instruction: do it in my academic style, using the skill. Everything about the <em>content</em> stayed constant — the same methods pipeline, the same adverse-event bar chart, the same per-device comparison. Only the design system changed.</p>
+<p>Here&#39;s the methods slide, both ways:</p>
+<p><img src="../../assets/images/comparison-methods.png" alt="Before and after: the methods slide. Left, the generic widescreen deck with teal rounded cards and icons in circles. Right, the academic-style version — 4:3, centered title with a red rule, navy process steps, navy footer bar."></p>
+<p>The two decks tell the same story with different accents. The generic version leads with color and iconography, the academic version with structure and restraint. Same numbers, same four-step pipeline, same caveats panel, but the second one would slot into one of my talks without anyone noticing it was new.</p>
+<p>The results slide shows the palette swap most clearly. The navy stat boxes for the severity callouts, the orange banner reserved for the single key takeaway, the citations dropped bottom-left:</p>
+<p><img src="../../assets/images/comparison-results.png" alt="Before and after: the results slide. Left, a teal horizontal bar chart with rounded severity cards. Right, a navy bar chart, navy severity boxes, an orange highlight banner for the key takeaway, and italic citations bottom-left."></p>
+<h2 id="what-actually-changed-between-the-two-runs">What Actually Changed Between the Two Runs</h2>
+<p>The substitutions are worth itemizing, because each one maps to a line in the skill:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Generic default</th>
+<th>Academic skill</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Aspect ratio</td>
+<td>16:9 widescreen</td>
+<td>4:3</td>
+</tr>
+<tr>
+<td>Background</td>
+<td>Dark teal title + light content</td>
+<td>White throughout</td>
+</tr>
+<tr>
+<td>Title treatment</td>
+<td>Left-aligned, no rule</td>
+<td>Centered, red rule beneath</td>
+</tr>
+<tr>
+<td>Palette</td>
+<td>Teal + coral accent</td>
+<td>Navy-dominant, red accent</td>
+</tr>
+<tr>
+<td>Motif</td>
+<td>Icon in a colored circle per card</td>
+<td>Navy stat boxes, numbered steps</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>None</td>
+<td>Navy bar on every slide</td>
+</tr>
+<tr>
+<td>Key takeaway</td>
+<td>Inline navy card</td>
+<td>Orange full-width banner</td>
+</tr>
+<tr>
+<td>Citations</td>
+<td>Absent</td>
+<td>Italic, bottom-left, &quot;Author, Journal, Year&quot;</td>
+</tr>
+</tbody></table>
+<p>None of these are improvements in the abstract. A designer would defend either column. The point is that the right-hand column is <em>consistent with eighty other slides I&#39;ve shown</em>, and the left-hand column isn&#39;t.</p>
+<h2 id="two-things-the-test-surfaced">Two Things the Test Surfaced</h2>
+<p>Two caveats came out of the run, and both matter if you want a skill that works rather than one that just demos well.</p>
+<p><strong>The assets have to actually be present.</strong> My skill references a template deck, a theme file, and a logo. In the run above, those weren&#39;t bundled in, so Claude rebuilt the navy footer bar and the red rule by hand from the written rules, which works, but it&#39;s reconstruction, not fidelity. The <code>SKILL.md</code> is the easy half. The real lever is shipping the source <code>.pptx</code> alongside it, so &quot;true fidelity&quot; runs repopulate the genuine slide masters instead of approximating them from a written description.</p>
+<p><strong>Constraints fight the canvas.</strong> The generic deck is widescreen, which gives titles a lot of horizontal room. My style is 4:3, which doesn&#39;t. The first regenerated methods slide had a title long enough to wrap onto a second line, and the red rule, positioned for a one-line title, cut straight through the wrapped text. Easy to fix by shortening the title, but it&#39;s a reminder that a style system isn&#39;t free-floating. A rule tuned for one canvas, a centered title with a fixed rule beneath it, can break when the canvas shrinks. The skill needs to own its format end to end, or the conventions collide with each other.</p>
+<h2 id="lessons">Lessons</h2>
+<p>A few things from this project that generalize past slides:</p>
+<ul>
+<li><strong>The generic AI look is a defaults problem, not a capability problem.</strong> The model converges on teal cards because nothing told it not to. What breaks the convergence is specific constraints, not better taste.</li>
+<li><strong>A style is a set of rules you can externalize.</strong> Most of what makes my decks recognizable — 4:3, red rule, navy footer, citation format — is mechanical, and mechanical things go in a skill.</li>
+<li><strong>Write down the rules you&#39;re deliberately breaking.</strong> The most useful part of the skill was the <em>intentional overrides</em> section, where it noted that the title underline it adds is normally an AI tell, and why it&#39;s keeping it anyway.</li>
+<li><strong>Ship the assets, not just the instructions.</strong> A written description gets you a good imitation. The template file itself gets you the real layouts.</li>
+<li><strong>Test on held-out content.</strong> Building the skill from one deck and validating it on a different paper is the only way to know it learned a style rather than memorized a deck.</li>
+</ul>
+<p>The whole loop — old deck in, skill out, new paper through the skill — took an afternoon. What I have now is a tool that takes any future paper and hands me back slides that look like they came from me, which is the one thing the generic deck never could.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js"></script>
+</body>
+</html>
