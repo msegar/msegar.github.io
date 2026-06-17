@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <meta name="description" content="Notes on adding multiple languages and right-to-left support to a Next.js app, covering logical CSS properties, locale formatting tags, LLM-assisted translation, and two hydration bugs to watch for">
     <meta name="author" content="Matt Segar">
-    <meta name="keywords" content="your, locale, language, logical, localization">
+    <meta name="keywords" content="your, locale, language, logical, once">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
@@ -57,12 +57,12 @@
         "@type": "WebPage",
         "@id": "https://segar.me/blog/posts/app_localization_rtl.html"
       },
-      "keywords": "your, locale, language, logical, localization"
+      "keywords": "your, locale, language, logical, once"
     }
     </script>
     
     <link rel="stylesheet" href="../../assets/css/normalize.css">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=8494294d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -193,8 +193,7 @@
                 </header>
                 
                 <div class="post-body">
-                    <h1 id="adding-localization-and-rtl-support-to-a-nextjs-app">Adding Localization and RTL Support to a Next.js App</h1>
-<p>I added eight languages and right-to-left (RTL) support to <a href="https://manuscriptmind.com">ManuscriptMind</a>, an AI peer-review tool I build, taking it from English only to German, Portuguese, French, Chinese, Japanese, Arabic, and Spanish. A handful of techniques handled most of the work, and two non-obvious bugs cost more time than they should have. These are my notes on both.</p>
+                    <p>I added eight languages and right-to-left (RTL) support to <a href="https://manuscriptmind.com">ManuscriptMind</a>, an AI peer-review tool I build, taking it from English only to German, Portuguese, French, Chinese, Japanese, Arabic, and Spanish. A handful of techniques handled most of the work, and two non-obvious bugs cost more time than they should have. These are my notes on both.</p>
 <p>The principles apply to any framework. The concrete examples use Next.js (App Router), <a href="https://next-intl.dev">next-intl</a>, Tailwind CSS, and Radix UI, since that&#39;s the stack here.</p>
 <h2 id="start-with-one-source-of-truth-for-your-locales">Start With One Source of Truth for Your Locales</h2>
 <p>Before touching a single string, decide where your list of supported locales lives, and make everything derive from it. Your language switcher, your sitemap, your <code>hreflang</code> tags, and your routing config should all read from the same array.</p>
@@ -328,6 +327,6 @@ export function getFormattingLocale(locale: string) {
     </footer>
 
     <!-- External JS file for theme toggle -->
-    <script src="../../assets/js/theme-toggle.js"></script>
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
 </body>
 </html>

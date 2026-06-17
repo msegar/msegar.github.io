@@ -6,8 +6,6 @@ img: ../assets/images/supabase-mcp-multi-org.png
 categories: [Supabase, Claude Code, MCP, Developer Tools]
 ---
 
-# Using Supabase MCP with Multiple Organizations in Claude Code
-
 If you work across multiple Supabase organizations — say, a personal project and a client project — you've probably hit this wall: Claude Code only lets you authenticate one Supabase org at a time, and switching means logging out and back in through a browser OAuth flow. Every. Single. Time.
 
 After fighting with this for longer than I'd like to admit, I found a clean solution that lets you have multiple Supabase MCP servers running simultaneously, each scoped to a different org and project. Here's exactly how to set it up.
