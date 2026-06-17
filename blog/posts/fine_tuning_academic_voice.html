@@ -151,7 +151,7 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html" class="logo-link">
+                <a href="../../index.html" class="logo-link">
                     <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
                     <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
                     <h1>Matt Segar</h1>
@@ -193,8 +193,7 @@
                 </header>
                 
                 <div class="post-body">
-                    <h1 id="fine-tuning-a-local-llm-to-write-in-my-academic-voice">Fine-Tuning a Local LLM to Write in My Academic Voice</h1>
-<p>I write a lot of papers, and the prose takes more time than the science. I turn statistical outputs and bullet points into a journal-shaped methods section, hedge a results paragraph the way a reviewer expects, drag a limitations paragraph out of a discussion. Generic chatbots can produce something on the topic, but the result reads like an AI assistant, not like me. I wanted a model that already knew the voice.</p>
+                    <p>I write a lot of papers, and the prose takes more time than the science. I turn statistical outputs and bullet points into a journal-shaped methods section, hedge a results paragraph the way a reviewer expects, drag a limitations paragraph out of a discussion. Generic chatbots can produce something on the topic, but the result reads like an AI assistant, not like me. I wanted a model that already knew the voice.</p>
 <p>I ended up with a fine-tuned <strong>Llama-3.1-8B-Instruct</strong>, trained on my own corpus of 37 published papers, running on my Mac in <strong>LM Studio</strong> at 25 to 30 tokens per second. Total cloud spend across the whole project was under $5. My first training run flopped, and the reason it flopped pointed me at the fix.</p>
 <h2 id="what-i-wanted-from-it">What I Wanted From It</h2>
 <p>A concrete goal made the rest of the decisions easier. The goal was a <strong>rewrite assistant</strong>. I paste a rough paragraph (mine, a co-author&#39;s, or something I dictated into Otter), and it returns the same content in my published academic style. The shapes I write in are abstracts, methods sections, and discussions.</p>

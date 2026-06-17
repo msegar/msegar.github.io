@@ -198,11 +198,13 @@ function generateBlogIndex(posts) {
     
     return `
     <article class="blog-card">
-        <div class="blog-thumbnail">
-            ${post.img ? `<img src="${post.img}" alt="${post.title}" loading="lazy">` : '<span>Featured Image</span>'}
-        </div>
+        <a href="posts/${post.slug}.html" class="blog-thumbnail-link" aria-label="${post.title}">
+            <div class="blog-thumbnail">
+                ${post.img ? `<img src="${post.img}" alt="${post.title}" loading="lazy">` : '<span>Featured Image</span>'}
+            </div>
+        </a>
         <div class="blog-content">
-            <h3 class="blog-title">${post.title}</h3>
+            <h3 class="blog-title"><a href="posts/${post.slug}.html" class="blog-title-link">${post.title}</a></h3>
             <div class="blog-meta">
                 <span class="blog-date">${formatDate(post.date)}</span>
                 <span class="blog-read-time">${readTime} min read</span>
