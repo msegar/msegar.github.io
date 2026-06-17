@@ -1,6 +1,7 @@
 // build-blog.js - Script to build blog posts from markdown
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const marked = require('marked');
 const matter = require('gray-matter');
 
@@ -106,6 +107,10 @@ generateRSSFeed(allPosts);
 
 // Create robots.txt file
 generateRobotsTxt();
+
+// Cache-bust CSS/JS references across all served HTML (must run last so it
+// also stamps the blog posts/index generated above)
+cacheBustAssets();
 
 console.log('Blog build complete!');
 
@@ -377,6 +382,58 @@ Sitemap: https://segar.me/sitemap.xml
   
   fs.writeFileSync(path.join(__dirname, '../robots.txt'), robotsTxt);
   console.log('Generated robots.txt');
+}
+
+// Append a content-based hash to CSS/JS references so browsers (notably Safari,
+// which heuristically over-caches on GitHub Pages where we can't set cache
+// headers) re-fetch whenever the asset content actually changes.
+function cacheBustAssets() {
+  const ROOT = path.join(__dirname, '..');
+
+  function hashFile(relPath) {
+    const contents = fs.readFileSync(path.join(ROOT, relPath));
+    return crypto.createHash('md5').update(contents).digest('hex').slice(0, 8);
+  }
+
+  const cssHash = hashFile('assets/css/styles.css');
+  const jsHash = hashFile('assets/js/theme-toggle.js');
+
+  // Collect served HTML: repo root, blog/, and blog/posts/ — excluding templates.
+  const templates = new Set(['template.html', 'index-template.html']);
+  const htmlFiles = [];
+
+  fs.readdirSync(ROOT)
+    .filter(f => f.endsWith('.html'))
+    .forEach(f => htmlFiles.push(path.join(ROOT, f)));
+
+  const blogDir = path.join(ROOT, 'blog');
+  fs.readdirSync(blogDir)
+    .filter(f => f.endsWith('.html') && !templates.has(f))
+    .forEach(f => htmlFiles.push(path.join(blogDir, f)));
+
+  const postsDir = path.join(blogDir, 'posts');
+  if (fs.existsSync(postsDir)) {
+    fs.readdirSync(postsDir)
+      .filter(f => f.endsWith('.html'))
+      .forEach(f => htmlFiles.push(path.join(postsDir, f)));
+  }
+
+  let stamped = 0;
+  htmlFiles.forEach(file => {
+    const original = fs.readFileSync(file, 'utf8');
+    // Match the filename portion regardless of relative path depth, replacing
+    // any pre-existing ?v=... so repeated builds stay idempotent.
+    const updated = original
+      .replace(/styles\.css(\?v=[a-f0-9]+)?/g, `styles.css?v=${cssHash}`)
+      .replace(/theme-toggle\.js(\?v=[a-f0-9]+)?/g, `theme-toggle.js?v=${jsHash}`);
+
+    if (updated !== original) {
+      fs.writeFileSync(file, updated);
+      stamped++;
+    }
+  });
+
+  console.log(`Cache-busted assets (css=${cssHash}, js=${jsHash}) across ${stamped} HTML files`);
 }
 
 // Helper function to escape XML entities

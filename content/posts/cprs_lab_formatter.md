@@ -6,8 +6,6 @@ img: ../assets/images/cprs.png
 categories: [Healthcare, VA, Data Visualization, Tools]
 ---
 
-# CPRS Lab Formatter: Making Lab Data Easier to See for VA Healthcare Workers
-
 Many of us have struggled with CPRS lab results - squinting at numbers, doing math by hand, or wishing we could see trends better. That's why I made the [CPRS Lab Formatter](https://segar.me/valabformatter) - a free tool built to improve how we look at VA lab data.
 
 ## The Problem with CPRS Labs

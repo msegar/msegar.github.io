@@ -6,8 +6,6 @@ img: ../assets/images/mixbook-movie-reconstruction.png
 categories: [Reverse Engineering, ffmpeg, Video, Lottie, Developer Tools]
 ---
 
-# Reconstructing a Mixbook Movie with ffmpeg
-
 [Mixbook](https://www.mixbook.com) emailed me to say my animated project was ready: a short movie built from my photos and set to music. I could watch it in the browser or order a printed copy. I could not download it. There is no download button, and Mixbook's help docs say one does not exist.
 
 I wanted the file. Getting it became a small reverse-engineering exercise, because the reason there's no download button is more interesting than a missing feature. There is no video file to download. Your browser builds the movie frame by frame every time you press play.

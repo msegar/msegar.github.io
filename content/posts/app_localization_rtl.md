@@ -6,8 +6,6 @@ img: ../assets/images/app-localization-rtl.png
 categories: [Localization, Next.js, i18n, Tailwind CSS, Developer Tools]
 ---
 
-# Adding Localization and RTL Support to a Next.js App
-
 I added eight languages and right-to-left (RTL) support to [ManuscriptMind](https://manuscriptmind.com), an AI peer-review tool I build, taking it from English only to German, Portuguese, French, Chinese, Japanese, Arabic, and Spanish. A handful of techniques handled most of the work, and two non-obvious bugs cost more time than they should have. These are my notes on both.
 
 The principles apply to any framework. The concrete examples use Next.js (App Router), [next-intl](https://next-intl.dev), Tailwind CSS, and Radix UI, since that's the stack here.

@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <meta name="description" content="How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.">
     <meta name="author" content="Matt Segar">
-    <meta name="keywords" content="schema, database, migration, supabase, files">
+    <meta name="keywords" content="schema, database, migration, files, supabase">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
@@ -57,12 +57,12 @@
         "@type": "WebPage",
         "@id": "https://segar.me/blog/posts/supabase_schema_workflow.html"
       },
-      "keywords": "schema, database, migration, supabase, files"
+      "keywords": "schema, database, migration, files, supabase"
     }
     </script>
     
     <link rel="stylesheet" href="../../assets/css/normalize.css">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=8494294d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -193,8 +193,7 @@
                 </header>
                 
                 <div class="post-body">
-                    <h1 id="a-sane-schema-workflow-for-supabase-projects">A Sane Schema Workflow for Supabase Projects</h1>
-<p>Most Supabase projects I&#39;ve seen end up in one of two failure modes for schema management. Either everyone hand-writes migration files into <code>supabase/migrations/</code>, drifts the live database out of sync with them, and then nobody trusts the folder. Or there are no migrations at all, just a Supabase dashboard and a vague memory of what was changed last Tuesday.</p>
+                    <p>Most Supabase projects I&#39;ve seen end up in one of two failure modes for schema management. Either everyone hand-writes migration files into <code>supabase/migrations/</code>, drifts the live database out of sync with them, and then nobody trusts the folder. Or there are no migrations at all, just a Supabase dashboard and a vague memory of what was changed last Tuesday.</p>
 <p>I went through both of these on <a href="www.claripulse.com">Claripulse</a> before settling on a workflow that I actually like. The short version: the live database is the source of truth, a <code>pg_dump</code> snapshot in <code>supabase/schema/</code> is the durable record, migrations are applied through the <a href="https://segar.me/blog/posts/supabase_multiple_orgs.html">Supabase MCP server</a>, and a single <code>docs/database_notes.md</code> captures the design intent that <code>pg_dump</code> cannot.</p>
 <p>Here&#39;s exactly how it&#39;s set up.</p>
 <h2 id="the-core-idea">The Core Idea</h2>
@@ -356,6 +355,6 @@ git diff supabase/schema/
     </footer>
 
     <!-- External JS file for theme toggle -->
-    <script src="../../assets/js/theme-toggle.js"></script>
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
 </body>
 </html>

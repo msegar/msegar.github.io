@@ -6,8 +6,6 @@ img: ../assets/images/static-blog.png
 categories: [JavaScript, Markdown, Web Development]
 ---
 
-# Building a Simple Static Blog with JavaScript and Markdown
-
 As a developer who values simplicity and performance, I've always been drawn to static site generators. While there are many excellent options like Jekyll, Hugo, and Eleventy, sometimes you want something tailored precisely to your needs without the overhead of learning a new framework. That's why I built a custom, lightweight blogging system for my personal website using JavaScript, Markdown, and HTML templates.
 
 ## Why Build a Custom Blog System?

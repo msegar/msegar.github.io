@@ -6,8 +6,6 @@ img: ../assets/images/doximity.png
 categories: [AI]
 ---
 
-# My Experience with Doximity AI Scribe
-
 As a cardiologist constantly battling documentation burden, I was intrigued when Doximity launched their AI Scribe feature. After using it in clinic, I'm impressed by both its simplicity and effectiveness.
 
 ## Getting Started

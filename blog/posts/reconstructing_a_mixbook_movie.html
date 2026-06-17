@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <meta name="description" content="How I traced Mixbook's animated Movie feature to its data API, found that the browser builds the video instead of storing it, and rebuilt a downloadable MP4 from the raw photos and music with crossfades, Ken Burns motion, and the original title text">
     <meta name="author" content="Matt Segar">
-    <meta name="keywords" content="movie, mixbook, ffmpeg, photo, photos">
+    <meta name="keywords" content="movie, mixbook, photo, ffmpeg, photos">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
@@ -57,12 +57,12 @@
         "@type": "WebPage",
         "@id": "https://segar.me/blog/posts/reconstructing_a_mixbook_movie.html"
       },
-      "keywords": "movie, mixbook, ffmpeg, photo, photos"
+      "keywords": "movie, mixbook, photo, ffmpeg, photos"
     }
     </script>
     
     <link rel="stylesheet" href="../../assets/css/normalize.css">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=8494294d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -193,8 +193,7 @@
                 </header>
                 
                 <div class="post-body">
-                    <h1 id="reconstructing-a-mixbook-movie-with-ffmpeg">Reconstructing a Mixbook Movie with ffmpeg</h1>
-<p><a href="https://www.mixbook.com">Mixbook</a> emailed me to say my animated project was ready: a short movie built from my photos and set to music. I could watch it in the browser or order a printed copy. I could not download it. There is no download button, and Mixbook&#39;s help docs say one does not exist.</p>
+                    <p><a href="https://www.mixbook.com">Mixbook</a> emailed me to say my animated project was ready: a short movie built from my photos and set to music. I could watch it in the browser or order a printed copy. I could not download it. There is no download button, and Mixbook&#39;s help docs say one does not exist.</p>
 <p>I wanted the file. Getting it became a small reverse-engineering exercise, because the reason there&#39;s no download button is more interesting than a missing feature. There is no video file to download. Your browser builds the movie frame by frame every time you press play.</p>
 <p>One caveat up front: this was my own project, reached through my own shareable view link. Everything below is about getting your own memories out of a service that offers no export. None of it touches anyone else&#39;s content.</p>
 <h2 id="the-first-dead-end-no-file-in-the-page">The First Dead End: No File in the Page</h2>
@@ -426,6 +425,6 @@ presets = [
     </footer>
 
     <!-- External JS file for theme toggle -->
-    <script src="../../assets/js/theme-toggle.js"></script>
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
 </body>
 </html>

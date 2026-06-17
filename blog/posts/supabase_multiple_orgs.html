@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <meta name="description" content="How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out">
     <meta name="author" content="Matt Segar">
-    <meta name="keywords" content="claude, code, supabase, project, multiple">
+    <meta name="keywords" content="project, claude, code, supabase, each">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
@@ -57,12 +57,12 @@
         "@type": "WebPage",
         "@id": "https://segar.me/blog/posts/supabase_multiple_orgs.html"
       },
-      "keywords": "claude, code, supabase, project, multiple"
+      "keywords": "project, claude, code, supabase, each"
     }
     </script>
     
     <link rel="stylesheet" href="../../assets/css/normalize.css">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=8494294d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -193,8 +193,7 @@
                 </header>
                 
                 <div class="post-body">
-                    <h1 id="using-supabase-mcp-with-multiple-organizations-in-claude-code">Using Supabase MCP with Multiple Organizations in Claude Code</h1>
-<p>If you work across multiple Supabase organizations — say, a personal project and a client project — you&#39;ve probably hit this wall: Claude Code only lets you authenticate one Supabase org at a time, and switching means logging out and back in through a browser OAuth flow. Every. Single. Time.</p>
+                    <p>If you work across multiple Supabase organizations — say, a personal project and a client project — you&#39;ve probably hit this wall: Claude Code only lets you authenticate one Supabase org at a time, and switching means logging out and back in through a browser OAuth flow. Every. Single. Time.</p>
 <p>After fighting with this for longer than I&#39;d like to admit, I found a clean solution that lets you have multiple Supabase MCP servers running simultaneously, each scoped to a different org and project. Here&#39;s exactly how to set it up.</p>
 <h2 id="the-problem-with-the-default-setup">The Problem with the Default Setup</h2>
 <p>The default Supabase MCP setup uses OAuth browser-based authentication. When you run <code>/mcp</code> in Claude Code and authorize, you&#39;re granting access to one specific Supabase organization. There&#39;s no built-in way to be authenticated to two orgs at once using this flow.</p>
@@ -288,6 +287,6 @@
     </footer>
 
     <!-- External JS file for theme toggle -->
-    <script src="../../assets/js/theme-toggle.js"></script>
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
 </body>
 </html>

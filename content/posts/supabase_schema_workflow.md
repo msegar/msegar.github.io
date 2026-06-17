@@ -6,8 +6,6 @@ img: ../assets/images/supabase-schema-workflow.png
 categories: [Supabase, Postgres, Database, Developer Tools]
 ---
 
-# A Sane Schema Workflow for Supabase Projects
-
 Most Supabase projects I've seen end up in one of two failure modes for schema management. Either everyone hand-writes migration files into `supabase/migrations/`, drifts the live database out of sync with them, and then nobody trusts the folder. Or there are no migrations at all, just a Supabase dashboard and a vague memory of what was changed last Tuesday.
 
 I went through both of these on [Claripulse](www.claripulse.com) before settling on a workflow that I actually like. The short version: the live database is the source of truth, a `pg_dump` snapshot in `supabase/schema/` is the durable record, migrations are applied through the [Supabase MCP server](https://segar.me/blog/posts/supabase_multiple_orgs.html), and a single `docs/database_notes.md` captures the design intent that `pg_dump` cannot.

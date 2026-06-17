@@ -6,10 +6,6 @@ img: ../assets/images/bookdown.png
 categories: [R, Bookdown]
 ---
 
-# Pagination for R Bookdown Books in Amazon KDP: A Comprehensive Guide
-
-## Understanding KDP's Pagination Requirements
-
 When publishing an academic or technical book using R Bookdown for Amazon Kindle Direct Publishing (KDP), pagination can become a complex challenge. Many authors encounter the frustrating error message: "Update the pagination in your manuscript file so that the main content begins with the correct page number."
 
 ### What KDP Wants
