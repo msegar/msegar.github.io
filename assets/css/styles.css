@@ -106,12 +106,25 @@ header {
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  position: relative;
 }
 
 header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* Hamburger menu button — hidden on desktop, shown on mobile */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 4px 8px;
+  color: var(--text-color);
 }
 
 .logo h1 {
@@ -329,44 +342,101 @@ footer p {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  /* Keep logo + hamburger on one row */
   header .container {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  nav {
-    margin-top: 20px;
-  }
-  
-  nav ul {
-    justify-content: center;
-  }
-  
-  nav li {
-    margin: 0 10px;
+    flex-direction: row;
+    text-align: left;
   }
 
-  /* Mobile dropdown improvements */
+  /* Show the hamburger button */
+  .nav-toggle {
+    display: block;
+  }
+
+  /* Nav collapses into a panel that drops down from the header */
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    display: none;
+  }
+
+  nav.nav-open {
+    display: block;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 8px 0;
+  }
+
+  nav li {
+    margin: 0;
+  }
+
+  nav li a,
+  nav li .nav-link {
+    display: block;
+    padding: 14px 24px;
+  }
+
+  /* Underline animation is awkward on stacked links */
+  nav a:after {
+    display: none;
+  }
+
+  /* Theme toggle sits as a row in the menu */
+  .theme-toggle {
+    padding: 10px 24px;
+  }
+
+  /* Innovations expand affordance */
   .dropdown .nav-link {
     position: relative;
   }
-  
+
   .dropdown .nav-link:after {
     content: '▼';
     font-size: 0.7em;
     margin-left: 5px;
     vertical-align: middle;
   }
-  
-  /* Make mobile menu accessible with a tap instead of hover */
+
+  /* Dropdown renders inline (indented), revealed by tap-toggled .active */
   .dropdown-content {
     display: none;
+    position: static;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    min-width: auto;
   }
-  
+
+  [data-theme="dark"] .dropdown-content {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+
   .dropdown.active .dropdown-content {
     display: block;
   }
-  
+
+  .dropdown-content a {
+    padding: 12px 24px 12px 44px;
+  }
+
   .about-content {
     flex-direction: column;
   }
@@ -381,14 +451,6 @@ footer p {
 }
 
 @media (max-width: 480px) {
-  nav ul {
-    flex-wrap: wrap;
-  }
-  
-  nav li {
-    margin: 5px 10px;
-  }
-  
   .hero {
     padding: 60px 0;
   }
@@ -473,8 +535,11 @@ footer p {
   background-color: #3a4a5e;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
+/* Open on hover only for true pointer devices (desktop); touch uses tap-to-toggle */
+@media (hover: hover) and (pointer: fine) {
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 }
 
 .dropdown .nav-link {

@@ -6,8 +6,6 @@ img: ../assets/images/fine-tuning-academic-voice.png
 categories: [LLM, Fine-Tuning, MLX, Modal, Academic Writing]
 ---
 
-# Fine-Tuning a Local LLM to Write in My Academic Voice
-
 I write a lot of papers, and the prose takes more time than the science. I turn statistical outputs and bullet points into a journal-shaped methods section, hedge a results paragraph the way a reviewer expects, drag a limitations paragraph out of a discussion. Generic chatbots can produce something on the topic, but the result reads like an AI assistant, not like me. I wanted a model that already knew the voice.
 
 I ended up with a fine-tuned **Llama-3.1-8B-Instruct**, trained on my own corpus of 37 published papers, running on my Mac in **LM Studio** at 25 to 30 tokens per second. Total cloud spend across the whole project was under $5. My first training run flopped, and the reason it flopped pointed me at the fix.

@@ -49,14 +49,27 @@
             height: 100%;
             object-fit: cover;
         }
-        
+
+        .blog-thumbnail-link {
+            display: block;
+        }
+
         .blog-content {
             padding: 20px;
         }
-        
+
         .blog-title {
             font-size: 1.2rem;
             margin-bottom: 10px;
+        }
+
+        .blog-title-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .blog-title-link:hover {
+            color: var(--accent-color);
         }
         
         .blog-meta {
@@ -121,7 +134,7 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html" class="logo-link">
+                <a href="../index.html" class="logo-link">
                     <img src="../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
                     <img src="../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
                     <h1>Matt Segar</h1>
