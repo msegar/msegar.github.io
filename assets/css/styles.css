@@ -559,3 +559,29 @@ footer a:hover {
 [data-theme="dark"] footer a:hover {
   color: var(--accent-color);
 }
+
+/* Blog post tables */
+.post-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 30px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.post-content th,
+.post-content td {
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+}
+
+.post-content thead th {
+  background-color: var(--light-background);
+  font-weight: 600;
+  text-align: left;
+}
+
+.post-content table code {
+  background: none;
+  padding: 0;
+}

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmarking Five Embedding Models for a Keyword Relevance Filter - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn't the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="model, threshold, keyword, models, tuned">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/embedding_model_comparison.html">
+    <meta property="og:title" content="Benchmarking Five Embedding Models for a Keyword Relevance Filter - Matt Segar">
+    <meta property="og:description" content="I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn't the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.">
+    <meta property="og:image" content="../assets/images/embedding_model_comparison.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/embedding_model_comparison.html">
+    <meta property="twitter:title" content="Benchmarking Five Embedding Models for a Keyword Relevance Filter - Matt Segar">
+    <meta property="twitter:description" content="I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn't the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.">
+    <meta property="twitter:image" content="../assets/images/embedding_model_comparison.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/embedding_model_comparison.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Benchmarking Five Embedding Models for a Keyword Relevance Filter",
+      "description": "I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn't the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.",
+      "image": "../assets/images/embedding_model_comparison.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-06-30T00:00:00.000Z",
+      "dateModified": "2026-06-30T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/embedding_model_comparison.html"
+      },
+      "keywords": "model, threshold, keyword, models, tuned"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=0b3ff06e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../../index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Benchmarking Five Embedding Models for a Keyword Relevance Filter</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-06-30T00:00:00.000Z">June 30, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>I run a content pipeline that pulls in keyword ideas, and most of what comes back belongs to some other domain. For a site about medical device safety, the keyword tools hand me &quot;pharmacy discount cards&quot; and &quot;anti-aging skincare routines&quot; next to the terms I want. I wanted to drop the wrong ones without checking each row by hand, on a CI runner, with no GPU.</p>
+<p>Embeddings fit the job. Embed the keyword, embed a handful of reference phrases that describe the domain, keep the keyword when it lands close enough. The open-model shelf for this is deep and mostly free, so the real question was which model to reach for. I benchmarked five, and three things came out that I did not expect. The highest score belonged to a model I would not ship. One threshold flipped the ranking between models. And the encoder itself was the least important choice on the table.</p>
+<h2 id="the-setup">The setup</h2>
+<p>I started with ground truth. I hand-labeled 69 keywords: 26 clearly in-domain, 27 clearly out, and 16 borderline cases I left in on purpose. The borderlines carry the exercise. A set of easy positives and obvious negatives flatters every model and teaches you nothing, while the ambiguous keywords are where two encoders disagree. I scored strict F1 on the clean labels and watched the borderlines to see where the score distribution drifted.</p>
+<p>The scoring stays simple. No training, no fine-tuning:</p>
+<pre><code>score = max(similarity to positive anchor phrases)
+      − max(similarity to negative anchor phrases)
+</code></pre>
+<p>Embed the keyword and two small sets of anchor phrases, one for the domain and one for the neighboring domains that produce false positives, take the difference, and threshold it. My first pass used a fixed threshold of 0.25.</p>
+<p>The field, all small enough to run on CPU:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Dim</th>
+<th>Type</th>
+<th>Prefix scheme</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>all-MiniLM-L6-v2</code></td>
+<td>384</td>
+<td>general small</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>e5-small-v2</code></td>
+<td>384</td>
+<td>similarity-tuned</td>
+<td>symmetric <code>query:</code></td>
+</tr>
+<tr>
+<td><code>bge-small-en-v1.5</code></td>
+<td>384</td>
+<td>general small</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>nomic-embed-text-v1.5</code></td>
+<td>768</td>
+<td>retrieval</td>
+<td>asymmetric query/document</td>
+</tr>
+<tr>
+<td><code>nomic-embed-text-v2-moe</code></td>
+<td>768</td>
+<td>retrieval, mixture-of-experts</td>
+<td>asymmetric query/document</td>
+</tr>
+</tbody></table>
+<h2 id="the-results">The results</h2>
+<p>Two configurations carry the whole story. The <strong>baseline</strong> is the naive setup above: raw <code>max − max</code> scoring, one broad domain anchor, a fixed 0.25 threshold. The <strong>tuned</strong> config keeps the same models and adds three changes that have nothing to do with the encoder, which I get to below: sharper anchors, a steadier aggregation, and a threshold read off the ROC curve.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th align="right">Dim</th>
+<th align="right">F1 (baseline)</th>
+<th align="right">F1 (tuned)</th>
+<th align="right">AUC (tuned)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>all-MiniLM-L6-v2</code></td>
+<td align="right">384</td>
+<td align="right">0.656</td>
+<td align="right">0.821</td>
+<td align="right">0.879</td>
+</tr>
+<tr>
+<td><code>bge-small-en-v1.5</code></td>
+<td align="right">384</td>
+<td align="right">0.457</td>
+<td align="right">0.852</td>
+<td align="right">0.885</td>
+</tr>
+<tr>
+<td><code>e5-small-v2</code></td>
+<td align="right">384</td>
+<td align="right"><strong>0.000</strong></td>
+<td align="right">0.889</td>
+<td align="right">0.899</td>
+</tr>
+<tr>
+<td><code>nomic-embed-text-v1.5</code></td>
+<td align="right">768</td>
+<td align="right">0.682</td>
+<td align="right"><strong>0.893</strong></td>
+<td align="right"><strong>0.922</strong></td>
+</tr>
+<tr>
+<td><code>nomic-embed-text-v2-moe</code></td>
+<td align="right">768</td>
+<td align="right">0.727</td>
+<td align="right">0.868</td>
+<td align="right">0.916</td>
+</tr>
+</tbody></table>
+<p>Most of what I learned about this problem sits in those five rows.</p>
+<h2 id="one-threshold-flips-the-ranking">One threshold flips the ranking</h2>
+<p>Read the two F1 columns side by side. At the naive baseline the order barely resembles the tuned order. The mixture-of-experts model leads at 0.727 and <code>e5-small-v2</code> scores a flat 0.000. After I retuned the three non-model knobs, <code>e5-small-v2</code> climbs to 0.889 while the MoE model, still the largest and slowest of the set, drops into the middle of the pack.</p>
+<p>That <code>e5-small-v2</code> zero comes from a mismatch you can hit with any encoder. e5 expects a <code>query:</code> prefix and packs its cosine similarities into a narrow, high band. A fixed 0.25 threshold sits above almost every score it emits, so the filter labels every keyword negative and F1 collapses. The model separates the two classes fine. Its tuned AUC of 0.899 leads the 384-dim group. A threshold borrowed from another model&#39;s scale hides that separation behind a bad cutoff.</p>
+<p>So an absolute similarity threshold does not carry between models. Compare encoders at each one&#39;s own best threshold, or use a threshold-free measure like AUC. Line them all up behind one hardcoded cutoff and you measure whose similarity scale happened to match your guess.</p>
+<h2 id="by-auc-the-models-sit-close-together">By AUC, the models sit close together</h2>
+<p>Set the threshold aside and read the AUC column, which scores class separation without committing to a cutoff. The five models land between 0.879 and 0.922, about four points apart. The two 768-dim models edge the three 384-dim ones, and they carry double the vector width for that edge.</p>
+<p>The mixture-of-experts model makes the trade concrete. It is the largest model in the set, and it still landed below the lighter <code>nomic-embed-text-v1.5</code> at the tuned config, 0.868 against 0.893. On short keyword text, the extra capacity trained for long-document retrieval bought nothing back.</p>
+<h2 id="the-winner-isnt-what-i-shipped">The winner isn&#39;t what I shipped</h2>
+<p>By the numbers, <code>nomic-embed-text-v1.5</code> wins. It tops both columns at 0.893 F1 and 0.922 AUC. I shipped <code>e5-small-v2</code> anyway.</p>
+<p><code>e5-small-v2</code> trails by 0.004 F1 at 384 dimensions against nomic&#39;s 768. That buys half the storage per vector and a symmetric design built for the short-text-against-short-text comparison I was running. A filter that scores every keyword candidate does not earn back double the vector width for four thousandths of F1. The top of the benchmark and the right pick for the job were two different questions, and the distance between the top two models came in under the distance between a good threshold and a bad one on a single model.</p>
+<h2 id="the-part-that-moved-the-number">The part that moved the number</h2>
+<p>Those three non-model changes did more work than the model choice did. The baseline-to-tuned jump, roughly 0.66 to 0.89, came mostly from parameters the encoder never touches.</p>
+<p><strong>The anchor phrases.</strong> My first anchor set leaned on one broad phrase to cover the whole domain. A single anchor like:</p>
+<pre><code>&quot;medical device industry news and analysis&quot;
+</code></pre>
+<p>sits close enough to adjacent-but-wrong keywords (&quot;prescription drug coupons&quot;, &quot;health insurance enrollment&quot;) to pull them over the line. I swapped that umbrella for several concrete anchors, each pinned to one subtopic:</p>
+<pre><code>&quot;implantable device malfunction and failure reports&quot;
+&quot;medical device recall and safety alerts&quot;
+&quot;post-market surveillance for device manufacturers&quot;
+</code></pre>
+<p>That removed a whole class of false positives on its own. Anchors are the cheapest thing in the system to edit, and sharpening them moved F1 more than any model swap. Naming the specific neighbors on the negative side helped as much, since it gave the score something concrete to push against.</p>
+<p><strong>The aggregation function.</strong> <code>max(pos) − max(neg)</code> breaks on a single lucky anchor match, which then decides the whole keyword. I switched to the mean of the top-3 positive similarities minus the max negative, and the score steadied out on the borderline cases where one anchor spikes but the overall fit stays weak:</p>
+<pre><code># brittle: one anchor decides everything
+score = max(pos) − max(neg)
+
+# steadier: needs broad agreement, not one spike
+score = mean(top-3 pos) − max(neg)
+</code></pre>
+<p><strong>The threshold.</strong> In place of my hand-picked 0.25, I swept the ROC curve and let the data pick the cutoff that maximized F1. As the <code>e5-small-v2</code> zero showed, that one choice separates a model that looks broken from a model that looks best.</p>
+<p>Model, anchors, aggregation, threshold. I reached for the model first, and across this table it explains less of the spread than the other three.</p>
+<h2 id="final-numbers">Final numbers</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Keywords labeled</td>
+<td>69</td>
+</tr>
+<tr>
+<td>Models compared</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Baseline F1 (MiniLM, fixed 0.25 threshold)</td>
+<td>0.656</td>
+</tr>
+<tr>
+<td>Best F1 (nomic-embed-text-v1.5, tuned)</td>
+<td>0.893</td>
+</tr>
+<tr>
+<td>Shipped model</td>
+<td>e5-small-v2 (0.889 F1, 384-dim)</td>
+</tr>
+<tr>
+<td>AUC spread across models (tuned)</td>
+<td>0.879 – 0.922</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>CPU, no GPU</td>
+</tr>
+</tbody></table>
+<h2 id="conclusion">Conclusion</h2>
+<p>A few things I would tell myself before starting:</p>
+<ol>
+<li><strong>Benchmark on your own data, not the leaderboard.</strong> MTEB rankings run on tasks that look nothing like short keyword-versus-phrase scoring. A 69-example set I labeled in an afternoon predicted real behavior that the public boards missed.</li>
+<li><strong>Never compare models at one fixed threshold.</strong> An absolute cutoff does not transfer between encoders, and it dragged my best-separating model down to a zero. Compare at each model&#39;s own threshold, or compare AUC.</li>
+<li><strong>The top score is not the pick.</strong> The leading model won by 0.004 F1 at double the dimensions. Vector width and how a model expects to be used outweighed a rounding-error gain in quality.</li>
+<li><strong>Tune the model last.</strong> How you write the anchor phrases and how you aggregate the scores moved the number more than swapping the encoder did.</li>
+</ol>
+<p>No GPU, no fine-tuning, one afternoon of labeling and one of sweeps, and I ended with a filter I trust. The keeper wasn&#39;t a favorite model. It was the reminder that when an embedding pipeline underperforms, the encoder is one knob among several, and rarely the one worth turning first.</p>
+<hr>
+<p><em>Have you hit the same &quot;everything but the model mattered&quot; surprise on an embedding task? Feel free to reach out.</em></p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
+</body>
+</html>
