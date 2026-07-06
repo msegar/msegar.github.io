@@ -5,13 +5,13 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Sun, 05 Jul 2026 18:04:41 GMT</lastBuildDate>
+  <lastBuildDate>Mon, 06 Jul 2026 00:24:28 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
   <item>
     <title>Benchmarking Five Embedding Models for a Keyword Relevance Filter</title>
     <link>https://segar.me/blog/posts/embedding_model_comparison.html</link>
     <guid>https://segar.me/blog/posts/embedding_model_comparison.html</guid>
-    <pubDate>Tue, 30 Jun 2026 00:00:00 GMT</pubDate>
+    <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
     <description>I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn&apos;t the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.</description>
   </item>
   <item>

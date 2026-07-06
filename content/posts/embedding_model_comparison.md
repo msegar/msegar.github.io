@@ -1,7 +1,7 @@
 ---
 title: Benchmarking Five Embedding Models for a Keyword Relevance Filter
 description: I compared five open embedding models to filter keyword lists down to a single niche. The top scorer wasn't the model I shipped, one wrong threshold made the best model look worthless, and the largest gains came from things the encoder never sees.
-date: 2026-06-30
+date: 2026-07-05
 img: ../assets/images/embedding_model_comparison.png
 categories: [Embeddings, NLP, Machine Learning, Benchmarking]
 ---

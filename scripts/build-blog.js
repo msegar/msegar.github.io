@@ -126,7 +126,9 @@ function formatDate(dateString) {
       return dateString;
     }
     
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    // Format in UTC so a bare YYYY-MM-DD date renders the same day regardless
+    // of the build machine's timezone (local vs. the UTC CI runner).
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString('en-US', options);
   } catch (error) {
     console.log(`Error parsing date: ${dateString}`, error);
