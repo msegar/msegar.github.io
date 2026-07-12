@@ -1,14 +1,16 @@
 ---
-title: A Sane Schema Workflow for Supabase Projects
-description: How I keep a Supabase Postgres schema in version control without hand-writing migration files, using pg_dump snapshots, MCP-applied migrations, and a notes file for the things pg_dump can't capture.
+title: Keeping Claude Code in Sync with Your Supabase Schema
+description: AI coding agents write a new migration file every time they change a table. Here's how a single pg_dump snapshot in the repo keeps Claude Code in sync with the current Supabase schema.
 date: 2026-05-08
 img: ../assets/images/supabase-schema-workflow.png
-categories: [Supabase, Postgres, Database, Developer Tools]
+categories: [Supabase, Claude Code, Postgres, Database, Developer Tools]
 ---
 
-Most Supabase projects I've seen end up in one of two failure modes for schema management. Either everyone hand-writes migration files into `supabase/migrations/`, drifts the live database out of sync with them, and then nobody trusts the folder. Or there are no migrations at all, just a Supabase dashboard and a vague memory of what was changed last Tuesday.
+Every time I asked Claude Code to add a column, it wrote a new migration file. A few weeks into [Claripulse](https://claripulse.com), `supabase/migrations/` had a couple dozen of them, and answering a question as basic as "what columns does the `signals` table have right now?" meant replaying the whole sequence in my head. That is also what I was making the agent do on every request that touched the database, and it got it wrong often enough to matter.
 
-I went through both of these on [Claripulse](www.claripulse.com) before settling on a workflow that I actually like. The short version: the live database is the source of truth, a `pg_dump` snapshot in `supabase/schema/` is the durable record, migrations are applied through the [Supabase MCP server](https://segar.me/blog/posts/supabase_multiple_orgs.html), and a single `docs/database_notes.md` captures the design intent that `pg_dump` cannot.
+A folder of migrations records how the schema got here. It never tells you where "here" is. That's tolerable when a human is the only reader, because you can always open the Supabase dashboard and look. It's a real problem when your primary reader is a coding agent whose entire view of the world is the repo.
+
+So I stopped keeping migrations as files. The live database is the source of truth, a `pg_dump` snapshot in `supabase/schema/` is the copy the agent reads, migrations are applied through the [Supabase MCP server](https://segar.me/blog/posts/supabase_multiple_orgs.html) and recorded in the database itself, and a single `docs/database_notes.md` captures the design intent that `pg_dump` cannot.
 
 Here's exactly how it's set up.
 
@@ -22,15 +24,18 @@ There are three layers, and each one has exactly one job:
 
 There is no folder of hand-written migration files that you maintain. Migrations are created and applied through the MCP server, which records them in `supabase_migrations.schema_migrations` automatically.
 
-## Why I Stopped Hand-Writing Migration Files
+![Diagram of the schema workflow. Claude Code applies a migration to the live Supabase database through the Supabase MCP server, refresh_schema.sh takes a pg_dump snapshot of that database into supabase/schema/, and the agent reads that single snapshot to learn the current schema instead of replaying a folder of migration files. A hand-written docs/database_notes.md holds the design intent pg_dump can't capture, and git diff on the snapshot acts as a drift detector.](../../assets/images/supabase-schema-loop.png)
+
+## Why a Migration Folder Fails an AI Agent
 
 The classic Supabase setup has you write `supabase/migrations/NNN_description.sql` files and apply them via the Supabase CLI. This works fine on day one. The problems show up later:
 
-1. **Drift.** Someone clicks something in the dashboard, or runs a one-off `ALTER TABLE` in a `psql` shell, and now the migration folder no longer describes the actual database. Once that happens, every future migration is built on a fiction.
-2. **Re-running history is fragile.** Long migration histories accumulate `DROP COLUMN` and `RENAME` and partial reversions. Replaying them from scratch on a new environment becomes its own debugging exercise.
-3. **The folder doesn't help reviewers.** A PR that says "added a partial index" gives you the `CREATE INDEX` but not the surrounding tables, indexes, and functions it interacts with. Reviewers can't see the shape of the schema, only the delta.
+1. **Current state is never written down.** The schema exists only as the sum of every migration ever applied. To know whether a column exists, an agent has to read all of them in order and simulate the result. Twenty files in, that costs a lot of context to get an answer that a single file could have given for free, and the agent will occasionally get it wrong — writing code against a column that a later migration renamed.
+2. **Drift.** Someone clicks something in the dashboard, or runs a one-off `ALTER TABLE` in a `psql` shell, and now the migration folder no longer describes the actual database. Once that happens, every future migration is built on a fiction, and so is everything the agent infers from the folder.
+3. **Re-running history is fragile.** Long migration histories accumulate `DROP COLUMN` and `RENAME` and partial reversions. Replaying them from scratch on a new environment becomes its own debugging exercise.
+4. **The folder doesn't help reviewers.** A PR that says "added a partial index" gives you the `CREATE INDEX` but not the surrounding tables, indexes, and functions it interacts with. Reviewers can't see the shape of the schema, only the delta.
 
-What I wanted was a single file (or a small set of split files) where I could open one tab, hit Cmd-F, and immediately see the current state of the database. That is what `pg_dump --schema-only` produces, and that is what gets committed.
+What I wanted was a single file (or a small set of split files) where the agent — or I — could open one tab, hit Cmd-F, and immediately see the current state of the database. That is what `pg_dump --schema-only` produces, and that is what gets committed.
 
 ## The `refresh_schema.sh` Script
 
@@ -161,7 +166,7 @@ That's it. There is no fourth step where you also write a numbered migration fil
 
 A few concrete things I get from this setup that I didn't have before:
 
-- **One place to read the schema.** When I want to know whether a column exists, I open `tables.sql` and Cmd-F. No flipping through a dozen migration files trying to reconstruct current state.
+- **One place to read the schema.** When Claude Code needs to know whether a column exists, it greps `tables.sql`. One file read, one correct answer, no reconstructing current state from a dozen deltas. This is the whole reason I built the thing.
 - **Reviewable schema PRs.** A PR that touches a function, an index, and a constraint shows three small diffs in three different files instead of one giant blob.
 - **Drift detection for free.** `git diff supabase/schema/` after a `refresh_schema.sh` run is a one-line check for "did anything change in the database that I didn't intend?"
 - **No re-application order to debug.** Because nobody is replaying a folder of migrations from scratch, there is no order-of-application bug class.

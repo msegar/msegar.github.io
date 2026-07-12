@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="450" viewBox="0 0 1080 450"
+     font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+
+  <defs>
+    <marker id="tipDark" markerWidth="9" markerHeight="8" refX="8.5" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 z" fill="#1c1c1a"/>
+    </marker>
+    <marker id="tipAccent" markerWidth="9" markerHeight="8" refX="8.5" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 z" fill="#0a3d62"/>
+    </marker>
+  </defs>
+
+  <rect width="1080" height="450" fill="#fafaf9"/>
+
+  <!-- ── chrome ── -->
+  <rect x="0" y="0" width="1080" height="40" fill="#1c1c1a"/>
+  <text x="20" y="24" font-size="13" font-weight="500" fill="#ffffff">Keeping Claude Code in sync with your Supabase schema</text>
+  <text x="1060" y="24" font-size="11" fill="#8a8a84" text-anchor="end">three layers · one loop</text>
+
+  <!-- ══ Claude Code ══ -->
+  <rect x="20" y="76" width="260" height="160" fill="#ffffff" stroke="#d9d9d6" stroke-width="1"/>
+  <text x="32" y="96" font-size="11" fill="#8a8a84">Agent</text>
+  <text x="32" y="118" font-size="13" font-weight="500" fill="#1c1c1a">Claude Code</text>
+  <text x="32" y="140" font-size="12" fill="#57574f">Its entire view of the database is</text>
+  <text x="32" y="157" font-size="12" fill="#57574f">whatever it can read in the repo.</text>
+  <line x1="32" y1="172" x2="268" y2="172" stroke="#d9d9d6" stroke-width="1"/>
+  <text x="32" y="190" font-size="11" fill="#8a8a84">What it no longer has to replay</text>
+  <text x="32" y="210" font-size="11" font-family="Menlo, monospace" fill="#8a8a84"
+        text-decoration="line-through">migration-1.sql  migration-2.sql</text>
+
+  <!-- ══ Live database — the source of truth, carried by the dark fill ══ -->
+  <rect x="410" y="76" width="260" height="160" fill="#1c1c1a"/>
+  <text x="422" y="96" font-size="11" fill="#8a8a84">Layer 1</text>
+  <text x="422" y="118" font-size="13" font-weight="500" fill="#ffffff">Live Supabase database</text>
+  <text x="422" y="140" font-size="12" fill="#b8b8b2">The source of truth. Anything you</text>
+  <text x="422" y="157" font-size="12" fill="#b8b8b2">can query is real.</text>
+  <line x1="422" y1="172" x2="658" y2="172" stroke="#3a3a36" stroke-width="1"/>
+  <text x="422" y="190" font-size="11" fill="#8a8a84">Migration history lives here</text>
+  <text x="422" y="210" font-size="10" font-family="Menlo, monospace" fill="#e8e8e4">supabase_migrations.schema_migrations</text>
+
+  <!-- ══ Snapshot in git ══ -->
+  <rect x="800" y="76" width="260" height="160" fill="#ffffff" stroke="#d9d9d6" stroke-width="1"/>
+  <text x="812" y="96" font-size="11" fill="#8a8a84">Layer 2</text>
+  <text x="812" y="118" font-size="13" font-weight="500" fill="#1c1c1a" font-family="Menlo, monospace">supabase/schema/</text>
+  <text x="812" y="140" font-size="12" fill="#57574f">A pg_dump snapshot, committed to</text>
+  <text x="812" y="157" font-size="12" fill="#57574f">git. The one file the agent reads.</text>
+  <line x1="812" y1="172" x2="1048" y2="172" stroke="#d9d9d6" stroke-width="1"/>
+  <text x="812" y="190" font-size="11" fill="#8a8a84">Split by object type, for review</text>
+  <text x="812" y="208" font-size="10" font-family="Menlo, monospace" fill="#1c1c1a">tables.sql · views.sql · functions.sql</text>
+  <text x="812" y="224" font-size="10" font-family="Menlo, monospace" fill="#1c1c1a">indexes.sql · misc.sql</text>
+
+  <!-- ── step 1 ── -->
+  <text x="345" y="118" font-size="11" fill="#8a8a84" text-anchor="middle">applied through</text>
+  <text x="345" y="137" font-size="12" font-family="Menlo, monospace" fill="#1c1c1a" text-anchor="middle">apply_migration</text>
+  <line x1="280" y1="170" x2="404" y2="170" stroke="#1c1c1a" stroke-width="1.5" marker-end="url(#tipDark)"/>
+  <rect x="338" y="163" width="14" height="14" fill="#1c1c1a"/>
+  <text x="345" y="173.5" font-size="10" font-family="Menlo, monospace" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="345" y="196" font-size="11" fill="#8a8a84" text-anchor="middle">via Supabase MCP</text>
+
+  <!-- ── step 2 ── -->
+  <text x="735" y="118" font-size="11" fill="#8a8a84" text-anchor="middle">snapshotted by</text>
+  <text x="735" y="137" font-size="11" font-family="Menlo, monospace" fill="#1c1c1a" text-anchor="middle">refresh_schema.sh</text>
+  <line x1="670" y1="170" x2="794" y2="170" stroke="#1c1c1a" stroke-width="1.5" marker-end="url(#tipDark)"/>
+  <rect x="728" y="163" width="14" height="14" fill="#1c1c1a"/>
+  <text x="735" y="173.5" font-size="10" font-family="Menlo, monospace" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="735" y="196" font-size="11" fill="#8a8a84" text-anchor="middle">pg_dump, schema only</text>
+
+  <!-- ── step 3: the loop closes. The one accent in the view. ── -->
+  <path d="M 930,236 L 930,300 L 150,300 L 150,244" fill="none" stroke="#0a3d62" stroke-width="1.5"
+        marker-end="url(#tipAccent)"/>
+  <rect x="533" y="293" width="14" height="14" fill="#0a3d62"/>
+  <text x="540" y="303.5" font-size="10" font-family="Menlo, monospace" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="540" y="326" font-size="12" font-weight="500" fill="#0a3d62" text-anchor="middle">The agent greps one file to learn the current schema — no deltas to replay</text>
+
+  <!-- ══ footer: layer 3 + the drift check ══ -->
+  <rect x="20" y="356" width="1040" height="74" fill="#f0f0ee" stroke="#d9d9d6" stroke-width="1"/>
+  <line x1="670" y1="356" x2="670" y2="430" stroke="#d9d9d6" stroke-width="1"/>
+
+  <text x="32" y="376" font-size="11" fill="#8a8a84">Layer 3 · hand-written</text>
+  <text x="32" y="397" font-size="13" font-weight="500" fill="#1c1c1a" font-family="Menlo, monospace">docs/database_notes.md</text>
+  <text x="32" y="417" font-size="12" fill="#57574f">The design intent pg_dump can't capture: lifecycle rules, index predicates, don't-refactor-this warnings.</text>
+
+  <text x="686" y="376" font-size="11" fill="#8a8a84">Drift check</text>
+  <text x="686" y="397" font-size="13" font-family="Menlo, monospace" fill="#1c1c1a">git diff supabase/schema/</text>
+  <text x="686" y="417" font-size="12" fill="#57574f">Changes you didn't author show up here.</text>
+</svg>
