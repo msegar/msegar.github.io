@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Anki Cards with Claude Code - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="A working method for generating Anki cards with AI that you can actually trust, covering the HTML rendering bug that eats numeric cutoffs without an error, why ChatGPT alone produces a deck that teaches you the question bank instead of the subject, and what happened when I graded my own AI-built deck against 50 real exam questions.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="cards, deck, card, fact, question">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/anki_cards_claude_code.html">
+    <meta property="og:title" content="Building Anki Cards with Claude Code - Matt Segar">
+    <meta property="og:description" content="A working method for generating Anki cards with AI that you can actually trust, covering the HTML rendering bug that eats numeric cutoffs without an error, why ChatGPT alone produces a deck that teaches you the question bank instead of the subject, and what happened when I graded my own AI-built deck against 50 real exam questions.">
+    <meta property="og:image" content="../assets/images/anki-claude-code.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/anki_cards_claude_code.html">
+    <meta property="twitter:title" content="Building Anki Cards with Claude Code - Matt Segar">
+    <meta property="twitter:description" content="A working method for generating Anki cards with AI that you can actually trust, covering the HTML rendering bug that eats numeric cutoffs without an error, why ChatGPT alone produces a deck that teaches you the question bank instead of the subject, and what happened when I graded my own AI-built deck against 50 real exam questions.">
+    <meta property="twitter:image" content="../assets/images/anki-claude-code.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/anki_cards_claude_code.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Building Anki Cards with Claude Code",
+      "description": "A working method for generating Anki cards with AI that you can actually trust, covering the HTML rendering bug that eats numeric cutoffs without an error, why ChatGPT alone produces a deck that teaches you the question bank instead of the subject, and what happened when I graded my own AI-built deck against 50 real exam questions.",
+      "image": "../assets/images/anki-claude-code.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-08-23T00:00:00.000Z",
+      "dateModified": "2026-08-23T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/anki_cards_claude_code.html"
+      },
+      "keywords": "cards, deck, card, fact, question"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=0b3ff06e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../../index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Building Anki Cards with Claude Code</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-08-23T00:00:00.000Z">August 23, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>I sit the clinical cardiac electrophysiology boards this year, and I own the usual pile of review material: a question-and-commentary product with 463 numbered items, twenty-three lecture decks, eighteen workshop question sets. Reading it is not the problem. Recalling a pre-excitation cutoff or an entrainment threshold months from now is the problem, and that is what spaced repetition solves.</p>
+<p>The obvious approach is one flashcard per numbered item. I tried it, and it produces a deck that teaches you the question bank instead of the subject. What I wanted was a deck built the way I build study notes: pull the same fact from six places in the corpus, reconcile the versions where they disagree, and write one dense card.</p>
+<p>I ended up with <strong>468 notes generating 1,386 cards across 13 subdecks</strong>, built with Claude Code over about a day. The tooling is ordinary. Python, <code>genanki</code> for packaging, <code>pdftotext</code> for extraction, no fine-tuning, no vector database, and no API bill beyond a Claude subscription.</p>
+<p>The deck is not the interesting part. The interesting part is what the build caught. My first batch of 52 cards imported into Anki with no errors and no warnings, and sixteen of them were broken.</p>
+<h2 id="the-bug-that-would-have-poisoned-everything">The Bug That Would Have Poisoned Everything</h2>
+<p>A card reading <code>SPERRI &lt;250 msec identifies a high-risk pathway</code> renders in Anki as <code>SPERRI</code>.</p>
+<p>Anki treats fields as HTML. An HTML parser reads <code>&lt;250 msec identifies a high-risk pathway</code> as an unclosed tag and discards everything up to the next <code>&gt;</code>. My deck is built around numeric cutoffs, so nearly a third of that first batch had lost its number, and nothing in the toolchain complained. I would have found out in November, drilling cards that had been gutted since August.</p>
+<p>The fix belongs in the packaging script rather than the card text, so that it protects every card written afterward:</p>
+<pre><code class="language-python">def esc(text: str) -&gt; str:
+    &quot;&quot;&quot;Escape &lt; and &gt; so Anki does not parse cutoffs like &quot;&lt;115 msec&quot; as HTML.
+
+    Card text is plain cloze markup, never HTML, so this is unconditional.
+    Without it, Anki swallows any &quot;&lt;...&quot; run and the cutoff vanishes from the
+    rendered card, a failure that is invisible until review time.
+    &quot;&quot;&quot;
+    return text.replace(&#39;&lt;&#39;, &#39;&amp;lt;&#39;).replace(&#39;&gt;&#39;, &#39;&amp;gt;&#39;)
+</code></pre>
+<p>Nine characters of code.</p>
+<p>The general version: whatever renders your cards has opinions about your text and will not tell you what they are. If your subject involves comparison operators, chemical formulas, or anything angle-bracketed, render a sample and look at it before you build a thousand more.</p>
+<h2 id="packaging-and-why-deck-ids-matter">Packaging, and Why Deck IDs Matter</h2>
+<p>The build stage is <code>genanki</code> and about sixty lines. Two decisions in it are worth copying.</p>
+<p>The note type carries two fields. <code>Text</code> holds the cloze markup and <code>Extra</code> renders on the answer side only, which makes it free real estate for mechanism, citations, and the reason a distractor fails. None of it costs a recall test.</p>
+<pre><code class="language-python">CLOZE_MODEL = genanki.Model(
+    998877661,                      # fixed ID so re-imports map to the same note type
+    &#39;EP Cloze Model&#39;,
+    fields=[{&#39;name&#39;: &#39;Text&#39;}, {&#39;name&#39;: &#39;Extra&#39;}],
+    templates=[{
+        &#39;name&#39;: &#39;Cloze&#39;,
+        &#39;qfmt&#39;: &#39;{{cloze:Text}}&#39;,
+        &#39;afmt&#39;: &#39;{{cloze:Text}}&lt;br&gt;&lt;br&gt;&#39;
+                &#39;&lt;div style=&quot;color:#666;font-size:0.9em&quot;&gt;{{Extra}}&lt;/div&gt;&#39;,
+    }],
+    model_type=genanki.Model.CLOZE,
+)
+</code></pre>
+<p>The second decision I made was to derive the deck ID from the deck name instead of letting <code>genanki</code> pick a random integer:</p>
+<pre><code class="language-python">def deck_id_from_name(name: str) -&gt; int:
+    return int(hashlib.md5(name.encode(&#39;utf-8&#39;)).hexdigest()[:8], 16)
+</code></pre>
+<p>A random ID means every rebuild imports as a brand new deck and your review history stays behind in the old one. Hashing the name means <code>EP Board Review::Devices &amp; Programming</code> resolves to the same ID forever, so a rebuild updates in place. The <code>::</code> separator gives you subdecks, which is how one master deck grows across many source PDFs over months.</p>
+<h2 id="why-not-just-ask-chatgpt">Why Not Just Ask ChatGPT?</h2>
+<p>This is the obvious question, and I tried the obvious thing first. Paste a chapter into a chat window, ask for cloze deletions, copy the result into Anki. It works, and it produces a deck with four problems.</p>
+<p><strong>It cards the source, not the subject.</strong> One flashcard per question teaches you the question bank. Real understanding needs the same fact pulled from six places in the corpus with the versions reconciled. A chat window holds one chapter at a time and has no memory of the other five mentions.</p>
+<p><strong>It duplicates.</strong> Anki deduplicates on exact first-field match, so two differently worded cards teaching the same fact both import without complaint. You review the same fact twice for weeks before noticing.</p>
+<p><strong>It cannot check its own work.</strong> A chat model will tell you the cards look good. It will not open the packaged file, render the fields, and discover that a third of them lost their numbers.</p>
+<p><strong>It cannot go to the source.</strong> When my review product paraphrased a guideline wrong, catching it required fetching the actual guideline PDF, extracting the recommendation table, and comparing the text.</p>
+<p>The difference is the agent loop. Claude Code reads files, writes files, runs code, and checks its own output against a standard I wrote down. Everything below depends on that loop, and none of it works in a chat window.</p>
+<h2 id="give-every-fact-a-machine-checkable-id">Give Every Fact a Machine-Checkable ID</h2>
+<p>Pass one walks the corpus and emits one JSON line per extracted fact. Each carries a <code>fact_key</code>: a normalized <code>topic::parameter</code> string.</p>
+<pre><code class="language-json">{&quot;item&quot;: 1,
+ &quot;fact_key&quot;: &quot;af_ablation::early_recurrence_predictive_value&quot;,
+ &quot;fact&quot;: &quot;Early recurrence after AF ablation: pooled NPV for late recurrence 89% paroxysmal / 91% persistent; PPV more variable (59.7% vs 81.2%)&quot;,
+ &quot;categories&quot;: [&quot;pearls&quot;, &quot;cutoffs&quot;],
+ &quot;numeric&quot;: [{&quot;param&quot;: &quot;NPV early recurrence&quot;, &quot;value&quot;: &quot;89% parox / 91% persistent&quot;},
+             {&quot;param&quot;: &quot;PPV early recurrence&quot;, &quot;value&quot;: &quot;59.7% parox / 81.2% persistent&quot;}],
+ &quot;figure_dependent&quot;: false,
+ &quot;src&quot;: &quot;epsap&quot;}
+</code></pre>
+<p>Every field earns its place. <code>numeric</code> is broken out separately so numbers can be checked against the source without parsing prose. <code>figure_dependent</code> flags facts that reference a tracing the extractor cannot see, which is how I learned that half the corpus was unusable for text cards. <code>src</code> matters once a second source enters the build.</p>
+<p>Six hundred forty-nine facts came out of that pass. Sorting by <code>fact_key</code> clusters every mention of a parameter across the whole corpus, which turns an invisible contradiction spread across 400 pages into a visible one in a single grep. Four numeric conflicts surfaced. Each now lives on one card that teaches the majority value first and names the minority framing, with the item numbers in the notes field.</p>
+<p>The same key solves the duplication problem. Before writing any card in a later phase, the build checks the key against the index. A hit permits three moves: enrich the existing note, reconcile a numeric conflict, or skip. Writing a new note is not among them. Two later phases added 104 notes and produced zero duplicates.</p>
+<p>If you build a deck across more than one sitting, this is the piece to steal.</p>
+<h2 id="grade-the-deck-against-real-questions">Grade the Deck Against Real Questions</h2>
+<p>After the first phase produced 356 notes, the temptation was to keep building. Instead the build stops for a checkpoint that writes no cards.</p>
+<p>The question sets are lecture slides, so there are no question numbers to split on. What every question does have is an option block, which makes the parse a scan for three or more consecutive <code>A.</code> through <code>E.</code> lines:</p>
+<pre><code class="language-python">OPT = re.compile(r&#39;^\s*([A-E])\s*[\.\)]\s*\S&#39;)
+...
+if len(set(letters)) &gt;= 3 and letters[0] == &#39;A&#39;:
+    stem = &#39;\n&#39;.join(lines[max(0, a - 14):a])   # 14 lines above the options
+    exp  = &#39;\n&#39;.join(lines[b:next_block])       # everything until the next one
+</code></pre>
+<p>Each stem appears twice in these decks, once on the question slide and once on the answer slide, so a dedup step keys on the normalized last 300 characters of the stem and keeps whichever copy carries the longer explanation. That yielded <strong>225 discrete questions</strong> across eighteen sets.</p>
+<p>The sample is drawn by stride rather than randomly:</p>
+<pre><code class="language-python">idx = [round(i * len(questions) / 50) for i in range(50)]
+</code></pre>
+<p>Deterministic, spread across every set in proportion to its size, and reproducible. Shifting the offset later gives a genuinely independent second sample, which matters because I plan to re-score the deck after the next build phase.</p>
+<p>Each question got one grade: does the deck contain the fact that discriminates the right answer from the distractors?</p>
+<table>
+<thead>
+<tr>
+<th>Grade</th>
+<th align="right">n</th>
+<th align="right">%</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>answered</td>
+<td align="right">28</td>
+<td align="right">56%</td>
+</tr>
+<tr>
+<td>partial</td>
+<td align="right">13</td>
+<td align="right">26%</td>
+</tr>
+<tr>
+<td>missing</td>
+<td align="right">9</td>
+<td align="right">18%</td>
+</tr>
+</tbody></table>
+<p><strong>56%.</strong></p>
+<p>My own review of my own cards told me the deck was in good shape. Fifty real questions told me it had holes and named them: the wavelength of a reentrant circuit, Coumel&#39;s sign, cryoablation technique for AV nodal reentry, the genetics counselling workflow. Not one had occurred to me.</p>
+<p>The distribution mattered more than the score. Entrainment and pacing manoeuvres scored 17 of 19. Conduction system pacing had <strong>one card in the entire deck</strong> against a 111-page lecture, on a topic modern boards lean on. That single measurement redirected the next phase.</p>
+<p>A second finding: 30 of the 50 questions required reading a tracing. The deck answered many of them because the discriminating fact is a principle and the tracing is the vehicle, but waveform interpretation stays out of reach for a text deck.</p>
+<p>If you build a deck with AI and never score it against real questions, you are grading your own homework.</p>
+<h2 id="coverage-and-card-quality-are-different-axes">Coverage and Card Quality Are Different Axes</h2>
+<p>I read a few hundred cards and found some of them worthless. This one is representative:</p>
+<blockquote>
+<p>Atenolol has {{c1::<strong>less</strong>}} protein binding than other beta-blockers and therefore more potential for beta-blocker-related adverse effects in pregnancy.</p>
+</blockquote>
+<p>The word &quot;therefore&quot; hands you the answer. Worse, the fact worth testing, that atenolol is the beta-blocker to avoid in pregnancy, sits in plain text where nothing tests it.</p>
+<p>A card like that scores <code>answered</code> on the coverage check. The validation checkpoint is blind to this failure by construction, because it asks whether the deck contains a fact, not whether the card tests it.</p>
+<p>One class of bad card is machine-detectable, and worth catching mechanically because it is invisible on a read-through: a cloze whose answer appears somewhere else in the same note, in plain text or inside a different cloze.</p>
+<pre><code class="language-python">CLOZE = re.compile(r&#39;\{\{c(\d+)::(.*?)\}\}&#39;)
+
+def giveaways(text):
+    &quot;&quot;&quot;Yield clozes whose answer is visible elsewhere in the same note.&quot;&quot;&quot;
+    for num, answer in CLOZE.findall(text):
+        # Same-numbered clozes hide together, so blank those; reveal the rest.
+        shown = CLOZE.sub(
+            lambda m: &#39;&#39; if m.group(1) == num else m.group(2), text)
+        a = answer.strip()
+        if len(a) &gt; 3 and re.search(
+                rf&#39;(?&lt;![A-Za-z]){re.escape(a)}(?![A-Za-z])&#39;, shown, re.I):
+            yield num, a
+</code></pre>
+<p>The subtlety is the same-number carve-out. Clozes sharing an index are hidden together during review, so <code>{{c1::fast}}</code> appearing twice is fine, while <code>{{c1::fast}}</code> alongside <code>{{c2::slow-fast AVNRT}}</code> is a leak. My first version of this check used substring matching without word boundaries and reported clean. The boundary-aware version found 23 real leaks I had already declared fixed.</p>
+<p>That scan is where mechanical detection stops. Run against the full deck it produced 65 candidates, most of them false positives, because <code>IKr</code> and <code>H-H</code> are short answers and good ones. It also missed the atenolol card entirely, since nothing in that sentence repeats the word &quot;less.&quot; The defect is semantic. So Claude Code read all 1,184 clozes one at a time against a written test:</p>
+<blockquote>
+<p>Could a smart person who has never studied this subject answer it from the sentence alone?</p>
+</blockquote>
+<p>Sixty-two clozes failed, or 5.2%. Six named failure modes came out of it, and they are the same six in any subject:</p>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Inferable from stem</td>
+<td>The sentence&#39;s own logic forces the answer</td>
+</tr>
+<tr>
+<td>Wrong half clozed</td>
+<td>The hard fact sits in plain text</td>
+</tr>
+<tr>
+<td>Redundant</td>
+<td>Same fact hidden twice in one note</td>
+</tr>
+<tr>
+<td>Coin-flip directional</td>
+<td>higher/lower with no memory hook</td>
+</tr>
+<tr>
+<td>Ungradeable</td>
+<td>A ten-word list you cannot honestly self-score</td>
+</tr>
+<tr>
+<td>Trivia</td>
+<td>Enrollment counts, dates nobody tests</td>
+</tr>
+</tbody></table>
+<h2 id="prose-cards-fail-fifteen-times-more-often-than-number-cards">Prose Cards Fail Fifteen Times More Often Than Number Cards</h2>
+<p>This is the finding I would carry to any subject.</p>
+<table>
+<thead>
+<tr>
+<th>Deck</th>
+<th align="right">Weak clozes</th>
+<th align="right">Rate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Drug Interactions</td>
+<td align="right">5 / 27</td>
+<td align="right">19%</td>
+</tr>
+<tr>
+<td>Clinical Pearls</td>
+<td align="right">11 / 62</td>
+<td align="right">18%</td>
+</tr>
+<tr>
+<td>Risk Factors</td>
+<td align="right">4 / 124</td>
+<td align="right">3%</td>
+</tr>
+<tr>
+<td>Ablation Biophysics</td>
+<td align="right">2 / 150</td>
+<td align="right">1%</td>
+</tr>
+</tbody></table>
+<p>The prose-heavy decks failed at roughly fifteen times the rate of the number-heavy ones, and the reason is mechanical. A cutoff of 250 msec cannot be inferred from a sentence. A clause beginning &quot;and therefore&quot; always can. Numbers resist the failure mode. Explanations invite it, because good explanatory prose makes its conclusion follow from its premises, which is the opposite of what a test item needs.</p>
+<p>If you write cloze cards on conceptual material, that is where your bad cards live. Check those first.</p>
+<p>The repair was rewriting rather than deletion. In almost every case the fact was fine and only the hiding was wrong, so 56 cards got new sentences and six lost a redundant cloze.</p>
+<h2 id="where-the-source-itself-was-wrong">Where the Source Itself Was Wrong</h2>
+<p>Three cards carried claims my review product had garbled. Finding them required going to the primary documents.</p>
+<p><strong>A pacing target.</strong> My source paraphrased a European guideline as recommending biventricular pacing above 95%. The guideline text reads that junction ablation should be added for incomplete pacing below <strong>90 to 95%</strong>, Class IIa. Close enough to sound right, wrong enough to lose a question.</p>
+<p><strong>An anticoagulation recommendation.</strong> The source cites a 2019 update that gave three drugs a Class III in end-stage kidney disease. The 2023 guideline supersedes it. No Class III survives, the whole question drops to Class IIb, and one of those three drugs remains listed at a reduced dose. The old card taught me to eliminate a drug that current guidance permits.</p>
+<p><strong>Sports participation.</strong> The 2015 disqualification framework, which most prep material still teaches, was replaced in 2025 by shared decision making. Several restrictions I would have memorized no longer exist.</p>
+<p>The pattern: a review product freezes at its publication date and paraphrases toward whatever sounds cleaner. Verification against the primary document is slow, and it caught three cards that would have taught me confident wrong answers.</p>
+<h2 id="does-this-work-for-other-subjects">Does This Work for Other Subjects?</h2>
+<p>Nothing above is specific to medicine. The method needs three things:</p>
+<ol>
+<li><strong>A corpus you can turn into text.</strong> PDFs with a text layer, transcripts, notes. My nine image-only lecture decks (604 pages) produced nothing, and that limitation is absolute.</li>
+<li><strong>A way to name facts.</strong> The <code>topic::parameter</code> convention works for anything with parameters. Pharmacology, statutes, language grammar rules, engineering constants.</li>
+<li><strong>A held-out set of real questions.</strong> Without something to score against, you have no feedback signal and you are back to grading your own homework.</li>
+</ol>
+<p>What transfers least is the part I spent the most time on, which is domain judgment about what matters. The AI proposed the cards. Deciding that conduction system pacing deserved 38 of them and adult congenital heart disease deserved fewer required knowing the field.</p>
+<h2 id="the-build-loop">The Build Loop</h2>
+<p>Every phase ends the same way. One script walks every note and checks four things: cloze numbering is contiguous from 1, no cloze leaks its answer, every note carries provenance in <code>Extra</code>, and nothing is empty. It prints one line, and that line is the gate.</p>
+<pre><code>$ python3 qc.py cards_*.json
+notes=468 cards=1386 issues=0
+
+$ .venv/bin/python build_deck.py cards_*.json ep_board_review.apkg
+Wrote 468 cards across 13 deck(s) to ep_board_review.apkg
+</code></pre>
+<p>A failing run names the card by deck and index, which is what makes the fix cheap:</p>
+<pre><code>GIVEAWAY  03_pacing_maneuvers 27 c1 :: fast
+GAP       10_devices 61 [1, 2, 4]
+THIN      09_guidelines 29
+</code></pre>
+<p>Two exports come out of the same pass: the <code>.apkg</code> for import, and a CSV carrying deck, a stable reference like <code>10_devices#32</code>, the card text, the extra field, and a blank verdict column. Reading 1,386 cards in a spreadsheet and flagging them by reference is a very different task from reading them in Anki one at a time.</p>
+<h2 id="what-i-have-not-proven">What I Have Not Proven</h2>
+<p>I have not sat the exam. I have no retention data, no comparison against a commercially built deck, and no evidence that a synthesized card outperforms a transcribed one on recall. What I have is a deck whose every card has been checked against a written standard by something with more patience than I have.</p>
+<p>Two known gaps remain. Waveform interpretation needs image occlusion cards from 604 pages holding no extractable text. And the deck is owed a second validation round on a fresh question sample, to see whether 56% moved.</p>
+<h2 id="lessons">Lessons</h2>
+<ul>
+<li><strong>Ask for a critique of the plan before asking for execution.</strong> Three errors in my build plan, including a worked example teaching the wrong number, surfaced before any card existed.</li>
+<li><strong>Give every fact a machine-checkable ID.</strong> Clustering by <code>topic::parameter</code> turned four silent contradictions into visible ones and made later phases safe to add without duplicating.</li>
+<li><strong>Render a sample before building a thousand.</strong> A comparison operator is an unclosed HTML tag. Sixteen of my first 52 cards were broken with no error.</li>
+<li><strong>Score against real questions, not your own review.</strong> My review said the deck was good. Fifty questions said 56% and named four gaps I would never have listed.</li>
+<li><strong>Coverage and card quality are different axes.</strong> A card can contain the right fact and test nothing. Read every cloze against &quot;could someone outside the field answer this from the sentence alone.&quot;</li>
+<li><strong>Prose cards fail fifteen times more often than number cards.</strong> The word &quot;therefore&quot; is where a testable fact goes to die.</li>
+<li><strong>Go to the primary document for anything versioned.</strong> Review products freeze at their publication date. Three cards in my deck taught outdated guidance.</li>
+<li><strong>Let the measurement tell you to stop.</strong> The same data that told me to build 29 more device cards told me to build zero more congenital ones.</li>
+</ul>
+<p>The generation is the easy half. Everything that made the deck worth keeping happened after the cards existed.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
+</body>
+</html>
