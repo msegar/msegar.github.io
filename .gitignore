@@ -25,3 +25,7 @@ npm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+# Secrets / API credentials
+.secrets/
+*.service-account.json
+*-key.json

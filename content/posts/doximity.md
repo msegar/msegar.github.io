@@ -37,7 +37,7 @@ For complex cases involving multiple therapeutic options, the AI captures the en
 
 ## The Template Advantage
 
-The most valuable feature is custom template creation. Here's the cardiology new patient encounter template I developed:
+The most valuable feature is custom template creation. I have since taken this further and use a separate template for [precharting](/blog/posts/doximity_precharting.html), reading the chart aloud before clinic and letting Scribe structure it. Here's the cardiology new patient encounter template I developed:
 
 ```
 Please extract and organize the information into a well-structured Cardiology Consult Note.

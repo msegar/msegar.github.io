@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Sun, 23 Aug 2026 19:11:38 GMT</lastBuildDate>
+  <lastBuildDate>Fri, 28 Aug 2026 19:46:11 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Precharting with Doximity Scribe</title>
+    <link>https://segar.me/blog/posts/doximity_precharting.html</link>
+    <guid>https://segar.me/blog/posts/doximity_precharting.html</guid>
+    <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+    <description>Using an ambient AI scribe for chart review instead of patient encounters. I read the chart aloud in whatever order I find things and let a custom template impose the structure, which removes the expensive part of precharting. Includes the full template and the prompt rules that keep it from inventing findings.</description>
+  </item>
   <item>
     <title>Building Anki Cards with Claude Code</title>
     <link>https://segar.me/blog/posts/anki_cards_claude_code.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/nextjs_optimization.html</guid>
     <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
     <description>A 50KB animation library was blocking my landing page render. Here&apos;s how I replaced it with CSS and gained 20 Lighthouse points in the process.</description>
-  </item>
-  <item>
-    <title>PDF Text Extraction in Next.js Standalone Builds</title>
-    <link>https://segar.me/blog/posts/pdf_extraction.html</link>
-    <guid>https://segar.me/blog/posts/pdf_extraction.html</guid>
-    <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
-    <description>How a simple PDF upload feature turned into a multi-day debugging session across browser polyfills, build tracing, and Docker containers.</description>
   </item>
 </channel>
 </rss>

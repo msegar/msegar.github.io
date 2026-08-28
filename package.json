@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Personal blog for Matt Segar",
   "scripts": {
-    "build": "node scripts/build-blog.js"
+    "build": "node scripts/build-blog.js",
+    "ga": "node scripts/ga-report.js"
   },
   "dependencies": {
-    "marked": "^5.0.2",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "marked": "^5.0.2"
+  },
+  "devDependencies": {
+    "@google-analytics/data": "^7.0.0"
   }
 }
