@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixing iPhone Dictation for Doximity Scribe with Local Whisper - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="iPhone dictation turns apixaban into "pixel band" and paroxysmal atrial fibrillation into "peroxy Malaysia," and Doximity Scribe cannot recover what I meant. Running Whisper Large v3 Turbo on the phone through Spokenly fixes most of it in 3 to 4 seconds, with the audio never leaving the device.">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="whisper, dictation, doximity, figure, nerve">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/local_whisper_dictation.html">
+    <meta property="og:title" content="Fixing iPhone Dictation for Doximity Scribe with Local Whisper - Matt Segar">
+    <meta property="og:description" content="iPhone dictation turns apixaban into "pixel band" and paroxysmal atrial fibrillation into "peroxy Malaysia," and Doximity Scribe cannot recover what I meant. Running Whisper Large v3 Turbo on the phone through Spokenly fixes most of it in 3 to 4 seconds, with the audio never leaving the device.">
+    <meta property="og:image" content="../assets/images/local-whisper-dictation.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/local_whisper_dictation.html">
+    <meta property="twitter:title" content="Fixing iPhone Dictation for Doximity Scribe with Local Whisper - Matt Segar">
+    <meta property="twitter:description" content="iPhone dictation turns apixaban into "pixel band" and paroxysmal atrial fibrillation into "peroxy Malaysia," and Doximity Scribe cannot recover what I meant. Running Whisper Large v3 Turbo on the phone through Spokenly fixes most of it in 3 to 4 seconds, with the audio never leaving the device.">
+    <meta property="twitter:image" content="../assets/images/local-whisper-dictation.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/local_whisper_dictation.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Fixing iPhone Dictation for Doximity Scribe with Local Whisper",
+      "description": "iPhone dictation turns apixaban into "pixel band" and paroxysmal atrial fibrillation into "peroxy Malaysia," and Doximity Scribe cannot recover what I meant. Running Whisper Large v3 Turbo on the phone through Spokenly fixes most of it in 3 to 4 seconds, with the audio never leaving the device.",
+      "image": "../assets/images/local-whisper-dictation.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-09-23T00:00:00.000Z",
+      "dateModified": "2026-09-23T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/local_whisper_dictation.html"
+      },
+      "keywords": "whisper, dictation, doximity, figure, nerve"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=03fc175b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../../index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Fixing iPhone Dictation for Doximity Scribe with Local Whisper</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-09-23T00:00:00.000Z">September 23, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>I use <a href="/blog/posts/doximity.html">Doximity Scribe for patient encounters</a>, and more recently for <a href="/blog/posts/doximity_precharting.html">precharting</a>: I read the chart in whatever order I find things and let a template impose the structure. The template works. Getting the words into Doximity in the first place was the part that kept failing.</p>
+<p>I dictate because thumb-typing a chart summary on a phone takes minutes I do not have, and the voice-to-text built into iOS cannot spell cardiology.</p>
+<h2 id="the-same-dictation-twice">The Same Dictation, Twice</h2>
+<p>I made up a patient and read the same summary into Doximity&#39;s pre-chart field twice: once with the iOS keyboard microphone, once with Whisper Large v3 Turbo running on the phone.</p>
+<figure class="figure-pair">
+<div class="figure-row">
+<figure>
+<span class="figure-label">iOS dictation</span>
+<img src="../../assets/images/dictation-ios.jpg" alt="iOS dictation of a fictional EP precharting summary in Doximity, with paroxysmal atrial fibrillation transcribed as peroxy Malaysia fibrillation, apixaban as a pixel band, dofetilide as deicide, and phrenic nerve palsy as nerve policy.">
+</figure>
+<figure>
+<span class="figure-label">Whisper, on-device</span>
+<img src="../../assets/images/dictation-whisper.jpg" alt="The same dictation transcribed by Whisper Large v3 Turbo on-device, with paroxysmal atrial fibrillation, transesophageal echocardiogram, left atrial appendage, apixaban, amiodarone-induced, and phrenic nerve palsy all correct.">
+</figure>
+</div>
+<figcaption class="figure-caption">The same fictional case read aloud into Doximity's pre-chart field. iOS dictation (left) turned paroxysmal atrial fibrillation into "peroxy Malaysia fibrillation," apixaban into "a pixel band," dofetilide into "deicide," and phrenic nerve palsy into "nerve policy." Whisper (right) got every one of those right and made three smaller errors of its own.</figcaption>
+</figure>
+
+<p>What each one heard:</p>
+<table>
+<thead>
+<tr>
+<th>I said</th>
+<th>iOS</th>
+<th>Whisper</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>68-year-old with</td>
+<td>60-year-old male</td>
+<td>68-year-old with</td>
+</tr>
+<tr>
+<td>paroxysmal atrial fibrillation</td>
+<td>peroxy Malaysia fibrillation</td>
+<td>paroxysmal atrial fibrillation</td>
+</tr>
+<tr>
+<td>non-sustained ventricular tachycardia on telemetry</td>
+<td>non-sustained ventricular telemetry</td>
+<td>non-sustained ventricular tachycardia on telemetry</td>
+</tr>
+<tr>
+<td>transesophageal echocardiogram</td>
+<td>transit, echocardiogram</td>
+<td>transesophageal echocardiogram</td>
+</tr>
+<tr>
+<td>left atrial appendage</td>
+<td>left appendix</td>
+<td>left atrial appendage</td>
+</tr>
+<tr>
+<td>apixaban</td>
+<td>a pixel band</td>
+<td>apixaban</td>
+</tr>
+<tr>
+<td>dofetilide</td>
+<td>deicide</td>
+<td>difetilide</td>
+</tr>
+<tr>
+<td>was initiated</td>
+<td>was initiative</td>
+<td>was initiated</td>
+</tr>
+<tr>
+<td>amiodarone-induced</td>
+<td>amiodarone reduced</td>
+<td>amiodarone-induced</td>
+</tr>
+<tr>
+<td>phrenic nerve palsy</td>
+<td>nerve policy</td>
+<td>phrenic nerve palsy</td>
+</tr>
+<tr>
+<td>cardiomyopathy</td>
+<td>cardiomyopathy</td>
+<td>cardiopathy</td>
+</tr>
+<tr>
+<td>antiarrhythmic</td>
+<td>antiarrhythmic</td>
+<td>an arrhythmic</td>
+</tr>
+</tbody></table>
+<p>iOS got the patient&#39;s age wrong, gave her the wrong sex, lost the arrhythmia, lost the anticoagulant, lost the antiarrhythmic, and turned a procedural complication into an insurance term. Whisper made three errors, and a reader could fix each one without the chart.</p>
+<h2 id="why-doximity-scribe-cannot-fix-it-downstream">Why Doximity Scribe Cannot Fix It Downstream</h2>
+<p>My first assumption was that the language model would clean up transcription errors. It knows cardiology. It should know I meant apixaban.</p>
+<p>It cannot, and I would not want it to try. A model might recover &quot;peroxy Malaysia fibrillation.&quot; &quot;A pixel band&quot; could be anything. &quot;Deicide&quot; gives the model nothing to reason from. &quot;Nerve policy&quot; dropped the word <em>phrenic</em>, and no amount of context puts it back. The model either drops the finding or guesses, and I wrote my template to stop it from guessing.</p>
+<p>&quot;60-year-old male&quot; worries me most, because it reads as correct. That clean, plausible demographic line drops the patient&#39;s CHA2DS2-VASc score by two points, one for age and one for sex, and I would have no reason to question it. Feed the template a wrong transcript and it will organize the wrong facts into a tidy note.</p>
+<h2 id="why-whisper-does-better">Why Whisper Does Better</h2>
+<p>iOS dictation behaves like a system tuned for everyday speech: messages, emails, search queries. When it hears a word it does not know, it reaches for the nearest common phrase, and &quot;a pixel band&quot; is a more common phrase than apixaban.</p>
+<p>OpenAI trained Whisper on millions of hours of audio from the web, and it transcribes in chunks of up to 30 seconds instead of word by word as you speak. By the time it decodes &quot;apixaban,&quot; it has heard &quot;maintained on&quot; before it and &quot;antiarrhythmic therapy&quot; after it. I suspect that surrounding context explains most of the gain on medical terms.</p>
+<p>OpenAI released <a href="https://huggingface.co/openai/whisper-large-v3-turbo">Large v3 Turbo</a> in October 2024 as a slimmed version of Whisper&#39;s largest model. It keeps the full encoder and cuts the decoder from 32 layers to 4, taking the model from 1.55 billion parameters to 809 million. That trade of a little accuracy for a lot of speed makes it usable on a phone.</p>
+<h2 id="the-setup">The Setup</h2>
+<p>I run it through <a href="https://spokenly.app">Spokenly</a>, which installs as an iOS keyboard. Anywhere I can type, including Doximity, I switch to the Spokenly keyboard, tap to record, read, and tap to stop. The transcript takes 3 to 4 seconds to appear and drops into the text field.</p>
+<p>Spokenly offers both local and cloud models. I use the local, quantized Whisper Large v3 Turbo, so the audio is transcribed on the phone and never goes to a transcription server. Doximity still receives the text, as it would anything I typed, but no third party ever holds a recording of me reading a chart. The local models cost nothing.</p>
+<h2 id="what-it-still-gets-wrong">What It Still Gets Wrong</h2>
+<p>Whisper made three mistakes in this sample:</p>
+<ul>
+<li><strong>Cardiopathy</strong> for cardiomyopathy. I can read it, and I still have to fix it.</li>
+<li><strong>An arrhythmic</strong> for antiarrhythmic. It split the word and flipped the meaning. A careless reader could take &quot;an arrhythmic therapy&quot; at face value.</li>
+<li><strong>Difetilide</strong> for dofetilide. The note generator may correct a near miss like this. I would not count on it.</li>
+</ul>
+<p>I catch errors like these on a reread, so I read every transcript before I tap the checkmark. The iOS errors sent me back to the chart, because &quot;nerve policy&quot; gave me no way to reconstruct what I said.</p>
+<h2 id="bottom-line">Bottom Line</h2>
+<p>The <a href="/blog/posts/doximity_precharting.html">precharting template</a> handles the organizing, and local Whisper handles the input. Voice remains the fastest way I have found to get a chart into Doximity Scribe, as long as I keep Apple&#39;s dictation out of the loop.</p>
+<p>Check your organization&#39;s policy on AI-assisted documentation and third-party keyboards before using any of this with real patient data.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
+</body>
+</html>

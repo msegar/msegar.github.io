@@ -585,3 +585,51 @@ footer a:hover {
   background: none;
   padding: 0;
 }
+/* Side-by-side figure pair with shared caption */
+.post-content .figure-pair {
+  margin: 30px 0;
+}
+
+.post-content .figure-pair .figure-row {
+  display: flex;
+  gap: 16px;
+}
+
+.post-content .figure-pair figure {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.post-content .figure-pair img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.post-content .figure-pair .figure-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.post-content .figure-pair figcaption.figure-caption {
+  font-size: 0.9rem;
+  color: var(--light-text);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .post-content .figure-pair .figure-row {
+    flex-direction: column;
+  }
+
+  .post-content table {
+    display: block;
+    overflow-x: auto;
+  }
+}

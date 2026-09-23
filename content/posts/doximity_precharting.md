@@ -208,7 +208,7 @@ These two belong to clinical writing rather than prompting.
 
 ## What It Does Not Do
 
-The output is a summary I read before clinic. I do not file it. Everything in it traces to something I said out loud while looking at the record, so it repeats every error in the source and every misreading of mine. I check device model numbers and imaging dates against the chart before they matter.
+The output is a summary I read before clinic. I do not file it. Everything in it traces to something I said out loud while looking at the record, so it repeats every error in the source and every misreading of mine. It also repeats every transcription error, which is why I switched from iPhone dictation to [local Whisper](/blog/posts/local_whisper_dictation.html). I check device model numbers and imaging dates against the chart before they matter.
 
 The template holds no HPI, assessment, or plan, because I have not seen the patient yet. I tried making one template serve both precharting and encounter notes and got worse output for each.
 
