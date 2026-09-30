@@ -5,8 +5,15 @@
   <link>https://segar.me/blog/</link>
   <description>Matt Segar's personal blog</description>
   <language>en-us</language>
-  <lastBuildDate>Wed, 23 Sep 2026 17:02:17 GMT</lastBuildDate>
+  <lastBuildDate>Wed, 30 Sep 2026 00:23:13 GMT</lastBuildDate>
   <atom:link href="https://segar.me/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Using Separate Work and Personal Claude Code Accounts on One Mac</title>
+    <link>https://segar.me/blog/posts/claude-code-multi-account.html</link>
+    <guid>https://segar.me/blog/posts/claude-code-multi-account.html</guid>
+    <pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate>
+    <description>How to switch Claude Code to your work account inside specific folders and keep your personal account everywhere else, using CLAUDE_CONFIG_DIR and direnv</description>
+  </item>
   <item>
     <title>Fixing iPhone Dictation for Doximity Scribe with Local Whisper</title>
     <link>https://segar.me/blog/posts/local_whisper_dictation.html</link>
@@ -69,13 +76,6 @@
     <guid>https://segar.me/blog/posts/supabase_schema_workflow.html</guid>
     <pubDate>Fri, 08 May 2026 00:00:00 GMT</pubDate>
     <description>AI coding agents write a new migration file every time they change a table. Here&apos;s how a single pg_dump snapshot in the repo keeps Claude Code in sync with the current Supabase schema.</description>
-  </item>
-  <item>
-    <title>Using Supabase MCP with Multiple Organizations in Claude Code</title>
-    <link>https://segar.me/blog/posts/supabase_multiple_orgs.html</link>
-    <guid>https://segar.me/blog/posts/supabase_multiple_orgs.html</guid>
-    <pubDate>Thu, 30 Apr 2026 00:00:00 GMT</pubDate>
-    <description>How to configure multiple Supabase MCP servers in Claude Code so you can work across different organizations and projects without constantly logging in and out</description>
   </item>
 </channel>
 </rss>

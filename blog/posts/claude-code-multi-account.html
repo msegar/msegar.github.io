@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using Separate Work and Personal Claude Code Accounts on One Mac - Matt Segar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="How to switch Claude Code to your work account inside specific folders and keep your personal account everywhere else, using CLAUDE_CONFIG_DIR and direnv">
+    <meta name="author" content="Matt Segar">
+    <meta name="keywords" content="work, folder, code, claude, your">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://segar.me/blog/posts/claude-code-multi-account.html">
+    <meta property="og:title" content="Using Separate Work and Personal Claude Code Accounts on One Mac - Matt Segar">
+    <meta property="og:description" content="How to switch Claude Code to your work account inside specific folders and keep your personal account everywhere else, using CLAUDE_CONFIG_DIR and direnv">
+    <meta property="og:image" content="../assets/images/claude-code-multi-account.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://segar.me/blog/posts/claude-code-multi-account.html">
+    <meta property="twitter:title" content="Using Separate Work and Personal Claude Code Accounts on One Mac - Matt Segar">
+    <meta property="twitter:description" content="How to switch Claude Code to your work account inside specific folders and keep your personal account everywhere else, using CLAUDE_CONFIG_DIR and direnv">
+    <meta property="twitter:image" content="../assets/images/claude-code-multi-account.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://segar.me/blog/posts/claude-code-multi-account.html">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Using Separate Work and Personal Claude Code Accounts on One Mac",
+      "description": "How to switch Claude Code to your work account inside specific folders and keep your personal account everywhere else, using CLAUDE_CONFIG_DIR and direnv",
+      "image": "../assets/images/claude-code-multi-account.png",
+      "author": {
+        "@type": "Person",
+        "name": "Matt Segar"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Matt Segar",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://segar.me/assets/images/logo_name.webp"
+        }
+      },
+      "datePublished": "2026-09-29T00:00:00.000Z",
+      "dateModified": "2026-09-29T00:00:00.000Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://segar.me/blog/posts/claude-code-multi-account.html"
+      },
+      "keywords": "work, folder, code, claude, your"
+    }
+    </script>
+    
+    <link rel="stylesheet" href="../../assets/css/normalize.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=03fc175b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Blog post specific styles */
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .post-content pre {
+            background-color: var(--light-background);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: var(--light-background);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .post-nav a {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9RJDGM699"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N9RJDGM699');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../../index.html" class="logo-link">
+                    <img src="../../assets/images/logo_color.webp" alt="Matt Segar Logo" class="logo-image light-logo" width="40" height="40">
+                    <img src="../../assets/images/logo_dark.webp" alt="Matt Segar Logo" class="logo-image dark-logo" width="40" height="40">
+                    <h1>Matt Segar</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../cv.html">CV</a></li>
+                    <li><a href="../index.html" class="active">Blog</a></li>
+                    <li class="dropdown">
+                        <a class="nav-link">Innovations</a>
+                        <div class="dropdown-content">
+                            <a href="../../book.html">ML Book</a>
+                            <a href="../../job-search-book.html">Physician's Job Search Playbook</a>
+                            <a href="../../valabformatter/index.html">CPRS Lab Formatter</a>
+                            <a href="../../eplog.html">EPLog</a>
+                        </div>
+                    </li>
+                    <li class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <article class="post-content">
+                <header class="post-header">
+                    <h1 class="post-title">Using Separate Work and Personal Claude Code Accounts on One Mac</h1>
+                    <div class="post-meta">
+                        <time datetime="2026-09-29T00:00:00.000Z">September 29, 2026</time>
+                    </div>
+                </header>
+                
+                <div class="post-body">
+                    <p>If you use Claude Code for work and personal projects, you have hit this limit: it assumes one signed-in account per machine. Switching from personal to work means logging out, logging back in through the browser, and remembering to reverse it later.</p>
+<p>I wanted the folder to decide. Inside my work folder and any repo beneath it, Claude Code uses my work account. Everywhere else it uses my personal one. This post covers the setup.</p>
+<h2 id="the-problem-with-the-default-setup">The Problem with the Default Setup</h2>
+<p>Claude Code keeps its login, settings, and history in <code>~/.claude</code>. Each user has one of those directories, so each user gets one account. The environment variable <code>CLAUDE_CONFIG_DIR</code> points Claude Code at a different config directory. It is stable but undocumented. Set it to a new path and you get a separate profile with its own login.</p>
+<p>Three things tripped me up:</p>
+<ol>
+<li><strong>Setting the variable per folder needs a tool.</strong> Most guides use shell aliases like <code>claude-work</code> and <code>claude-personal</code>. Those work, but you have to remember which one to type.</li>
+<li><strong>A missing shell hook fails silently.</strong> I installed direnv, created the <code>.envrc</code>, ran <code>direnv allow</code>, and saw nothing. No error appeared. The variable never got set because I had skipped the direnv hook in <code>~/.zshrc</code>.</li>
+<li><strong>You can log into the wrong profile.</strong> With the variable unset, I signed into my work account in the <em>default</em> profile. Every repo on my machine then used my work account.</li>
+</ol>
+<h2 id="the-solution-claude_config_dir--direnv">The Solution: <code>CLAUDE_CONFIG_DIR</code> + direnv</h2>
+<p><a href="https://direnv.net">direnv</a> loads and unloads environment variables based on your current directory. An <code>.envrc</code> in a folder applies its exports to that folder and every subfolder. When you <code>cd</code> out, direnv unsets them.</p>
+<h3 id="step-1-install-direnv-and-hook-it-into-your-shell">Step 1: Install direnv and Hook It Into Your Shell</h3>
+<pre><code class="language-bash">brew install direnv
+echo &#39;eval &quot;$(direnv hook zsh)&quot;&#39; &gt;&gt; ~/.zshrc
+exec zsh
+</code></pre>
+<p>The second line is the one I missed. Without the hook, direnv never runs when you change directories, and nothing tells you.</p>
+<p>If you use bash, swap <code>zsh</code> for <code>bash</code> and add the line to <code>~/.bashrc</code>.</p>
+<h3 id="step-2-add-an-envrc-to-your-work-folder">Step 2: Add an <code>.envrc</code> to Your Work Folder</h3>
+<p>Put it at the top of the folder that holds your work repos. My layout:</p>
+<pre><code>~/matt/project1/
+├── .envrc
+└── apps/
+    ├── app1/
+    ├── app2/
+    └── ...
+</code></pre>
+<pre><code class="language-bash">cd ~/path/to/your/work-folder
+echo &#39;export CLAUDE_CONFIG_DIR=~/.claude-work&#39; &gt; .envrc
+direnv allow
+</code></pre>
+<p>Every repo under that folder, including repos you add later, now uses the work profile.</p>
+<h3 id="step-3-verify-the-variable-is-set">Step 3: Verify the Variable Is Set</h3>
+<pre><code class="language-bash">cd ~/path/to/your/work-folder/apps/some-repo
+echo $CLAUDE_CONFIG_DIR     # → /Users/you/.claude-work
+
+cd ~/some/personal/repo
+echo $CLAUDE_CONFIG_DIR     # → (nothing)
+</code></pre>
+<p>You should also see a <code>direnv: loading .../.envrc</code> line each time you <code>cd</code> into the work folder. If it doesn&#39;t appear, return to Step 1.</p>
+<h3 id="step-4-log-in-once-per-profile">Step 4: Log In Once Per Profile</h3>
+<ul>
+<li><strong>Outside the work folder:</strong> run <code>claude</code> and check <code>/status</code>. If it shows your work account, as mine did, run <code>/logout</code>, then <code>/login</code> with your <strong>personal</strong> account.</li>
+<li><strong>Inside the work folder:</strong> run <code>claude</code> and <code>/login</code> with your <strong>work</strong> account. This profile starts empty, so Claude Code prompts you.</li>
+</ul>
+<p>Run <code>/status</code> in each location to confirm. After that, type <code>claude</code> and the folder picks the account.</p>
+<h2 id="things-worth-knowing">Things Worth Knowing</h2>
+<ul>
+<li><strong>Nested <code>.envrc</code> files replace the parent&#39;s.</strong> direnv loads only the nearest <code>.envrc</code>. If a work repo has its own <code>.envrc</code> for app-specific variables, make <code>source_up</code> its first line so it still inherits the work profile.</li>
+<li><strong>Keep <code>.envrc</code> out of git.</strong> Add it to <code>.gitignore</code> or your global gitignore so teammates don&#39;t inherit your local path.</li>
+<li><strong>Launch your editor from the terminal.</strong> direnv sets variables in your shell. To use Claude Code inside VS Code or Cursor, run <code>code .</code> from inside the folder so the editor inherits <code>CLAUDE_CONFIG_DIR</code>.</li>
+<li><strong>Each profile has its own settings.</strong> Settings, MCP servers, custom commands, and your global <code>CLAUDE.md</code> live in the config directory. To share them, copy or symlink the files into <code>~/.claude-work</code>. Project-level <code>.claude/</code> folders inside a repo behave the same under either account.</li>
+<li><strong>Update Claude Code on macOS.</strong> Claude Code stores credentials in the macOS Keychain instead of a file. Recent versions keep a separate Keychain entry for each config directory. If both profiles collapse onto the same account, run <code>claude update</code> and log in again in each one.</li>
+</ul>
+<h2 id="why-this-works">Why This Works</h2>
+<p>Claude Code reads <code>CLAUDE_CONFIG_DIR</code> at startup and keeps everything under that directory, including the pointer to its login. direnv sets the variable when you enter the work folder and clears it when you leave. Your folder layout then picks the account, which matches how I already sort work from personal.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The setup takes one Homebrew install, one line in <code>~/.zshrc</code>, one <code>.envrc</code>, and two logins. If <code>echo $CLAUDE_CONFIG_DIR</code> comes back empty inside your work folder, check the shell hook first.</p>
+<p>Once it&#39;s in place, <code>cd</code> into a folder, type <code>claude</code>, and you&#39;re on the right account.</p>
+
+                </div>
+                
+                <div class="post-nav">
+                    <a href="../index.html">← Back to Blog</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> Dr. Matt Segar. All rights reserved.</p>
+            <p><a href="/sitemap.xml">Sitemap</a> | <a href="/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- External JS file for theme toggle -->
+    <script src="../../assets/js/theme-toggle.js?v=a31ddf85"></script>
+</body>
+</html>
