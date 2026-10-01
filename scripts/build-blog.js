@@ -76,11 +76,28 @@ mdFiles.forEach(mdFile => {
   allPosts.push(post);
   
   // Replace template placeholders with content
-  let postHtml = template
-    .replace(/{{title}}/g, post.title)
+  // Escape title/description for their context: JSON string inside the
+  // ld+json block, HTML-escaped everywhere else (attributes, <title>, <h1>)
+  const escapeHtml = (str) => String(str)
+    .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escapeJson = (str) => JSON.stringify(String(str)).slice(1, -1);
+  const jsonLdRe = /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/;
+  const jsonLdBlock = (template.match(jsonLdRe) || [])[0];
+  const fillTemplate = (tpl, esc) => tpl
+    .replace(/{{title}}/g, () => esc(post.title))
+    .replace(/{{description}}/g, () => esc(post.description));
+  let templateEscaped = jsonLdBlock
+    ? template.replace(jsonLdRe, '\u0000JSONLD\u0000')
+    : template;
+  templateEscaped = fillTemplate(templateEscaped, escapeHtml);
+  if (jsonLdBlock) {
+    templateEscaped = templateEscaped.replace('\u0000JSONLD\u0000', () => fillTemplate(jsonLdBlock, escapeJson));
+  }
+
+  let postHtml = templateEscaped
     .replace(/{{date}}/g, formatDate(post.date))
     .replace(/{{isoDate}}/g, post.isoDate)
-    .replace(/{{description}}/g, post.description)
     .replace(/{{content}}/g, htmlContent)
     .replace(/{{slug}}/g, post.slug)
     .replace(/{{img}}/g, post.img)
