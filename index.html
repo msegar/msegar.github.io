@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Matt Segar - Cardiac Electrophysiologist & AI Healthcare Innovator</title>
+    <title>Dr. Matt Segar - Cardiac Electrophysiologist at Ascension St. Vincent</title>
+    <link rel="canonical" href="https://segar.me/">
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Dr. Matt Segar is a cardiac electrophysiologist, AI developer, and healthcare entrepreneur specializing in cardiovascular machine learning and medical technology innovation.">
-    <meta name="keywords" content="Matt Segar, cardiac electrophysiology, cardiovascular AI, machine learning, WATCH-DM Risk Score, ReCODE Medical, healthcare technology">
+    <meta name="description" content="Dr. Matt Segar is a cardiac electrophysiologist at Ascension St. Vincent (Carmel and New Castle, Indiana) who treats atrial fibrillation and heart rhythm disorders, and builds AI tools for cardiovascular care.">
     <meta name="author" content="Dr. Matt Segar">
     <!-- Open Graph Tags for Social Media -->
-    <meta property="og:title" content="Dr. Matt Segar - Cardiac Electrophysiologist & AI Healthcare Innovator">
-    <meta property="og:description" content="Combining cardiology expertise with AI to improve cardiovascular risk prediction and healthcare technology solutions.">
+    <meta property="og:title" content="Dr. Matt Segar - Cardiac Electrophysiologist at Ascension St. Vincent">
+    <meta property="og:description" content="Cardiac electrophysiologist at Ascension St. Vincent in Carmel and New Castle, Indiana. I treat atrial fibrillation and build AI tools for cardiovascular care.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://segar.me">
-    <meta property="og:image" content="https://segar.me/assets/images/logo_name.webp">
+    <meta property="og:image" content="https://segar.me/assets/images/headshot-og.webp">
     <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@mattsegar">
     <meta name="twitter:title" content="Dr. Matt Segar - Cardiac Electrophysiology & AI">
     <meta name="twitter:description" content="Physician, researcher, and founder developing AI solutions for cardiovascular care.">
-    <meta name="twitter:image" content="https://segar.me/assets/images/logo_name.webp">
+    <meta name="twitter:image" content="https://segar.me/assets/images/headshot-og.webp">
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
@@ -29,7 +29,7 @@
     <link rel="manifest" href="assets/favicon_io/site.webmanifest">
     <!-- Make sure these paths are correct -->
     <link rel="stylesheet" href="assets/css/normalize.css">
-    <link rel="stylesheet" href="assets/css/styles.css?v=03fc175b">
+    <link rel="stylesheet" href="assets/css/styles.css?v=56fc9f41">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -84,18 +84,23 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Matt Segar",
-      "jobTitle": "Cardiac Electrophysiologist, AI Developer, Healthcare Entrepreneur",
+      "@type": ["Person", "Physician"],
+      "name": "Matthew W. Segar, MD",
+      "alternateName": "Matt Segar",
+      "image": "https://segar.me/assets/images/headshot-480.webp",
+      "jobTitle": "Cardiac Electrophysiologist",
+      "medicalSpecialty": ["Cardiovascular", "Cardiac Electrophysiology"],
       "url": "https://segar.me",
       "sameAs": [
         "https://twitter.com/mattsegar",
         "https://linkedin.com/in/matthewsegar",
-        "https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ"
+        "https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ",
+        "https://healthcare.ascension.org/find-care/provider/1942703749/matthew-segar"
       ],
       "worksFor": {
         "@type": "Organization",
-        "name": "Texas Heart Institute"
+        "name": "Ascension St. Vincent",
+        "url": "https://healthcare.ascension.org/"
       },
       "alumniOf": [
         {
@@ -109,9 +114,13 @@
         {
           "@type": "CollegeOrUniversity",
           "name": "UT Southwestern Medical Center"
+        },
+        {
+          "@type": "Organization",
+          "name": "Texas Heart Institute"
         }
       ],
-      "knowsAbout": ["Cardiac Electrophysiology", "Machine Learning", "Cardiovascular Risk Prediction", "Healthcare Technology"]
+      "knowsAbout": ["Cardiac Electrophysiology", "Atrial Fibrillation", "Catheter Ablation", "Machine Learning", "Cardiovascular Risk Prediction", "Healthcare Technology"]
     }
     </script>
 </head>
@@ -128,10 +137,11 @@
             <nav aria-label="Main Navigation">
                 <ul>
                     <li><a href="index.html" class="active" aria-current="page">Home</a></li>
+                    <li><a href="patients/index.html">For Patients</a></li>
                     <li><a href="cv.html">CV</a></li>
                     <li><a href="blog/index.html">Blog</a></li>
                     <li class="dropdown">
-                        <a class="nav-link">Innovations</a>
+                        <a class="nav-link" tabindex="0" role="button" aria-haspopup="true">Innovations</a>
                         <div class="dropdown-content">
                             <a href="book.html">ML in Cardiology Book</a>
                             <a href="job-search-book.html">Physician's Job Search Playbook</a>
@@ -153,9 +163,30 @@
     <main>
         <section class="hero">
             <div class="container">
-                <div class="hero-content">
-                    <h2>Physician. Cardiovascular AI Developer. Healthtech Founder.</h2>
-                    <p>Bridging medical expertise with technology innovation to transform cardiovascular care.</p>
+                <div class="hero-split">
+                    <div class="hero-main">
+                        <h2>Electrophysiologist.<br>Cardiovascular AI Developer.<br>Healthtech Founder.</h2>
+                        <p class="hero-lead">I'm an electrophysiologist at Ascension St. Vincent, where I treat atrial fibrillation and other rhythm problems. I also build software for medicine, from AI risk prediction to the tools physicians use every day.</p>
+                        <ul class="hero-facts">
+                            <li>90+ publications</li>
+                            <li>2 books</li>
+                            <li>Fellowship at Texas Heart Institute</li>
+                            <li>Co-founded ReCODE Medical</li>
+                        </ul>
+                    </div>
+                    <aside class="hero-care" aria-labelledby="care-heading">
+                        <div class="care-header">
+                            <img class="headshot" src="assets/images/headshot-192.webp" alt="Dr. Matt Segar" width="72" height="72">
+                            <h3 id="care-heading">Looking for care?</h3>
+                        </div>
+                        <p>I see patients in Carmel and New Castle, Indiana.</p>
+                        <ul>
+                            <li>Carmel Heart Care: <a href="tel:+13173386666">(317) 338-6666</a></li>
+                            <li>New Castle Heart Care: <a href="tel:+17655211461">(765) 521-1461</a></li>
+                        </ul>
+                        <a class="button" href="https://healthcare.ascension.org/find-care/provider/1942703749/matthew-segar?utm_source=segar.me&amp;utm_medium=referral&amp;utm_campaign=home" rel="noopener">Schedule through Ascension</a>
+                        <p class="hero-care-guides"><a href="patients/index.html">AFib and smartwatch alert guides</a></p>
+                    </aside>
                 </div>
             </div>
         </section>
@@ -166,10 +197,11 @@
                     <div class="about-text">
                         <h3>About Dr. Matt Segar</h3>
                         <p>I am a practicing cardiac electrophysiologist at Ascension St. Vincent. I completed my cardiology and cardiac electrophysiology fellowships at the Texas Heart Institute. I graduated from Internal Medicine residency at UT Southwestern Medical Center and received my medical degree from the Indiana University School of Medicine. I also graduated with a degree in computer science with Honors from Bucknell University and a Masters of Science in Bioinformatics from Indiana University.</p>
-                        <p>My research sits at the intersection of machine learning, artificial intelligence, and cardiovascular medicine. I have authored over 90 peer-reviewed publications and two books, and I am best known as the developer of the <a href="https://cvriskscores.com/watchdm/index.html" target="_blank" rel="noopener"><strong>WATCH-DM Risk Score</strong></a>, a validated clinical prediction tool now used in practice and guidelines.</p>
+                        <p>My research sits at the intersection of machine learning, artificial intelligence, and cardiovascular medicine. I have authored over 90 peer-reviewed publications and two books, and I am best known as the developer of the <a href="https://cvriskscores.com/watchdm/index.html" target="_blank" rel="noopener">WATCH-DM Risk Score</a>, a validated clinical prediction tool now used in practice and guidelines.</p>
                         <p>Outside of clinical and academic work, I am a healthcare entrepreneur focused on building technology that solves real problems in medicine. I co-founded <a href="https://www.recodemedical.com" target="_blank" rel="noopener">ReCODE Medical</a>, an AI-powered platform for medical procedure coding — which was recently acquired. I am currently building <a href="https://claripulse.com" target="_blank" rel="noopener">Claripulse</a>, a post-market surveillance platform for medical devices. I also hold Epic certifications in data analytics and physician builder, have conducted EHR-based clinical trials, and bring a hands-on approach to health data infrastructure, clinical decision support, and applied AI in medicine.</p>
-                        
-                        <div class="connect">
+                    </div>
+                    <aside class="about-connect">
+                        <div class="connect-card">
                             <h4>Connect With Me</h4>
                             <div class="social-links">
                                 <a href="https://twitter.com/mattsegar" title="Follow Dr. Matt Segar on Twitter" class="social-link" rel="noopener">
@@ -195,7 +227,7 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </section>

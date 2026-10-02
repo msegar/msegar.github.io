@@ -116,6 +116,9 @@ allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 // Update the blog index page
 generateBlogIndex(allPosts);
 
+// Build patient pages (must run before the sitemap so they are listed)
+require('./build-patients');
+
 // Generate sitemap
 generateSitemap(allPosts);
 
@@ -338,6 +341,19 @@ function generateSitemap(posts) {
   </url>\n`;
   });
   
+  // Add patient-education pages
+  const patientPages = fs.existsSync(path.join(__dirname, '../patients'))
+    ? fs.readdirSync(path.join(__dirname, '../patients')).filter(f => f.endsWith('.html') && f !== 'template.html')
+    : [];
+  patientPages.forEach(page => {
+    sitemap += `  <url>
+    <loc>${baseUrl}/patients/${page}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>\n`;
+  });
+
   // Add blog posts
   posts.forEach(post => {
     const postDate = new Date(post.date).toISOString().split('T')[0];
@@ -435,6 +451,13 @@ function cacheBustAssets() {
     fs.readdirSync(postsDir)
       .filter(f => f.endsWith('.html'))
       .forEach(f => htmlFiles.push(path.join(postsDir, f)));
+  }
+
+  const patientsDir = path.join(ROOT, 'patients');
+  if (fs.existsSync(patientsDir)) {
+    fs.readdirSync(patientsDir)
+      .filter(f => f.endsWith('.html') && !templates.has(f))
+      .forEach(f => htmlFiles.push(path.join(patientsDir, f)));
   }
 
   let stamped = 0;

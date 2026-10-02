@@ -9,7 +9,7 @@ categories: [R, API, Deployment, Heroku]
 Deploying and self-hosting a R API using Plumber is difficult. I've been trying to
 use DigitalOcean and Docker services, but have had trouble with uptime. I recently
 came across a blog article by [Magnus Furugard](https://medium.com/@magnus.furugard/r-docker-heroku-rest-api-30c351f9c194)
-and realized [Heroku](www.heroku.com) could be an ideal solution. In short, Heroku
+and realized [Heroku](https://www.heroku.com) could be an ideal solution. In short, Heroku
 has been a life saver! My goal in this post is to walk you through steps to implement
 a R Plumber API yourself.
 

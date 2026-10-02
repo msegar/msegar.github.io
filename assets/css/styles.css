@@ -14,6 +14,7 @@
   --background-color: #fff;
   --light-background: #f5f8fa;
   --border-color: #e1e8ed;
+  --link-color: #0b5ed7;
   --header-font: 'Merriweather', serif;
   --body-font: 'Open Sans', sans-serif;
 }
@@ -28,6 +29,7 @@
   --background-color: #1a1a1a;
   --light-background: #2a2a2a;
   --border-color: #444;
+  --link-color: #7cb7ff;
 }
 
 html {
@@ -76,6 +78,38 @@ a {
 
 a:hover {
   color: var(--accent-color);
+}
+
+/* Inline links in running text: a distinct blue plus an underline, so they
+   read as clickable. Nav, buttons and card links keep their own styling. */
+main p a:not(.button),
+main li a:not(.button),
+main td a:not(.button),
+main dd a:not(.button),
+main summary a:not(.button) {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--link-color) 45%, transparent);
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
+}
+
+main p a:not(.button):hover,
+main li a:not(.button):hover,
+main td a:not(.button):hover,
+main dd a:not(.button):hover,
+main summary a:not(.button):hover {
+  color: var(--link-color);
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2.5px;
+}
+
+main p a:not(.button):focus-visible,
+main li a:not(.button):focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 img {
@@ -231,19 +265,141 @@ nav a:hover:after, nav a.active:after {
   margin: 0 auto;
 }
 
+/* Hero split: identity and research on the left, patient care on the right */
+.hero-split {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 48px;
+  align-items: start;
+  text-align: left;
+}
+
+.hero-split h2 {
+  font-size: 2.3rem;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.hero-lead {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+.hero-facts {
+  list-style: none;
+  padding: 14px 0 0;
+  margin: 0 0 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 24px;
+  border-top: 1px solid var(--border-color);
+  color: var(--light-text);
+}
+
+.hero-care {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-care .button {
+  align-self: flex-start;
+}
+
+.care-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.care-header h3 {
+  margin: 0;
+}
+
+.headshot {
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  flex: none;
+  border: 1px solid var(--border-color);
+}
+
+.hero-care h3 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.hero-care p {
+  margin: 0 0 12px;
+}
+
+.hero-care ul {
+  margin: 0 0 16px;
+  padding-left: 18px;
+}
+
+.hero-care .hero-care-guides {
+  margin: 14px 0 0;
+}
+
+@media (max-width: 800px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .hero-split h2 {
+    font-size: 1.8rem;
+  }
+
+  /* Patients reach the phone numbers before the bio */
+  .hero-care {
+    order: -1;
+  }
+}
+
 /* About Section */
 .about {
   padding: 80px 0;
 }
 
 .about-content {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.connect-card {
+  background: var(--light-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.connect-card h4 {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+
+.connect-card .social-links {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.connect-card .social-link {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
 }
 
 .about-text {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .about-text h3 {
@@ -438,7 +594,8 @@ footer p {
   }
 
   .about-content {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
   
   .hero-content h2 {
@@ -540,6 +697,10 @@ footer p {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+}
+
+.dropdown:focus-within .dropdown-content {
+  display: block;
 }
 
 .dropdown .nav-link {
