@@ -33,9 +33,12 @@ const qrSvg = text => {
 const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
 const pages = [];
 
-fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
-  const slug = file.replace('.md', '');
-  const { data: fm, content } = matter(fs.readFileSync(path.join(CONTENT_DIR, file), 'utf8'));
+const sources = fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).map(file => ({
+  slug: file.replace('.md', ''),
+  ...matter(fs.readFileSync(path.join(CONTENT_DIR, file), 'utf8'))
+}));
+
+sources.forEach(({ slug, data: fm, content }) => {
   const reviewed = fm.reviewed instanceof Date ? fm.reviewed.toISOString().split('T')[0] : String(fm.reviewed);
   const url = slug === 'index' ? `${BASE_URL}/patients/` : `${BASE_URL}/patients/${slug}.html`;
   const faq = fm.faq || [];
@@ -93,6 +96,24 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
   const answerHtml = fm.answer ? `<div class="answer-box"><span class="answer-label">The short answer</span><p>${inline(fm.answer)}</p></div>` : '';
   const faqHtml = faq.length ? `<h2>Common questions</h2>\n<div class="faq">${faq.map(f =>
     `<details><summary>${esc(f.q)}</summary><p>${inline(f.a)}</p></details>`).join('\n')}</div>` : '';
+  // Links to the other guides; the index page already lists them all
+  const others = slug === 'index' ? [] : sources.filter(p => p.slug !== slug && p.slug !== 'index');
+  const relatedHtml = others.length ? `<section class="related-guides" aria-labelledby="related-heading">
+                    <h2 id="related-heading">Related guides</h2>
+                    <ul>${others.map(p => `
+                        <li><a href="${p.slug}.html">${esc(p.data.title)}</a><span>${esc(p.data.description)}</span></li>`).join('')}
+                    </ul>
+                </section>` : '';
+  // Share card from og_image front matter or assets/images/og/<slug>.png; headshot if neither exists
+  const ogPath = fm.og_image || `assets/images/og/${slug}.png`;
+  const socialHtml = fs.existsSync(path.join(__dirname, '..', ogPath))
+    ? `<meta property="og:image" content="${BASE_URL}/${ogPath}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="${BASE_URL}/${ogPath}">`
+    : `<meta property="og:image" content="${BASE_URL}/assets/images/headshot-og.webp">
+    <meta name="twitter:card" content="summary">`;
   const citeHtml = fm.citations ? `<h2>References</h2>\n<ol class="citations">${fm.citations.map(c => `<li>${inline(c)}</li>`).join('\n')}</ol>` : '';
 
   const html = template
@@ -101,6 +122,7 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
     .replace(/{{url}}/g, url)
     .replace(/{{reviewed}}/g, reviewed)
     .replace(/{{reviewedDisplay}}/g, new Date(reviewed + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))
+    .replace(/{{socialImage}}/g, () => socialHtml)
     .replace(/{{pageLd}}/g, () => ld(pageLd))
     .replace(/{{faqLd}}/g, () => faqLd ? `<script type="application/ld+json">\n${ld(faqLd)}\n    </script>` : '')
     .replace(/{{layoutClass}}/g, wide ? 'wide' : 'has-aside')
@@ -109,6 +131,7 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
     .replace(/{{answer}}/g, () => answerHtml)
     .replace(/{{content}}/g, () => marked.parse(content))
     .replace(/{{faq}}/g, () => faqHtml)
+    .replace(/{{related}}/g, () => relatedHtml)
     .replace(/{{citations}}/g, () => citeHtml)
     .replace(/{{qr}}/g, () => qrSvg(url))
     .replace(/{{ascensionUrl}}/g, ASCENSION_URL);

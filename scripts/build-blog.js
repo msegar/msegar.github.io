@@ -311,6 +311,12 @@ function generateBlogIndex(posts) {
 
 function generateSitemap(posts) {
   const baseUrl = 'https://segar.me';
+  // Use the page's own canonical URL when it has one, so the sitemap never disagrees with it
+  const locFor = relPath => {
+    const file = path.join(__dirname, '..', relPath);
+    const m = fs.existsSync(file) && fs.readFileSync(file, 'utf8').match(/<link rel="canonical" href="([^"]+)"/);
+    return m ? m[1] : `${baseUrl}/${relPath}`;
+  };
   let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
   sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
   
@@ -324,7 +330,7 @@ function generateSitemap(posts) {
   
   // Add blog index
   sitemap += `  <url>
-    <loc>${baseUrl}/blog/index.html</loc>
+    <loc>${locFor('blog/index.html')}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -334,7 +340,7 @@ function generateSitemap(posts) {
   const mainPages = ['cv.html', 'book.html', 'job-search-book.html', 'valabformatter/index.html'];
   mainPages.forEach(page => {
     sitemap += `  <url>
-    <loc>${baseUrl}/${page}</loc>
+    <loc>${locFor(page)}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -347,7 +353,7 @@ function generateSitemap(posts) {
     : [];
   patientPages.forEach(page => {
     sitemap += `  <url>
-    <loc>${baseUrl}/patients/${page}</loc>
+    <loc>${locFor(`patients/${page}`)}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -358,7 +364,7 @@ function generateSitemap(posts) {
   posts.forEach(post => {
     const postDate = new Date(post.date).toISOString().split('T')[0];
     sitemap += `  <url>
-    <loc>${baseUrl}/blog/posts/${post.slug}.html</loc>
+    <loc>${locFor(`blog/posts/${post.slug}.html`)}</loc>
     <lastmod>${postDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

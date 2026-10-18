@@ -14,8 +14,11 @@
     <meta property="og:url" content="https://segar.me/patients/">
     <meta property="og:title" content="Heart Rhythm Information for Patients - Dr. Matt Segar">
     <meta property="og:description" content="Patient guides from Dr. Matt Segar, a cardiac electrophysiologist at Ascension St. Vincent in Carmel and New Castle, Indiana: AFib, smartwatch alerts, pulsed field ablation, and visit preparation.">
-    <meta property="og:image" content="https://segar.me/assets/images/headshot-og.webp">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://segar.me/assets/images/og/index.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://segar.me/assets/images/og/index.png">
     <meta name="twitter:title" content="Heart Rhythm Information for Patients - Dr. Matt Segar">
     <meta name="twitter:description" content="Patient guides from Dr. Matt Segar, a cardiac electrophysiologist at Ascension St. Vincent in Carmel and New Castle, Indiana: AFib, smartwatch alerts, pulsed field ablation, and visit preparation.">
 
@@ -136,6 +139,15 @@
         .urgent-box p, .urgent-box ul { margin-bottom: 8px; }
         .cta-box { background: var(--light-background); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin: 40px 0 20px; }
         .cta-box .button { display: inline-block; margin-top: 6px; }
+        .related-guides { background: var(--light-background); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px 22px; margin: 40px 0 20px; }
+        .related-guides h2 { margin-top: 0; }
+        .related-guides ul { list-style: none; margin: 0; padding: 0; }
+        .related-guides li { margin: 0; padding: 12px 0; border-top: 1px solid var(--border-color); }
+        .related-guides li:first-child { border-top: 0; padding-top: 0; }
+        .related-guides li:last-child { padding-bottom: 0; }
+        .related-guides a { font-family: var(--header-font); font-weight: 700; line-height: 1.4; }
+        .related-guides span { display: block; font-size: 0.95rem; line-height: 1.5; color: var(--light-text); margin-top: 4px; }
+        @media (max-width: 600px) { .related-guides { padding: 16px; } }
         .faq details { border-bottom: 1px solid var(--border-color); padding: 12px 0; }
         .faq summary { cursor: pointer; font-weight: 600; }
         .faq details p { margin-top: 10px; }
@@ -171,7 +183,7 @@
         @media print {
             :root { color-scheme: light; }
             body { background: #fff; color: #111; font-size: 11pt; line-height: 1.45; }
-            header, footer, nav, .patient-aside, .mobile-call, .print-button, .figure-expand, .figure-dialog, .cta-box .button, .headshot { display: none !important; }
+            header, footer, nav, .patient-aside, .mobile-call, .print-button, .figure-expand, .figure-dialog, .cta-box .button, .headshot, .related-guides { display: none !important; }
             .print-only { display: block; }
             .container, .patient-layout, .patient-layout.has-aside { display: block; width: auto; max-width: none; margin: 0; padding: 0; }
             .has-aside .cta-box { display: block; }
@@ -323,6 +335,8 @@
 
                 
 
+                
+
                 <p class="disclosure">This page is general education, not medical advice, and does not create a doctor-patient relationship. It cannot replace an exam or an ECG. If you think you are having an emergency, call 911. This is my personal website, and the views here are my own. I also build health technology products, which are not promoted on this page.</p>
 
                 <div class="print-footer print-only">
@@ -436,6 +450,22 @@
                 moved = [];
             });
         })();
+    </script>
+    <script>
+        // GA4 events for office calls, Ascension profile clicks, and printing; beacon so the
+        // hit survives the page handing off to the dialer or Ascension
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('a[href^="tel:"], a[href*="healthcare.ascension.org"], .print-button');
+            if (!el || typeof gtag !== 'function') return;
+            var href = el.getAttribute('href') || '';
+            if (el.matches('.print-button')) {
+                gtag('event', 'print_page', { transport_type: 'beacon' });
+            } else if (href.indexOf('tel:') === 0) {
+                gtag('event', 'phone_call', { location: { '+13173386666': 'carmel', '+17655211461': 'new_castle' }[href.slice(4)] || 'other', transport_type: 'beacon' });
+            } else {
+                gtag('event', 'ascension_profile_click', { transport_type: 'beacon' });
+            }
+        });
     </script>
     <script src="../assets/js/theme-toggle.js?v=a31ddf85"></script>
 </body>
