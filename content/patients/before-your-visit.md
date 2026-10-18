@@ -31,6 +31,14 @@ faq:
 4. Tap **Export a PDF for Your Doctor**.
 5. Tap the share icon and save the PDF to Files, or choose how to send it. Do not email it to this website. Ask the office how they want to receive it.
 
+<figure class="patient-figure">
+<picture>
+<source media="(max-width: 600px)" srcset="../assets/images/how-to-share-watch-ecg-mobile.svg" width="500" height="1384">
+<img src="../assets/images/how-to-share-watch-ecg.svg" width="1000" height="638" loading="lazy" alt="Four iPhone screens. One: in the Health app, tap the Browse tab, then tap Heart. Two: tap Electrocardiograms (ECG). Three: tap a recording, then tap Export a PDF for Your Doctor. Four: tap the Share button to print the PDF or save it to Files.">
+</picture>
+<figcaption>These steps match Apple's support instructions as of September 2026. Menu names can change with iPhone updates.</figcaption>
+</figure>
+
 For irregular rhythm notifications, you can also take a screenshot of the alert and of your heart rate data in the Health app.
 
 **Kardia (AliveCor)**

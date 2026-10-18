@@ -161,7 +161,10 @@ header .container {
   color: var(--text-color);
 }
 
-.logo h1 {
+.logo h1,
+.logo .site-name {
+  font-family: var(--header-font);
+  color: var(--primary-color);
   margin: 0;
   font-size: 1.8rem;
   font-weight: 700;

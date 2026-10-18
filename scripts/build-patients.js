@@ -9,6 +9,12 @@ const OUTPUT_DIR = path.join(__dirname, '../patients');
 const TEMPLATE_PATH = path.join(OUTPUT_DIR, 'template.html');
 const BASE_URL = 'https://segar.me';
 const ASCENSION_URL = 'https://healthcare.ascension.org/find-care/provider/1942703749/matthew-segar';
+const SAME_AS = [
+  'https://twitter.com/mattsegar',
+  'https://linkedin.com/in/matthewsegar',
+  'https://scholar.google.com/citations?hl=en&user=S3EnanEAAAAJ',
+  ASCENSION_URL
+];
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // JSON for embedding in <script type="application/ld+json">
@@ -27,11 +33,12 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
   const faq = fm.faq || [];
 
   const physician = {
-    '@type': 'Physician',
+    '@type': ['Person', 'Physician'],
+    '@id': `${BASE_URL}/#physician`,
     name: 'Matthew W. Segar, MD',
     url: BASE_URL,
     medicalSpecialty: ['Cardiovascular', 'Cardiac Electrophysiology'],
-    sameAs: [ASCENSION_URL]
+    sameAs: SAME_AS
   };
   const pageLd = {
     '@context': 'https://schema.org',
@@ -46,6 +53,12 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
     audience: { '@type': 'PeopleAudience', audienceType: 'Patient' },
     isPartOf: { '@type': 'WebSite', name: 'Matt Segar', url: BASE_URL }
   };
+  const crumbs = [{ name: 'Home', item: `${BASE_URL}/` }, { name: 'For Patients', item: `${BASE_URL}/patients/` }];
+  if (slug !== 'index') crumbs.push({ name: fm.title });
+  pageLd.breadcrumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, ...c }))
+  };
   if (fm.about) pageLd.about = { '@type': 'MedicalCondition', name: fm.about };
   if (fm.citations) pageLd.citation = fm.citations.map(c => plain(c));
 
@@ -57,7 +70,7 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
 
   const wide = fm.layout === 'wide';
   const asideHtml = wide ? '' : `<aside class="patient-aside" aria-labelledby="aside-heading">
-                <h2 id="aside-heading">Make an appointment</h2>
+                <p class="aside-title" id="aside-heading">Make an appointment</p>
                 <p>I see patients in Carmel and New Castle, Indiana.</p>
                 <ul>
                     <li>Carmel Heart Care: <a href="tel:+13173386666">(317) 338-6666</a></li>

@@ -38,6 +38,14 @@ Most smartwatches shine a light on your wrist and track the pulse in the blood f
 
 AFib is a common heart rhythm problem where the top chambers of the heart quiver instead of squeezing normally. It can make the pulse fast and irregular. It can also cause no symptoms at all.
 
+<figure class="patient-figure">
+<picture>
+<source media="(max-width: 600px)" srcset="../assets/images/normal-vs-afib-rhythm-mobile.svg" width="480" height="710">
+<img src="../assets/images/normal-vs-afib-rhythm.svg" width="1000" height="650" loading="lazy" alt="Two example heart tracings. In normal rhythm, a small P wave comes before every beat and the gap between beats is always 0.80 seconds. In atrial fibrillation there are no P waves, the baseline is wobbly, and the gaps between beats keep changing, from 0.44 to 1.08 seconds.">
+</picture>
+<figcaption>The pulse sensor behind your watch's alerts only times the gaps between beats. It can't see P waves, so an alert is a warning, not a diagnosis. An ECG read by a doctor is how AFib is confirmed.</figcaption>
+</figure>
+
 How accurate are these alerts? In the Apple Heart Study (more than 400,000 people), about half of one percent got an irregular-pulse notification. Of those who then wore an ECG patch for a week or so, 34% (about one in three) had AFib detected on the patch. When the patch happened to be recording at the moment of an alert, AFib was confirmed 84% of the time. Other brands work differently, so these numbers do not apply to every watch. The takeaway is simple: many alerts are real, many are not, and only a proper recording can tell the difference.
 
 ## Why it matters

@@ -29,3 +29,6 @@ npm-debug.log*
 .secrets/
 *.service-account.json
 *-key.json
+
+# Private notes
+AUDIT.md
