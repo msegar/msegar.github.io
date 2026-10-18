@@ -113,4 +113,4 @@ AFib can let blood pool in the heart and form clots. A clot that travels to the 
 - Often a wearable heart monitor for one to several weeks, if the ECG is normal but the alert was real or repeated.
 - Sometimes an ultrasound of the heart (echocardiogram) and blood tests.
 
-If we confirm AFib, we decide together about stroke prevention, controlling symptoms, and whether a procedure like [ablation](pulsed-field-ablation.html) makes sense. Stroke prevention starts with your CHA₂DS₂-VASc score, which counts risk factors such as age, high blood pressure, diabetes, and prior stroke. You can read more in my [AFib overview](atrial-fibrillation.html).
+If we confirm AFib, we decide together about stroke prevention, controlling symptoms, and whether a procedure like [ablation](pulsed-field-ablation.html) makes sense. Stroke prevention starts with your CHA₂DS₂-VASc score, which counts risk factors such as age, high blood pressure, diabetes, and prior stroke. Most people at higher risk take a blood thinner. For people who cannot take one long term, [Watchman](watchman.html) is an alternative. You can read more in my [AFib overview](atrial-fibrillation.html).

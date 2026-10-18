@@ -10,7 +10,7 @@ faq:
   - q: "Will I be asleep?"
     a: "Yes. You are either under general anesthesia or deeply sedated, depending on the plan. You should not feel the procedure."
   - q: "How long will I be on a blood thinner?"
-    a: "Usually for at least the first two to three months after the procedure, as I instruct you. After that, whether you continue depends on your stroke risk, not on whether the ablation worked."
+    a: "Usually for at least the first two to three months after the procedure, as I instruct you. After that, whether you continue depends on your stroke risk, not on whether the ablation worked. If you cannot stay on a blood thinner long term, ask about [Watchman](watchman.html)."
   - q: "What if AFib comes back after ablation?"
     a: "Brief episodes in the first few weeks to three months are common and do not always mean the ablation failed. This early period is called the blanking period. If AFib returns afterward, we discuss options, which can include medicine or a repeat procedure."
   - q: "When can I drive, exercise, and go back to work?"

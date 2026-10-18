@@ -4,7 +4,7 @@ description: "Watchman (left atrial appendage closure) compared with a blood thi
 reviewed: 2026-10-18
 about: "Atrial fibrillation"
 trademarks: "Watchman is a trademark of Boston Scientific. Amulet is a trademark of Abbott. This page is not affiliated with either company."
-answer: "Watchman is a small implant that seals off the pocket of the heart where most AFib clots form. In randomized trials, about the same number of people had a stroke or a serious bleed over 3 years with Watchman as with a blood thinner. The trade-off: Watchman led to fewer bleeds after the procedure but about 1 to 2 more strokes from clots per 100 people, plus a small up-front procedure risk. A blood thinner remains the first choice for most people. Watchman fits best when you cannot stay on a blood thinner long term."
+answer: "Watchman is a small implant that seals off the pouch of the heart where most AFib clots form. In randomized trials, out of 100 people followed for about 3 years, Watchman led to about 1 to 2 more strokes from clots and about 2 to 3 fewer serious bleeds after the procedure period than a blood thinner. The procedure itself caused a problem in about 3 in 100 people, often bleeding, so total serious bleeding ended up about the same. A blood thinner remains the first choice for most people. Watchman fits best when you cannot stay on a blood thinner long term."
 faq:
   - q: "Will I be off all blood thinners after Watchman?"
     a: "Not necessarily. Watchman changes which blood thinner you take more than whether you take one. Most people take an anticoagulant such as apixaban (Eliquis), sometimes with aspirin, for about 6 weeks to 3 months while heart tissue grows over the device. After an imaging test confirms a good seal, most people switch to aspirin or another antiplatelet medicine and stay on it long term. Antiplatelet medicines also thin the blood and also cause bleeding. Some people stay on an anticoagulant longer if a clot forms on the device or a leak remains."
@@ -61,7 +61,7 @@ The best evidence comes from 8 randomized trials that assigned about 7,400 peopl
 
 Numbers are pooled from the 8 trials and rounded. "Serious bleeding" means bleeding that needed a transfusion, a hospital stay, or surgery, or bleeding in a critical place such as the brain.
 
-**How to read this.** Treat 100 people with Watchman instead of a blood thinner, and over 3 years you would expect about 1 to 2 more strokes from clots and about 2 to 3 fewer bleeds after the procedure period. The procedure adds its own bleeding up front, so total serious bleeding ends up about the same. Overall stroke and survival were similar.
+**How to read this.** Treat 100 people with Watchman instead of a blood thinner, and over 3 years you would expect about 1 to 2 more strokes from clots and about 2 to 3 fewer bleeds after the procedure period. The procedure adds its own bleeding up front, so total serious bleeding ends up about the same. Counting every type of stroke, the gap was smaller and not statistically significant, and survival was similar.
 
 A stroke from a clot often causes lasting disability. The most common serious bleeds on a blood thinner come from the stomach or gut, and most can be treated. Bleeding in the brain is the exception. That difference in severity is one reason I weigh the extra strokes heavily.
 

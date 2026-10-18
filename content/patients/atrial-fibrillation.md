@@ -12,7 +12,7 @@ faq:
   - q: "Can AFib be cured?"
     a: "Ablation can stop AFib in many people, but it is not a guaranteed cure, and some people need more than one procedure. Treating risk factors improves the odds."
   - q: "Do I need to take a blood thinner forever?"
-    a: "It depends on your stroke risk, not on whether you feel the AFib. Many people need to stay on one long term, even after a successful ablation. We decide this based on your risk score and your preferences."
+    a: "It depends on your stroke risk, not on whether you feel the AFib. Many people need to stay on one long term, even after a successful ablation. We decide this based on your risk score and your preferences. If bleeding makes a blood thinner unsafe for you, read about [Watchman](watchman.html)."
   - q: "Can alcohol, caffeine, or poor sleep trigger AFib?"
     a: "Alcohol is a clear trigger for many people. Untreated sleep apnea is a major, fixable cause. Caffeine has a smaller effect in most people than they fear, but tell me if you notice a pattern."
 citations:
@@ -43,7 +43,7 @@ Many people find out about AFib from a routine ECG or a [smartwatch alert](apple
 
 ## The treatment plan
 
-**1. Stroke prevention.** We estimate your stroke risk using factors like age, blood pressure, diabetes, heart failure, and prior stroke. If your risk is high enough, a blood thinner (anticoagulant) is recommended. We weigh this against your bleeding risk.
+**1. Stroke prevention.** We estimate your stroke risk using factors like age, blood pressure, diabetes, heart failure, and prior stroke. If your risk is high enough, a blood thinner (anticoagulant) is recommended. We weigh this against your bleeding risk. If you cannot stay on a blood thinner long term, [Watchman](watchman.html), an implant that seals off the pouch where most AFib clots form, is another option.
 
 **2. Rate or rhythm control.**
 
