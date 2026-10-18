@@ -67,6 +67,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://segar.me/patients/watchman.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://segar.me/blog/posts/claude-code-multi-account.html</loc>
     <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>

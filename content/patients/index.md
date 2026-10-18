@@ -1,6 +1,6 @@
 ---
 title: "Heart Rhythm Information for Patients"
-description: "Patient guides from Dr. Matt Segar, a cardiac electrophysiologist at Ascension St. Vincent in Carmel and New Castle, Indiana: AFib, smartwatch alerts, pulsed field ablation, and visit preparation."
+description: "Patient guides from Dr. Matt Segar, a cardiac electrophysiologist at Ascension St. Vincent in Carmel and New Castle, Indiana: AFib, smartwatch alerts, pulsed field ablation, Watchman, and visit preparation."
 reviewed: 2026-10-02
 layout: wide
 ---
@@ -19,6 +19,10 @@ Plain-language guides on atrial fibrillation and the care that goes with it.
 <div class="guide-card">
 <p class="guide-title"><a href="pulsed-field-ablation.html">Pulsed field ablation: what to expect and recovery</a></p>
 <p class="guide-desc">How the procedure works, what recovery looks like, and the risks.</p>
+</div>
+<div class="guide-card">
+<p class="guide-title"><a href="watchman.html">Watchman vs. blood thinners: the numbers out of 100</a></p>
+<p class="guide-desc">Stroke, bleeding, and procedure risks from the latest trials, and who Watchman fits.</p>
 </div>
 <div class="guide-card">
 <p class="guide-title"><a href="before-your-visit.html">Before your visit: what to bring</a></p>

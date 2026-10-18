@@ -133,6 +133,7 @@ sources.forEach(({ slug, data: fm, content }) => {
     .replace(/{{faq}}/g, () => faqHtml)
     .replace(/{{related}}/g, () => relatedHtml)
     .replace(/{{citations}}/g, () => citeHtml)
+    .replace(/{{trademarks}}/g, () => fm.trademarks ? ` ${esc(fm.trademarks)}` : '')
     .replace(/{{qr}}/g, () => qrSvg(`${url}?utm_source=qr&utm_medium=print`))
     .replace(/{{ascensionUrl}}/g, ASCENSION_URL);
 
