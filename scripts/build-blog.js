@@ -438,6 +438,7 @@ function cacheBustAssets() {
 
   const cssHash = hashFile('assets/css/styles.css');
   const jsHash = hashFile('assets/js/theme-toggle.js');
+  const contactHash = hashFile('assets/js/contact.js');
 
   // Collect served HTML: repo root, blog/, and blog/posts/ — excluding templates.
   const templates = new Set(['template.html', 'index-template.html']);
@@ -473,7 +474,8 @@ function cacheBustAssets() {
     // any pre-existing ?v=... so repeated builds stay idempotent.
     const updated = original
       .replace(/styles\.css(\?v=[a-f0-9]+)?/g, `styles.css?v=${cssHash}`)
-      .replace(/theme-toggle\.js(\?v=[a-f0-9]+)?/g, `theme-toggle.js?v=${jsHash}`);
+      .replace(/theme-toggle\.js(\?v=[a-f0-9]+)?/g, `theme-toggle.js?v=${jsHash}`)
+      .replace(/contact\.js(\?v=[a-f0-9]+)?/g, `contact.js?v=${contactHash}`);
 
     if (updated !== original) {
       fs.writeFileSync(file, updated);

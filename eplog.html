@@ -435,15 +435,8 @@
             <div class="container">
                 <div class="support-section">
                     <h3>Contact</h3>
-                    <p>Questions, feedback, or feature requests: <a id="contact-link" href="#"></a></p>
-                    <script>
-                    (function() {
-                        var u = 'matt', d = 'segar.me';
-                        var el = document.getElementById('contact-link');
-                        el.href = 'mailto:' + u + '@' + d;
-                        el.textContent = u + '@' + d;
-                    })();
-                    </script>
+                    <p>Questions, feedback, or feature requests: <a data-contact href="#">email me</a></p>
+                    <a href="mailto:office@segar.me" aria-hidden="true" tabindex="-1" rel="nofollow" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">office@segar.me</a>
                 </div>
             </div>
         </section>
@@ -458,5 +451,6 @@
 
     <!-- External JS file for theme toggle -->
     <script src="assets/js/theme-toggle.js?v=a31ddf85"></script>
+    <script src="assets/js/contact.js?v=c23c5cfe"></script>
 </body>
 </html>
