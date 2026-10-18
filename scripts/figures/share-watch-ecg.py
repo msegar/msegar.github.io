@@ -255,7 +255,7 @@ def screens(i, uid):
     return [screen_browse, screen_heart, lambda: screen_ecg(uid), lambda: screen_share(uid)][i]()
 
 
-def build(layout):
+def build(layout, steps=STEPS, screen_fn=screens, title=TITLE, desc=DESC, footer=FOOTER):
     out = []
     d = []
     if layout == 'desktop':
@@ -272,13 +272,13 @@ def build(layout):
         d.append(defs(uid))
         px = x0 + (col_w - 25 - PHONE_W * scale) / 2 if layout == 'desktop' else x0 + (210 - PHONE_W * scale) / 2
         out.append(text(x0, y0 + 48, str(i + 1), 44, ACCENT, family=SERIF, extra=' font-style="italic" fill-opacity="0.55"'))
-        out.append(f'<g transform="translate({px:.1f},{y0 + 62}) scale({scale})">{phone(screens(i, uid), uid)}</g>')
+        out.append(f'<g transform="translate({px:.1f},{y0 + 62}) scale({scale})">{phone(screen_fn(i, uid), uid)}</g>')
         ty = y0 + 62 + PHONE_H * scale + 40
-        for j, line in enumerate(wrap(STEPS[i][0], title_size, text_w, 0.5)):
+        for j, line in enumerate(wrap(steps[i][0], title_size, text_w, 0.5)):
             out.append(text(x0, ty, line, title_size, INK, 700, SERIF))
             ty += title_size * 1.3
         ty += 4
-        for line in wrap(STEPS[i][1], body_size, text_w, 0.47):
+        for line in wrap(steps[i][1], body_size, text_w, 0.47):
             out.append(text(x0, ty, line, body_size, MUTED, family=SERIF))
             ty += body_size * 1.4
         y_bottom = max(y_bottom, ty)
@@ -290,13 +290,13 @@ def build(layout):
     out.append(f'<line x1="{margin if layout != "desktop" else 60}" y1="{fy}" x2="{W - (60 if layout == "desktop" else 30)}" y2="{fy}" stroke="#E1E4E8" stroke-width="1"/>')
     fy += 24
     foot_size = 12.5 if layout == 'desktop' else 14
-    lines = FOOTER if layout == 'desktop' else [l for f in FOOTER for l in wrap(f, foot_size, 440, 0.5)]
+    lines = footer if layout == 'desktop' else [l for f in footer for l in wrap(f, foot_size, 440, 0.5)]
     for line in lines:
         out.append(text(60 if layout == 'desktop' else 30, fy, line, foot_size, MUTED))
         fy += foot_size * 1.45
     H = math.ceil(fy + 6)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-labelledby="t d">\n'
-            f'  <title id="t">{esc(TITLE)}</title>\n  <desc id="d">{esc(DESC)}</desc>\n'
+            f'  <title id="t">{esc(title)}</title>\n  <desc id="d">{esc(desc)}</desc>\n'
             f'  <defs>{"".join(d)}</defs>\n  <rect width="{W}" height="{H}" fill="#FFFFFF"/>\n  '
             + '\n  '.join(out) + '\n</svg>\n')
 

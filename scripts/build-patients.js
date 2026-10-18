@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const marked = require('marked');
 const matter = require('gray-matter');
+const QRCode = require('qrcode');
 
 const CONTENT_DIR = path.join(__dirname, '../content/patients');
 const OUTPUT_DIR = path.join(__dirname, '../patients');
@@ -21,6 +22,13 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 const ld = obj => JSON.stringify(obj, null, 2).replace(/</g, '\\u003c');
 const inline = s => marked.parseInline(String(s));
 const plain = s => String(s).replace(/<[^>]+>/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '');
+// Inline SVG QR code for the printed page footer
+const qrSvg = text => {
+  const { size, data } = QRCode.create(text, { errorCorrectionLevel: 'M' }).modules;
+  let d = '';
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (data[y * size + x]) d += `M${x} ${y}h1v1h-1z`;
+  return `<svg class="print-qr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" aria-hidden="true"><path fill="#000" d="${d}"/></svg>`;
+};
 
 const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
 const pages = [];
@@ -102,6 +110,7 @@ fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md')).forEach(file => {
     .replace(/{{content}}/g, () => marked.parse(content))
     .replace(/{{faq}}/g, () => faqHtml)
     .replace(/{{citations}}/g, () => citeHtml)
+    .replace(/{{qr}}/g, () => qrSvg(url))
     .replace(/{{ascensionUrl}}/g, ASCENSION_URL);
 
   fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), html);

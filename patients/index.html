@@ -141,6 +141,17 @@
         .faq details p { margin-top: 10px; }
         .citations { font-size: 0.9rem; color: var(--light-text); }
         .patient-figure { margin: 28px 0; position: relative; }
+        .patient-content table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem; }
+        .patient-content th, .patient-content td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+        .patient-content th { background: var(--light-background); font-weight: 600; }
+        .patient-content td:first-child { font-weight: 600; width: 24%; }
+        @media (max-width: 700px) {
+            .patient-content thead { display: none; }
+            .patient-content table, .patient-content tbody, .patient-content tr, .patient-content td { display: block; width: 100%; }
+            .patient-content tr { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+            .patient-content td { border-bottom: 0; padding: 6px 14px; }
+            .patient-content td:first-child { width: 100%; background: var(--light-background); padding: 10px 14px; }
+        }
         .patient-figure picture { display: block; position: relative; }
         .figure-expand { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; color: #57606a; background: rgba(255,255,255,0.9); border: 1px solid #d0d7de; border-radius: 6px; cursor: pointer; }
         .figure-expand:hover, .figure-expand:focus-visible { color: #1F2A37; background: #fff; border-color: #8c959f; }
@@ -152,6 +163,63 @@
         .figure-dialog-close { position: fixed; top: 12px; right: 12px; z-index: 1; width: 40px; height: 40px; padding: 0; font: inherit; font-size: 1.6rem; line-height: 1; color: #fff; background: #1F2A37; border: 0; border-radius: 6px; cursor: pointer; }
         .patient-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: 8px; }
         .patient-figure figcaption { font-size: 0.95rem; color: var(--light-text); margin-top: 10px; }
+        .print-button { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; font: inherit; font-size: 0.85rem; color: var(--light-text); background: transparent; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; }
+        .print-button:hover, .print-button:focus-visible { color: var(--text-color); border-color: var(--light-text); }
+        .print-only { display: none; }
+        @media (max-width: 600px) { .print-button span { display: none; } }
+        @page { size: letter; margin: 0.6in 0.65in 0.7in; }
+        @media print {
+            :root { color-scheme: light; }
+            body { background: #fff; color: #111; font-size: 11pt; line-height: 1.45; }
+            header, footer, nav, .patient-aside, .mobile-call, .print-button, .figure-expand, .figure-dialog, .cta-box .button, .headshot { display: none !important; }
+            .print-only { display: block; }
+            .container, .patient-layout, .patient-layout.has-aside { display: block; width: auto; max-width: none; margin: 0; padding: 0; }
+            .has-aside .cta-box { display: block; }
+            .print-header { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; margin-bottom: 18px; border-bottom: 2px solid #1F3A5F; }
+            .print-header-name { display: flex; flex-direction: column; }
+            .print-header-name strong { font-family: var(--header-font); font-size: 14pt; color: #1F3A5F; }
+            .print-header-name span, .print-header-phones { font-size: 9pt; color: #444; }
+            .print-header-phones { margin-left: auto; display: flex; flex-direction: column; text-align: right; }
+            h1 { font-size: 20pt; line-height: 1.2; margin: 0 0 6px; color: #1F3A5F; }
+            h2 { font-size: 14pt; margin: 18px 0 6px; color: #1F3A5F; break-after: avoid; }
+            .patient-meta { font-size: 9pt; color: #444; margin-bottom: 12px; }
+            main a, main a:not(.button), .patient-content a { color: inherit !important; text-decoration: none !important; border: 0 !important; }
+            .answer-box, .urgent-box, .cta-box, .patient-figure, .faq details, .patient-content tr { break-inside: avoid; }
+            .answer-box, .cta-box { background: none; border: 1.5px solid #1F3A5F; }
+            .urgent-box { border: 2px solid #B42318; }
+            .patient-figure img { border: 1px solid #ccc; }
+            .patient-figure figcaption { color: #444; font-size: 9pt; }
+            .patient-content th { background: none; border-bottom: 1.5px solid #333; }
+            .faq details { border: 0; padding: 0; margin: 0 0 8px; }
+            .faq summary { font-weight: 700; list-style: none; }
+            .faq summary::-webkit-details-marker { display: none; }
+            .citations { font-size: 8.5pt; }
+            .disclosure { font-size: 8pt; color: #555; }
+            .print-footer { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #ccc; break-inside: avoid; font-size: 9pt; color: #333; }
+            .print-footer p { margin: 0; }
+            .print-qr { width: 0.9in; height: 0.9in; flex: none; }
+            .patient-content { font-size: 10.5pt; line-height: 1.4; }
+            .patient-content p, .patient-content li { margin-bottom: 5px; }
+            .patient-content ul, .patient-content ol { margin: 4px 0 8px; padding-left: 20px; }
+            .patient-content h2 { margin: 14px 0 5px; }
+            .answer-box { padding: 8px 12px; margin: 8px 0 12px; }
+            .answer-box .answer-label { font-size: 8pt; margin-bottom: 2px; }
+            .urgent-box { padding: 6px 12px; margin: 8px 0; }
+            .urgent-box li { margin-bottom: 1px; }
+            .patient-figure { margin: 10px 0; }
+            .patient-figure img { width: auto; max-width: 100%; max-height: 3.4in; margin: 0 auto; }
+            .patient-figure figcaption { text-align: center; margin-top: 4px; }
+            .faq details { margin-bottom: 6px; }
+            .faq details p { margin: 2px 0 0; }
+            .cta-box { padding: 8px 12px; margin: 12px 0; }
+            .cta-box h2 { font-size: 12pt; margin: 0 0 4px; }
+            .patient-content table { display: table; font-size: 9.5pt; margin: 8px 0; }
+            .patient-content thead { display: table-header-group; }
+            .patient-content tbody { display: table-row-group; }
+            .patient-content tr { display: table-row; border: 0; }
+            .patient-content th, .patient-content td { display: table-cell; padding: 4px 8px; border-bottom: 1px solid #ccc; }
+            .patient-content td:first-child { width: 22%; background: none; padding: 4px 8px; }
+        }
         .disclosure { font-size: 0.85rem; color: var(--light-text); border-top: 1px solid var(--border-color); margin-top: 40px; padding-top: 16px; }
     </style>
 
@@ -200,10 +268,21 @@
     </header>
 
     <main>
+        <div class="print-header print-only">
+            <img src="../assets/images/logo_color.webp" alt="" width="44" height="44">
+            <div class="print-header-name">
+                <strong>Matthew W. Segar, MD</strong>
+                <span>Cardiac Electrophysiologist &middot; Carmel and New Castle, Indiana</span>
+            </div>
+            <div class="print-header-phones">
+                <span>Carmel Heart Care: (317) 338-6666</span>
+                <span>New Castle Heart Care: (765) 521-1461</span>
+            </div>
+        </div>
         <section class="container patient-layout wide">
             <article class="patient-content">
                 <h1>Heart Rhythm Information for Patients</h1>
-                <p class="patient-meta"><img class="headshot headshot-sm" src="../assets/images/headshot-192.webp" alt="Dr. Matt Segar" width="40" height="40"><span>By <a href="https://healthcare.ascension.org/find-care/provider/1942703749/matthew-segar" rel="noopener">Matthew W. Segar, MD</a>, Cardiac Electrophysiologist, Ascension St. Vincent &middot; Last reviewed <time datetime="2026-10-02">October 2, 2026</time></span></p>
+                <p class="patient-meta"><img class="headshot headshot-sm" src="../assets/images/headshot-192.webp" alt="Dr. Matt Segar" width="40" height="40"><span>By <a href="https://healthcare.ascension.org/find-care/provider/1942703749/matthew-segar" rel="noopener">Matthew W. Segar, MD</a>, Cardiac Electrophysiologist, Ascension St. Vincent &middot; Last reviewed <time datetime="2026-10-02">October 2, 2026</time></span><button type="button" class="print-button" aria-label="Print this page" title="Print"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 6V1.5h8V6"/><rect x="1.5" y="6" width="13" height="6" rx="1.5"/><path d="M4 10h8v4.5H4z"/></svg><span>Print</span></button></p>
 
                 
 
@@ -245,6 +324,11 @@
                 
 
                 <p class="disclosure">This page is general education, not medical advice, and does not create a doctor-patient relationship. It cannot replace an exam or an ECG. If you think you are having an emergency, call 911. This is my personal website, and the views here are my own. I also build health technology products, which are not promoted on this page.</p>
+
+                <div class="print-footer print-only">
+                    <svg class="print-qr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" shape-rendering="crispEdges" aria-hidden="true"><path fill="#000" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM10 0h1v1h-1zM11 0h1v1h-1zM12 0h1v1h-1zM13 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM13 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM9 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM11 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM13 7h1v1h-1zM16 7h1v1h-1zM0 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM9 8h1v1h-1zM10 8h1v1h-1zM11 8h1v1h-1zM14 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM1 9h1v1h-1zM3 9h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM23 9h1v1h-1zM0 10h1v1h-1zM1 10h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM9 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM10 11h1v1h-1zM18 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM0 12h1v1h-1zM1 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM12 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM24 12h1v1h-1zM0 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM0 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM24 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM12 17h1v1h-1zM16 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM20 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM0 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM0 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM9 24h1v1h-1zM11 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM21 24h1v1h-1zM24 24h1v1h-1z"/></svg>
+                    <p>Scan to read this page online, with links and full-size figures:<br><strong>https://segar.me/patients/</strong><br>Last reviewed October 2, 2026. Printed copies can go out of date.</p>
+                </div>
             </article>
             
         </section>
@@ -284,6 +368,73 @@
             });
             dialog.querySelector('.figure-dialog-close').addEventListener('click', function () { dialog.close(); });
             dialog.addEventListener('click', function (e) { if (e.target === dialog || e.target.classList.contains('figure-dialog-scroll')) dialog.close(); });
+        })();
+    </script>
+    <script>
+        // Print button; open FAQ answers for the printout, then restore them
+        (function () {
+            var btn = document.querySelector('.print-button');
+            if (btn) btn.addEventListener('click', function () { window.print(); });
+            var closed = [], moved = [];
+
+            // Copy the @media print rules under html.print-measure so the page can be measured at print size
+            var measureCss = '';
+            Array.prototype.forEach.call(document.styleSheets, function (sheet) {
+                try {
+                    Array.prototype.forEach.call(sheet.cssRules, function (rule) {
+                        if (!rule.media || rule.media.mediaText.indexOf('print') === -1) return;
+                        Array.prototype.forEach.call(rule.cssRules, function (r) {
+                            if (!r.selectorText) return;
+                            var sel = r.selectorText.split(',').map(function (part) {
+                                part = part.trim();
+                                return part === ':root' || part === 'html' ? 'html.print-measure' : 'html.print-measure ' + part;
+                            }).join(', ');
+                            measureCss += sel + ' {' + r.style.cssText + '}\n';
+                        });
+                    });
+                } catch (e) { /* cross-origin stylesheet */ }
+            });
+            measureCss += 'html.print-measure body { width: 7.2in; margin: 0; }\n';
+            var measureStyle = document.createElement('style');
+
+            // LaTeX-style figure floats: a figure that would straddle a page break waits
+            // while the text after it moves up to fill the page
+            var PAGE_H = 9.7 * 96;   // letter height minus @page margins, in CSS px
+            function floatFigures() {
+                var origin = document.querySelector('.print-header');
+                if (!origin) return;
+                document.querySelectorAll('.patient-content > .patient-figure').forEach(function (fig) {
+                    for (;;) {
+                        var top0 = origin.getBoundingClientRect().top;
+                        var r = fig.getBoundingClientRect();
+                        var y = r.top - top0, pageEnd = (Math.floor(y / PAGE_H) + 1) * PAGE_H;
+                        if (y + r.height <= pageEnd) break;               // fits where it is
+                        var next = fig.nextElementSibling, group = [next];
+                        if (!next || next.matches('.patient-figure, .cta-box, .disclosure, .print-footer')) break;
+                        if (/^H[1-6]$/.test(next.tagName) && next.nextElementSibling) group.push(next.nextElementSibling);
+                        var h = 0;
+                        group.forEach(function (el) { h += el.getBoundingClientRect().height + parseFloat(getComputedStyle(el).marginTop); });
+                        if (y + h > pageEnd) break;                       // nothing more fits; figure starts the next page
+                        group.forEach(function (el) { moved.push({ el: el, before: el.nextSibling, parent: el.parentNode }); fig.parentNode.insertBefore(el, fig); });
+                    }
+                });
+            }
+
+            window.addEventListener('beforeprint', function () {
+                closed = Array.prototype.filter.call(document.querySelectorAll('.faq details'), function (d) { return !d.open; });
+                closed.forEach(function (d) { d.open = true; });
+                measureStyle.textContent = measureCss;
+                document.head.appendChild(measureStyle);
+                document.documentElement.classList.add('print-measure');
+                floatFigures();
+                document.documentElement.classList.remove('print-measure');
+                measureStyle.remove();
+            });
+            window.addEventListener('afterprint', function () {
+                closed.forEach(function (d) { d.open = false; });
+                for (var i = moved.length - 1; i >= 0; i--) moved[i].parent.insertBefore(moved[i].el, moved[i].before);
+                moved = [];
+            });
         })();
     </script>
     <script src="../assets/js/theme-toggle.js?v=a31ddf85"></script>

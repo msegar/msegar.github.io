@@ -43,9 +43,18 @@ For irregular rhythm notifications, you can also take a screenshot of the alert 
 
 **Kardia (AliveCor)**
 
-1. Open the Kardia app and select the recording.
-2. Use the share or email option to create a PDF.
-3. Save the PDF to your phone or print it.
+1. Open the Kardia app and tap **History**.
+2. Tap **View EKG History**.
+3. Tap the three dots next to the recording, then tap **Download PDF**.
+4. Skip the password step. Tap the share icon at the bottom left to print it, save it to Files, or choose how to send it.
+
+<figure class="patient-figure">
+<picture>
+<source media="(max-width: 600px)" srcset="../assets/images/how-to-share-kardia-ekg-mobile.svg" width="500" height="1408">
+<img src="../assets/images/how-to-share-kardia-ekg.svg" width="1000" height="659" loading="lazy" alt="Four phone screens. One: in the Kardia app, tap the History tab. Two: tap View EKG History. Three: tap the three dots next to a recording, then tap Download PDF. Four: skip the password step and tap the Share icon at the bottom left.">
+</picture>
+<figcaption>These steps follow AliveCor's support instructions. Menus can look different depending on your app version and phone.</figcaption>
+</figure>
 
 **Other watches (Samsung, Fitbit, Pixel, Garmin, Withings)**
 
