@@ -33,3 +33,6 @@ npm-debug.log*
 # Private notes
 AUDIT.md
 __pycache__/
+
+# Research notes
+research/

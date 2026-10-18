@@ -23,6 +23,18 @@ citations:
 
 Your heart has an electrical system that keeps the beat steady. In AFib, the upper chambers (the atria) fire chaotic signals. The pulse becomes irregular and often fast. AFib is the most common long-lasting heart rhythm problem.
 
+<figure class="patient-figure">
+<img src="../assets/images/afib-normal-vs-afib-heart.webp" width="1447" height="1087" loading="lazy" alt="In normal rhythm, one signal starts at the top of the right atrium and spreads in an organized way, so the heartbeat is steady. In AFib, chaotic signals fire all over both upper chambers, so the heartbeat becomes irregular and often fast.">
+<figcaption>AFib starts in the upper chambers (the atria). Chaotic signals there make the heartbeat irregular and often fast.</figcaption>
+</figure>
+
+AFib often comes and goes at first. Over time, episodes can last longer or stop going away on their own.
+
+<figure class="patient-figure">
+<img src="../assets/images/afib-types-over-time.webp" width="1448" height="1086" loading="lazy" alt="Four types of AFib, from earliest to latest. Paroxysmal AFib starts and stops on its own, lasting minutes to days. Persistent AFib lasts more than 7 days and does not stop on its own. Long-standing persistent AFib has lasted more than 12 months. Permanent AFib is ongoing, and treatment focuses on symptoms, heart rate, and stroke prevention.">
+<figcaption>AFib can change over time. Not everyone goes through every stage, and treating AFib and its risk factors early may help slow it down.</figcaption>
+</figure>
+
 ## Symptoms
 
 Some people feel nothing. Others notice:
